@@ -17,7 +17,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     [Required]
     public string? Password { get; set; }
 
-    /// <summary>Gets/sets an object that indicates if a login is permanent.</summary>
+    /// <summary>Gets/sets an object that indicates if a login request is persistent.</summary>
     public bool RememberMe { get; set; }
   }
 }
