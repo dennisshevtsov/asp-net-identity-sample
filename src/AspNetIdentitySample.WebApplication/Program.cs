@@ -2,14 +2,15 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-using Microsoft.AspNetCore.Identity;
-
-using AspNetIdentitySample.ApplicationCore.Entities;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentity<UserEntity, RoleEntity>()
-                .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllers();
+
 app.Run();

@@ -4,6 +4,7 @@
 
 namespace AspNetIdentitySample.ApplicationCore.Entities
 {
+  /// <summary>Represents details of a role.</summary>
   public sealed class RoleEntity
   {
   }
