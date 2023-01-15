@@ -4,12 +4,19 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
-  [Route("")]
-  public sealed class HomeController : Controller
+  [Route("logout")]
+  public sealed class LogoutController : Controller
   {
+    [HttpGet]
     public IActionResult Get()
     {
-      return View("Home");
+      return View("Logout");
+    }
+
+    [HttpPost]
+    public IActionResult Post()
+    {
+      return RedirectToAction("Logout");
     }
   }
 }
