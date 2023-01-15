@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetIdentitySample.WebApp", "src\AspNetIdentitySample.WebApp\AspNetIdentitySample.WebApp.csproj", "{97BF4484-57C8-4C30-9F3A-62DE60D8E558}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetIdentitySample.WebApplication", "src\AspNetIdentitySample.WebApplication\AspNetIdentitySample.WebApplication.csproj", "{97BF4484-57C8-4C30-9F3A-62DE60D8E558}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetIdentitySample.Test", "test\AspNetIdentitySample.Test\AspNetIdentitySample.Test.csproj", "{2927EA4F-44EF-45DB-9BD1-D40252619441}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetIdentitySample.ApplicationCore", "src\AspNetIdentitySample.ApplicationCore\AspNetIdentitySample.ApplicationCore.csproj", "{152266EE-C14F-479B-A139-A4FF52ABCC5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2927EA4F-44EF-45DB-9BD1-D40252619441}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2927EA4F-44EF-45DB-9BD1-D40252619441}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2927EA4F-44EF-45DB-9BD1-D40252619441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{152266EE-C14F-479B-A139-A4FF52ABCC5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{152266EE-C14F-479B-A139-A4FF52ABCC5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{152266EE-C14F-479B-A139-A4FF52ABCC5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{152266EE-C14F-479B-A139-A4FF52ABCC5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
