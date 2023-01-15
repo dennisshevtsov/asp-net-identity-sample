@@ -4,6 +4,7 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [Route("")]
   public sealed class HomeController : Controller
   {
