@@ -9,7 +9,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public IActionResult Get()
     {
-      return View("Home");
+      return View("HomeView");
     }
   }
 }

@@ -2,9 +2,16 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
+using Microsoft.AspNetCore.Mvc.Razor;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<RazorViewEngineOptions>(options =>
+{
+  options.ViewLocationFormats.Clear();
+  options.ViewLocationFormats.Add($"/Views/{{0}}{RazorViewEngine.ViewExtension}");
+});
 
 var app = builder.Build();
 

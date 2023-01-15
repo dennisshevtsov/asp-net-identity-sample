@@ -10,13 +10,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet]
     public IActionResult Get()
     {
-      return View("Logout");
+      return View("LogoutView");
     }
 
     [HttpPost]
     public IActionResult Post()
     {
-      return RedirectToAction("Logout");
+      return RedirectToAction("LogoutView");
     }
   }
 }
