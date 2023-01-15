@@ -1,0 +1,21 @@
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.LoginViewModel
+
+<h1>ASP.NET Core Identity Sample</h1>
+<p>Please log in</p>
+<form method="post">
+  <div>
+    <input asp-for="Email" type="email" placeholder="Email" />
+    <label asp-for="Email">Email</label>
+  </div>
+  <div>
+    <input asp-for="Password" type="password" placeholder="Password" />
+    <label asp-for="Password">Password</label>
+  </div>
+  <div>
+    <input asp-for="RememberMe" type="checkbox" />
+    <label asp-for="RememberMe">Remember me</label>
+  </div>
+  <div>
+    <button type="submit"><span>Log in</span></button>
+  </div>
+</form>

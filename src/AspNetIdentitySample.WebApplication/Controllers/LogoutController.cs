@@ -5,12 +5,19 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("")]
-  public sealed class HomeController : Controller
+  [Route("logout")]
+  public sealed class LogoutController : Controller
   {
+    [HttpGet]
     public IActionResult Get()
     {
-      return View("HomeView");
+      return View("LogoutView");
+    }
+
+    [HttpPost]
+    public IActionResult Post()
+    {
+      return RedirectToAction("LogoutView");
     }
   }
 }

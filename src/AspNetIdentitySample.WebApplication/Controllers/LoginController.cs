@@ -4,13 +4,22 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using AspNetIdentitySample.WebApplication.ViewModels;
+
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("")]
-  public sealed class HomeController : Controller
+  [Route("login")]
+  public sealed class LoginController : Controller
   {
+    [HttpGet]
     public IActionResult Get()
     {
-      return View("HomeView");
+      return View("LoginView", new LoginViewModel());
+    }
+
+    [HttpPost]
+    public IActionResult Post(LoginViewModel vm)
+    {
+      return RedirectToAction("LoginView");
     }
   }
 }
