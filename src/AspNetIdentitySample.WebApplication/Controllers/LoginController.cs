@@ -17,9 +17,14 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpPost]
-    public IActionResult Post(LoginViewModel vm)
+    public IActionResult Post([FromForm] LoginViewModel vm)
     {
-      return RedirectToAction("LoginView");
+      if (ModelState.IsValid)
+      {
+        RedirectToAction("Get", "Home");
+      }
+
+      return View("LoginView", vm);
     }
   }
 }
