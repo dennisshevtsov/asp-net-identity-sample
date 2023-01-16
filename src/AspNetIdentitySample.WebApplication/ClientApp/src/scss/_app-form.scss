@@ -1,0 +1,12 @@
+﻿.app-form {
+  &__group {
+    @extend .mb-3;
+  }
+
+  &__button {
+    @extend .btn;
+    @extend .btn-lg;
+    @extend .btn-primary;
+    @extend .w-100;
+  }
+}

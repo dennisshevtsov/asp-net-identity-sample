@@ -1,0 +1,23 @@
+﻿.app-login {
+  @extend .card;
+  @extend .m-auto;
+  @extend .mt-3;
+  width: 400px;
+
+  &__content {
+    @extend .card-body;
+  }
+
+  &__title {
+    @extend .card-title;
+    @extend .text-center;
+  }
+
+  &__text {
+    @extend .card-text;
+    @extend .text-center;
+  }
+
+  &__form {
+  }
+}

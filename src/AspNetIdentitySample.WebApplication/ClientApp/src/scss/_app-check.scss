@@ -1,0 +1,11 @@
+﻿.app-check {
+  @extend .form-check;
+
+  &__field {
+    @extend .form-check-input;
+  }
+
+  &__label {
+    @extend .form-check-label;
+  }
+}
