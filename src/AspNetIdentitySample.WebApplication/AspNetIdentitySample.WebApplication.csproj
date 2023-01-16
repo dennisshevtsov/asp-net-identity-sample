@@ -4,6 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <ClientAppDirector>ClientApp\</ClientAppDirector>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,5 +17,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec WorkingDirectory="$(ClientAppDirector)" Command="npm install"></Exec>
+    <Exec WorkingDirectory="$(ClientAppDirector)" Command="npm run build"></Exec>
+  </Target>
 
 </Project>
