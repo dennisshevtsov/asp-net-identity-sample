@@ -1,21 +1,29 @@
 ﻿@model AspNetIdentitySample.WebApplication.ViewModels.LoginViewModel
 
-<h1>ASP.NET Core Identity Sample</h1>
-<p>Please log in</p>
-<form method="post">
-  <div>
-    <input asp-for="Email" type="email" placeholder="Email" />
-    <label asp-for="Email">Email</label>
+<div class="app-login">
+  <div class="app-login__content">
+    <h3 class="app-login__title"><span>ASP.NET Core Identity Sample</span></h3>
+    <p class="app-login__text">Please log in</p>
+
+    <form class="app-login__form app-form" method="post">
+      <div class="app-form__group app-control">
+        <input class="app-control__field" asp-for="Email" type="email" placeholder="Email" />
+        <label class="app-control__label" asp-for="Email">Email</label>
+        <span class="app-control__error" asp-validation-for="Email"></span>
+      </div>
+
+      <div class="app-form__group app-control">
+        <input class="app-control__field" asp-for="Password" type="password" placeholder="Password" />
+        <label class="app-control__label" asp-for="Password">Password</label>
+        <span class="app-control__error" asp-validation-for="Password"></span>
+      </div>
+
+      <div class="app-form__group app-check">
+        <input class="app-check__field" asp-for="RememberMe" type="checkbox" />
+        <label class="app-check__label" asp-for="RememberMe">Remember me</label>
+      </div>
+
+      <button class="app-form__button" type="submit"><span>Log in</span></button>
+    </form>
   </div>
-  <div>
-    <input asp-for="Password" type="password" placeholder="Password" />
-    <label asp-for="Password">Password</label>
-  </div>
-  <div>
-    <input asp-for="RememberMe" type="checkbox" />
-    <label asp-for="RememberMe">Remember me</label>
-  </div>
-  <div>
-    <button type="submit"><span>Log in</span></button>
-  </div>
-</form>
+</div>

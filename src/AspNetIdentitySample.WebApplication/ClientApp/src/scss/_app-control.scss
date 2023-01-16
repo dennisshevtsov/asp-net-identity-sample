@@ -1,0 +1,14 @@
+﻿.app-control {
+  @extend .form-floating;
+
+  &__field {
+    @extend .form-control;
+  }
+
+  &__label {
+  }
+
+  &__error {
+    @extend .invalid-feedback;
+  }
+}
