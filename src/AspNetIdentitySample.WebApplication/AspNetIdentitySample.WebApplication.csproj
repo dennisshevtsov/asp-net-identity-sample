@@ -4,10 +4,23 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <ClientAppDirector>ClientApp\</ClientAppDirector>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AspNetIdentitySample.ApplicationCore\AspNetIdentitySample.ApplicationCore.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec WorkingDirectory="$(ClientAppDirector)" Command="npm install"></Exec>
+    <Exec WorkingDirectory="$(ClientAppDirector)" Command="npm run build"></Exec>
+  </Target>
 
 </Project>
