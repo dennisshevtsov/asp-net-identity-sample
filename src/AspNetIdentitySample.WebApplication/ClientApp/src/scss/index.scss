@@ -1,0 +1,66 @@
+﻿@import 'bootstrap';
+
+.app-login {
+  @extend .card;
+  @extend .m-auto;
+  @extend .mt-3;
+
+  width: 400px;
+
+  &__content {
+    @extend .card-body;
+  }
+
+  &__title {
+    @extend .card-title;
+    @extend .text-center;
+  }
+
+  &__text {
+    @extend .card-text;
+    @extend .text-center;
+  }
+
+  &__form {
+  }
+}
+
+.app-form {
+  &__group {
+    @extend .mb-3;
+  }
+
+  &__button {
+    @extend .btn;
+    @extend .btn-lg;
+    @extend .btn-primary;
+    @extend .w-100;
+  }
+}
+
+.app-control {
+  @extend .form-floating;
+
+  &__field {
+    @extend .form-control;
+  }
+
+  &__label {
+  }
+
+  &__error {
+    @extend .invalid-feedback;
+  }
+}
+
+.app-check {
+  @extend .form-check;
+
+  &__field {
+    @extend .form-check-input;
+  }
+
+  &__label {
+    @extend .form-check-label;
+  }
+}
