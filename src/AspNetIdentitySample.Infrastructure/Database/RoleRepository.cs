@@ -10,8 +10,16 @@ namespace AspNetIdentitySample.Infrastructure.Database
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</summary>
   public sealed class RoleRepository : IRoleRepository
   {
-    public Task<RoleEntity> GetRoleAsync(Guid userId, CancellationToken cancellationToken) => throw new NotImplementedException();
+    /// <summary>Gets a role by a role ID.</summary>
+    /// <param name="roleName">An object that represents a name of a role.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task<RoleEntity> GetRoleAsync(string roleName, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-    public Task CreateRoleAsync(RoleEntity roleEntity, CancellationToken cancellationToken) => throw new NotImplementedException();
+    /// <summary>Adds a new role to the database.</summary>
+    /// <param name="roleEntity">An object that represents details of a role.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    public Task AddRoleAsync(RoleEntity roleEntity, CancellationToken cancellationToken) => throw new NotImplementedException();
   }
 }
