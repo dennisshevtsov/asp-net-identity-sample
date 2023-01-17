@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AspNetIdentitySample.ApplicationCore\AspNetIdentitySample.ApplicationCore.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\AspNetIdentitySample.Infrastructure\AspNetIdentitySample.Infrastructure.csproj" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
