@@ -41,7 +41,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
         if (signInResult != null && signInResult.Succeeded)
         {
-          return LocalRedirect("~" + vm.ReturnUrl);
+          return LocalRedirect(vm.ReturnUrl);
         }
 
         ModelState.Clear();
