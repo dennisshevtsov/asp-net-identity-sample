@@ -33,7 +33,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Post([FromForm] LoginViewModel vm)
+    public async Task<IActionResult> Post(LoginViewModel vm)
     {
       if (ModelState.IsValid)
       {
@@ -41,7 +41,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
         if (signInResult != null && signInResult.Succeeded)
         {
-          return RedirectToAction("Get", "Home");
+          return LocalRedirect("~" + vm.ReturnUrl);
         }
 
         ModelState.Clear();
