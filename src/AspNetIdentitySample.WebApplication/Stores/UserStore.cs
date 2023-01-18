@@ -104,7 +104,21 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="normalizedUserName"/> if it exists.
     /// </returns>
     public Task<UserEntity?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      UserEntity? userEntity = null;
+
+      if (string.Equals(normalizedUserName, "test@test.test", StringComparison.OrdinalIgnoreCase))
+      {
+        userEntity = new UserEntity
+        {
+          UserId = new Guid("798e202f-3d00-492b-bc04-4016cfc1dca0"),
+          Email = "test@test.test",
+          Name = "test@test.test",
+        };
+      }
+
+      return Task.FromResult(userEntity);
+    }
 
     /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     public void Dispose() { }
