@@ -8,8 +8,17 @@ namespace AspNetIdentitySample.WebApplication.Stores
 
   using AspNetIdentitySample.ApplicationCore.Entities;
 
-  public sealed class UserStore : IUserStore<UserEntity>
+  public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
   {
+    private readonly IPasswordHasher<UserEntity> _passwordHasher;
+
+    public UserStore(IPasswordHasher<UserEntity> passwordHasher)
+    {
+      _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+    }
+
+    #region Members of IUserStore
+
     /// <summary>
     /// Gets the user identifier for the specified <paramref name="user"/>.
     /// </summary>
@@ -17,7 +26,9 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the identifier for the specified <paramref name="user"/>.</returns>
     public Task<string> GetUserIdAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      return Task.FromResult(user.UserId.ToString());
+    }
 
     /// <summary>
     /// Gets the user name for the specified <paramref name="user"/>.
@@ -26,7 +37,16 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the name for the specified <paramref name="user"/>.</returns>
     public Task<string?> GetUserNameAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      string? username = null;
+
+      if (user != null && !string.IsNullOrWhiteSpace(user.Email)) 
+      {
+        username = user.Email;
+      }
+
+      return Task.FromResult(username);
+    }
 
     /// <summary>
     /// Sets the given <paramref name="userName" /> for the specified <paramref name="user"/>.
@@ -104,9 +124,74 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="normalizedUserName"/> if it exists.
     /// </returns>
     public Task<UserEntity?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+    {
+      UserEntity? userEntity = null;
+
+      if (string.Equals(normalizedUserName, "test@test.test", StringComparison.OrdinalIgnoreCase))
+      {
+        userEntity = new UserEntity
+        {
+          UserId = new Guid("798e202f-3d00-492b-bc04-4016cfc1dca0"),
+          Email = "test@test.test",
+          Name = "test@test.test",
+          PasswordHash = "AQAAAAIAAYagAAAAEK1J2OGSiw1GPjwtTfNlKBOTGZg0ktpqEd7YkwbfMRWOw35KYVpsAQzpC2qwjtN0wg==",
+        };
+      }
+
+      return Task.FromResult(userEntity);
+    }
+
+    #endregion
+
+    #region Members of IUserPasswordStore
+
+    /// <summary>
+    /// Sets the password hash for the specified <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">The user whose password hash to set.</param>
+    /// <param name="passwordHash">The password hash to set.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public Task SetPasswordHashAsync(UserEntity user, string? passwordHash, CancellationToken cancellationToken)
       => throw new NotImplementedException();
+
+    /// <summary>
+    /// Gets the password hash for the specified <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">The user whose password hash to retrieve.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation, returning the password hash for the specified <paramref name="user"/>.</returns>
+    public Task<string?> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      string? passwordHash = null;
+
+      if (user != null)
+      {
+        passwordHash = user.PasswordHash;
+      }
+
+      return Task.FromResult(passwordHash);
+    }
+
+    /// <summary>
+    /// Gets a flag indicating whether the specified <paramref name="user"/> has a password.
+    /// </summary>
+    /// <param name="user">The user to return a flag for, indicating whether they have a password or not.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation, returning true if the specified <paramref name="user"/> has a password
+    /// otherwise false.
+    /// </returns>
+    public Task<bool> HasPasswordAsync(UserEntity user, CancellationToken cancellationToken)
+      => throw new NotImplementedException();
+
+    #endregion
+
+    #region Members of IDisposable
 
     /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     public void Dispose() { }
+
+    #endregion
   }
 }

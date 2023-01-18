@@ -5,16 +5,16 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("logout")]
+  [Route("account")]
   public sealed class LogoutController : Controller
   {
-    [HttpGet]
+    [HttpGet("logout")]
     public IActionResult Get()
     {
       return View("LogoutView");
     }
 
-    [HttpPost]
+    [HttpPost("logout")]
     public IActionResult Post()
     {
       return RedirectToAction("LogoutView");
