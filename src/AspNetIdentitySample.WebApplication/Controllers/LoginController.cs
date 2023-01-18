@@ -4,19 +4,22 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using Microsoft.AspNetCore.Authorization;
+
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("login")]
+  [AllowAnonymous]
+  [Route("account")]
   public sealed class LoginController : Controller
   {
-    [HttpGet]
+    [HttpGet("login")]
     public IActionResult Get()
     {
       return View("LoginView", new LoginViewModel());
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public IActionResult Post([FromForm] LoginViewModel vm)
     {
       if (ModelState.IsValid)

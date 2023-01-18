@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 
 using AspNetIdentitySample.ApplicationCore.Entities;
@@ -10,7 +12,14 @@ using AspNetIdentitySample.WebApplication.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+  var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
+                                               .Build();
+  var filter = new AuthorizeFilter(policy);
+
+  options.Filters.Add(filter);
+});
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
   options.ViewLocationFormats.Clear();
@@ -25,6 +34,8 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
