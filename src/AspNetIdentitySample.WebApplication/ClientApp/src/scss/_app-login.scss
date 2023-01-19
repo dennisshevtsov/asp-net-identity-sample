@@ -1,8 +1,7 @@
-﻿.app-login {
+﻿.app-signin, .app-signout {
   @extend .card;
   @extend .m-auto;
   @extend .mt-3;
-
   width: 410px;
 
   &__content {
@@ -20,5 +19,22 @@
   }
 
   &__form {
+  }
+
+  &__ok, &__cancel {
+    @extend .btn-lg;
+    @extend .w-100;
+  }
+
+  &__ok + &__cancel {
+    @extend .mt-3;
+  }
+
+  &__ok {
+    @extend .btn-primary;
+  }
+
+  &__cancel {
+    @extend .btn-outline-primary;
   }
 }

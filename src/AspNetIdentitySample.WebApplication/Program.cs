@@ -31,7 +31,7 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>()
                 .AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-  options.LoginPath = "/account/login";
+  options.LoginPath = "/account/signin";
   options.ReturnUrlParameter = "returnUrl";
 });
 
