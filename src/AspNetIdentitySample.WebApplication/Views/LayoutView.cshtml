@@ -11,6 +11,26 @@
   <script src="~/dist/index.js"></script>
 </head>
 <body>
+  <div class="app">
+    <div class="app__header header">
+      <nav class="header__content">
+        <a class="app__brand" asp-controller="Home" asp-action="Index"><span>ASP.NET Core Identity Sample</span></a>
+
+        <div class="header__profile profile-menu">
+          <a class="profile-menu__toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <span>John Smith</span>
+          </a>
+          <nav class="profile-menu__nav dropdown-menu">
+            <a class="profile-menu__item"><span>Profile</span></a>
+            <a class="profile-menu__item" asp-controller="SignOut" asp-action="Get"><span>Sign out</span></a>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="app__main main">
     @RenderBody()
+  </main>
 </body>
 </html>
