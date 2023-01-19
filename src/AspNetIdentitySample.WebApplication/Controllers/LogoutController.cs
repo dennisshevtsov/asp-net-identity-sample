@@ -4,10 +4,26 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using System;
+
+  using Microsoft.AspNetCore.Identity;
+
+  using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.WebApplication.ViewModels;
+
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [Route("account")]
   public sealed class LogoutController : Controller
   {
+    private readonly SignInManager<UserEntity> _signInManager;
+
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.LogoutController"/> class.</summary>
+    /// <param name="signInManager">An object that provides the APIs for user sign in.</param>
+    public LogoutController(SignInManager<UserEntity> signInManager)
+    {
+      _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+    }
+
     [HttpGet("logout")]
     public IActionResult Get()
     {
@@ -15,9 +31,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpPost("logout")]
-    public IActionResult Post()
+    public async Task<IActionResult> Post(LogoutViewModel vm)
     {
-      return RedirectToAction("LogoutView");
+      await _signInManager.SignOutAsync();
+
+      return LocalRedirect(vm.ReturnUrl ?? "/");
     }
   }
 }
