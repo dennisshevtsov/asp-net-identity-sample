@@ -1,0 +1,13 @@
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.SignOutAccountViewModel
+
+<div class="app-signout">
+  <div class="app-signout__content">
+    <h3 class="app-signout__title"><span>ASP.NET Core Identity Sample</span></h3>
+    <p class="app-signout__text">Do you really want to sign out?</p>
+
+    <form class="app-signout__form app-form" method="post">
+      <button class="app-signout__ok app-form__button" type="submit"><span>OK</span></button>
+      <a class="app-signout__cancel app-form__button" href="@Model.ReturnUrl"><span>Cancel</span></a>
+    </form>
+  </div>
+</div>

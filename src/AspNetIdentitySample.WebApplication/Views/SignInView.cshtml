@@ -1,11 +1,11 @@
-﻿@model AspNetIdentitySample.WebApplication.ViewModels.LoginViewModel
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.SignInAccountViewModel
 
-<div class="app-login">
-  <div class="app-login__content">
-    <h3 class="app-login__title"><span>ASP.NET Core Identity Sample</span></h3>
-    <p class="app-login__text">Please log in</p>
+<div class="app-signin">
+  <div class="app-signin__content">
+    <h3 class="app-signin__title"><span>ASP.NET Core Identity Sample</span></h3>
+    <p class="app-signin__text">Please sign in</p>
 
-    <form class="app-login__form app-form" method="post">
+    <form class="app-signin__form app-form" method="post">
       <div class="app-form__group app-control">
         <input class="app-control__field" asp-for="Email" type="email" placeholder="Email" />
         <label class="app-control__label" asp-for="Email">Email</label>
@@ -23,7 +23,7 @@
         <label class="app-check__label" asp-for="RememberMe">Remember me</label>
       </div>
 
-      <button class="app-form__button" type="submit"><span>Log in</span></button>
+      <button class="app-signin__ok app-form__button" type="submit"><span>Log in</span></button>
     </form>
   </div>
 </div>

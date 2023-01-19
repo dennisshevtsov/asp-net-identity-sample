@@ -9,7 +9,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   using Microsoft.AspNetCore.Mvc;
 
   /// <summary>Represents data to log in an account.</summary>
-  public sealed class LoginViewModel
+  public sealed class SignInAccountViewModel : AccountViewModelBase
   {
     /// <summary>Gets/sets an object that represents an email of an account.</summary>
     [Required]
@@ -24,9 +24,5 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that indicates if a login request is persistent.</summary>
     [FromForm]
     public bool RememberMe { get; set; }
-
-    /// <summary>Gets/sets an object that represents a URL to that the app should return after an successful login.</summary>
-    [FromQuery]
-    public string? ReturnUrl { get; set; }
   }
 }

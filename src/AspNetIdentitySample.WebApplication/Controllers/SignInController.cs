@@ -15,25 +15,27 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [AllowAnonymous]
   [Route("account")]
-  public sealed class LoginController : Controller
+  public sealed class SignInController : Controller
   {
+    private const string ViewName = "SignInView";
+
     private readonly SignInManager<UserEntity> _signInManager;
 
-    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.LoginController"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.SignInController"/> class.</summary>
     /// <param name="signInManager">An object that provides the APIs for user sign in.</param>
-    public LoginController(SignInManager<UserEntity> signInManager)
+    public SignInController(SignInManager<UserEntity> signInManager)
     {
       _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
     }
 
-    [HttpGet("login")]
+    [HttpGet("signin")]
     public IActionResult Get()
     {
-      return View("LoginView", new LoginViewModel());
+      return View(SignInController.ViewName, new SignInAccountViewModel());
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Post(LoginViewModel vm)
+    [HttpPost("signin")]
+    public async Task<IActionResult> Post(SignInAccountViewModel vm)
     {
       if (ModelState.IsValid)
       {
@@ -41,14 +43,14 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
         if (signInResult != null && signInResult.Succeeded)
         {
-          return LocalRedirect(vm.ReturnUrl ?? "/");
+          return LocalRedirect(vm.ReturnUrl);
         }
 
         ModelState.Clear();
-        ModelState.AddModelError(nameof(LoginViewModel.Email), "The credentials are not valid.");
+        ModelState.AddModelError(nameof(SignInAccountViewModel.Email), "The credentials are not valid.");
       }
 
-      return View("LoginView", vm);
+      return View(SignInController.ViewName, vm);
     }
   }
 }
