@@ -1,0 +1,15 @@
+﻿.app-header {
+  &__content {
+    @extend .container-xl;
+  }
+
+  &__menu {
+    @extend .ms-auto;
+    @extend .mb-2;
+    @extend .mb-lg-0;
+  }
+
+  &__profile {
+    @extend .ms-2;
+  }
+}

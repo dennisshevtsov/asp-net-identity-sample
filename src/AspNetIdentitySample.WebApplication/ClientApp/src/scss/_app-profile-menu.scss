@@ -1,0 +1,23 @@
+﻿.app-profile-menu {
+  @extend .dropdown;
+
+  &__toggle {
+    @extend .d-flex;
+    @extend .align-items-center;
+    @extend .text-white;
+    @extend .text-decoration-none;
+    @extend .dropdown-toggle;
+    cursor: pointer;
+  }
+
+  &__nav {
+    @extend .dropdown-menu;
+    @extend .dropdown-menu-dark;
+    @extend .shadow;
+  }
+
+  &__item {
+    @extend .dropdown-item;
+    cursor: pointer;
+  }
+}
