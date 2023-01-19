@@ -1,1 +1,13 @@
-﻿<h1>Logout</h1>
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.LogoutViewModel
+
+<div class="app-login">
+  <div class="app-login__content">
+    <h3 class="app-login__title"><span>ASP.NET Core Identity Sample</span></h3>
+    <p class="app-login__text">Do you really want to log out?</p>
+
+    <form class="app-login__form app-form" method="post">
+      <button class="app-form__ok" type="submit"><span>OK</span></button>
+      <a class="app-form__cancel" href="@Model.ReturnUrl"><span>Cancel</span></a>
+    </form>
+  </div>
+</div>

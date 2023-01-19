@@ -3,10 +3,21 @@
     @extend .mb-3;
   }
 
-  &__button {
+  &__ok {
     @extend .btn;
     @extend .btn-lg;
     @extend .btn-primary;
     @extend .w-100;
+  }
+
+  &__cancel {
+    @extend .btn;
+    @extend .btn-lg;
+    @extend .btn-outline-primary;
+    @extend .w-100;
+  }
+
+  &__ok + &__cancel {
+    @extend .mt-3;
   }
 }
