@@ -5,10 +5,7 @@
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   /// <summary>Represents data to log out an account.</summary>
-  public sealed class LogoutViewModel
+  public sealed class LogoutAccountViewModel : AccountViewModelBase
   {
-    /// <summary>Gets/sets an object that represents a URL to that the app should return after an successful login.</summary>
-    [FromQuery]
-    public string ReturnUrl { get; set; } = "/";
   }
 }

@@ -29,11 +29,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet("login")]
     public IActionResult Get()
     {
-      return View("LoginView", new LoginViewModel());
+      return View("LoginView", new LoginAccountViewModel());
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Post(LoginViewModel vm)
+    public async Task<IActionResult> Post(LoginAccountViewModel vm)
     {
       if (ModelState.IsValid)
       {
@@ -45,7 +45,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
         }
 
         ModelState.Clear();
-        ModelState.AddModelError(nameof(LoginViewModel.Email), "The credentials are not valid.");
+        ModelState.AddModelError(nameof(LoginAccountViewModel.Email), "The credentials are not valid.");
       }
 
       return View("LoginView", vm);

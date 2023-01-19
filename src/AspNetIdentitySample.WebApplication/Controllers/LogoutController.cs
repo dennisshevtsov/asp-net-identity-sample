@@ -25,13 +25,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpGet("logout")]
-    public IActionResult Get(LogoutViewModel vm)
+    public IActionResult Get(LogoutAccountViewModel vm)
     {
       return View("LogoutView", vm);
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Post(LogoutViewModel vm)
+    public async Task<IActionResult> Post(LogoutAccountViewModel vm)
     {
       await _signInManager.SignOutAsync();
 
