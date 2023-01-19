@@ -1,0 +1,13 @@
+﻿.app-menu {
+  @extend .navbar-nav;
+
+  &__item {
+    @extend .nav-item;
+    @extend .nav-link;
+    cursor: pointer;
+
+    &_active {
+      @extend .active;
+    }
+  }
+}

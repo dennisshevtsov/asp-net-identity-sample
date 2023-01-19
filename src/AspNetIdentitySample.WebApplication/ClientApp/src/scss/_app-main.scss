@@ -1,0 +1,11 @@
+﻿.app-main {
+  &__action-bar {
+    @extend .d-flex;
+    @extend .flex-row-reverse;
+    @extend .mb-3;
+  }
+
+  &__content {
+    @extend .table-responsive;
+  }
+}
