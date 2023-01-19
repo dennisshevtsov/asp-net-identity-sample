@@ -25,9 +25,9 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpGet("logout")]
-    public IActionResult Get()
+    public IActionResult Get(LogoutViewModel vm)
     {
-      return View("LogoutView");
+      return View("LogoutView", vm);
     }
 
     [HttpPost("logout")]
@@ -35,7 +35,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       await _signInManager.SignOutAsync();
 
-      return LocalRedirect(vm.ReturnUrl ?? "/");
+      return LocalRedirect(vm.ReturnUrl);
     }
   }
 }

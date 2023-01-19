@@ -27,6 +27,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 
     /// <summary>Gets/sets an object that represents a URL to that the app should return after an successful login.</summary>
     [FromQuery]
-    public string? ReturnUrl { get; set; }
+    public string ReturnUrl { get; set; } = "/";
   }
 }
