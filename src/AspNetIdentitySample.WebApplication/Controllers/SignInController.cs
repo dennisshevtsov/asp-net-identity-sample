@@ -29,9 +29,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     }
 
     [HttpGet("signin")]
-    public IActionResult Get()
+    public IActionResult Get(SignInAccountViewModel vm)
     {
-      return View(SignInController.ViewName, new SignInAccountViewModel());
+      ModelState.Clear();
+
+      return View(SignInController.ViewName, vm);
     }
 
     [HttpPost("signin")]
