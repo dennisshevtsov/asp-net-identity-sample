@@ -17,6 +17,6 @@ namespace AspNetIdentitySample.Infrastructure
     public string? DatabaseName { get; set; }
 
     /// <summary>Gets/sets an object that represents a name of a user container.</summary>
-    public string? UserContainerName { get; set; }
+    public string UserContainerName { get; set; } = "users";
   }
 }
