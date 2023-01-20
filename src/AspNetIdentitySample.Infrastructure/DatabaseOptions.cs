@@ -4,6 +4,7 @@
 
 namespace AspNetIdentitySample.Infrastructure
 {
+  /// <summary>Represents settings of a database.</summary>
   public sealed class DatabaseOptions
   {
     /// <summary>Gets/sets an object that represents an account endpoint of a database.</summary>

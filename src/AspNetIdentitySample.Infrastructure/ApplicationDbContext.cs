@@ -30,7 +30,6 @@ namespace AspNetIdentitySample.Infrastructure
     /// <param name="modelBuilder">Provides a simple API surface for configuring a <see cref="Microsoft.EntityFrameworkCore.Metadata.IMutableModel" /> that defines the shape of your entities, the relationships between them, and how they map to the database.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
       modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration(_databaseOptions.Value.UserContainerName ?? ApplicationDbContext.DefaultUserContainerName));
     }
   }

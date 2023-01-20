@@ -14,7 +14,7 @@ namespace AspNetIdentitySample.Infrastructure.Configurations
   /// <summary>Allows configuration for an entity type.</summary>
   public sealed class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
   {
-    private const string DescriminatorPropertyName = "type";
+    private const string DescriminatorPropertyName = "_type";
 
     private readonly string _containerName;
 
