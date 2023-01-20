@@ -10,6 +10,9 @@ namespace AspNetIdentitySample.ApplicationCore.Entities
   public sealed class UserEntity : IUserIdentity
   {
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
+    public Guid Id { get; set; }
+
+    /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }
 
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
