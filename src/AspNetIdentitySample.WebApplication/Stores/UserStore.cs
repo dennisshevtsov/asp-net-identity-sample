@@ -7,14 +7,17 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.ApplicationCore.Database;
 
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
   {
-    private readonly IPasswordHasher<UserEntity> _passwordHasher;
+    private readonly IUserRepository _userRepository;
 
-    public UserStore(IPasswordHasher<UserEntity> passwordHasher)
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Stores.UserStore"/> class.</summary>
+    /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
+    public UserStore(IUserRepository userRepository)
     {
-      _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
     }
 
     #region Members of IUserStore
@@ -124,22 +127,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="normalizedUserName"/> if it exists.
     /// </returns>
     public Task<UserEntity?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-    {
-      UserEntity? userEntity = null;
-
-      if (string.Equals(normalizedUserName, "test@test.test", StringComparison.OrdinalIgnoreCase))
-      {
-        userEntity = new UserEntity
-        {
-          UserId = new Guid("798e202f-3d00-492b-bc04-4016cfc1dca0"),
-          Email = "test@test.test",
-          Name = "test@test.test",
-          PasswordHash = "AQAAAAIAAYagAAAAEK1J2OGSiw1GPjwtTfNlKBOTGZg0ktpqEd7YkwbfMRWOw35KYVpsAQzpC2qwjtN0wg==",
-        };
-      }
-
-      return Task.FromResult(userEntity);
-    }
+      => _userRepository.GetUserAsync(normalizedUserName, cancellationToken);
 
     #endregion
 
