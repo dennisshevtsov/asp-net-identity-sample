@@ -13,12 +13,6 @@ namespace AspNetIdentitySample.ApplicationCore.Database
     /// <param name="userId">An object that represents an ID of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task<UserEntity> GetUserAsync(Guid userId, CancellationToken cancellationToken);
-
-    /// <summary>Adds a new user to the database.</summary>
-    /// <param name="userEntity">An object that represents details of a user.</param>
-    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
-    /// <returns>An object that represents an asynchronous operation.</returns>
-    public Task AddUserAsync(UserEntity userEntity, CancellationToken cancellationToken);
+    public Task<UserEntity?> GetUserAsync(Guid userId, CancellationToken cancellationToken);
   }
 }
