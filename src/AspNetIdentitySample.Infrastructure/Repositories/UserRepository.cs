@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Infrastructure.Database
+namespace AspNetIdentitySample.Infrastructure.Repositories
 {
   using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ namespace AspNetIdentitySample.Infrastructure.Database
   {
     private readonly DbContext _dbContext;
 
-    /// <summary>Initializes a new instance of the <see cref=""/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.Infrastructure.Repositories.UserRepository"/> class.</summary>
     /// <param name="dbContext">An object that represents a session with the database and can be used to query and save instances of your entities.</param>
     public UserRepository(DbContext dbContext)
     {

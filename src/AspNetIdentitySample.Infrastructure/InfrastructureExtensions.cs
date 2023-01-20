@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.Infrastructure
   using Microsoft.Extensions.Options;
 
   using AspNetIdentitySample.ApplicationCore.Database;
-  using AspNetIdentitySample.Infrastructure.Database;
+  using AspNetIdentitySample.Infrastructure.Repositories;
 
   /// <summary>Provides a simple API to register infrastructure services.</summary>
   public static class InfrastructureExtensions
