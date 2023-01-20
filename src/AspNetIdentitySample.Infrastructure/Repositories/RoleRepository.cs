@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Infrastructure.Database
+namespace AspNetIdentitySample.Infrastructure.Repositories
 {
   using AspNetIdentitySample.ApplicationCore.Database;
   using AspNetIdentitySample.ApplicationCore.Entities;
