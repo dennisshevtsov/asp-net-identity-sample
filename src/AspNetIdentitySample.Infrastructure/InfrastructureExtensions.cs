@@ -1,18 +1,17 @@
-﻿using AspNetIdentitySample.ApplicationCore.Database;
-using AspNetIdentitySample.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Dennis Shevtsov. All rights reserved.
+// Licensed under the MIT License.
+// See LICENSE in the project root for license information.
 
 namespace AspNetIdentitySample.Infrastructure
 {
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Configuration;
+  using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Options;
+
+  using AspNetIdentitySample.ApplicationCore.Database;
+  using AspNetIdentitySample.Infrastructure.Database;
+
   /// <summary>Provides a simple API to register infrastructure services.</summary>
   public static class InfrastructureExtensions
   {
