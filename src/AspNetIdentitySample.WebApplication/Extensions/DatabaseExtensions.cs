@@ -8,13 +8,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
   using AspNetIdentitySample.ApplicationCore.Entities;
 
-  /// <summary>Provides a simple API to configure the app.</summary>
-  public static class ApplicationBuilderExtensions
+  /// <summary>Provides a simple API to set up the database.</summary>
+  public static class DatabaseExtensions
   {
-    /// <summary>Initializes a database.</summary>
+    /// <summary>Set up the database.</summary>
     /// <param name="app">An object that defines a class that provides the mechanisms to configure an application's request pipeline.</param>
     /// <returns>An object that defines a class that provides the mechanisms to configure an application's request pipeline.</returns>
-    public static IApplicationBuilder InitializeDatabase(this IApplicationBuilder app)
+    public static IApplicationBuilder SetUpDatabase(this IApplicationBuilder app)
     {
       using (var scope = app.ApplicationServices.CreateScope())
       {
@@ -22,9 +22,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
         dbContext.Database.EnsureCreated();
 
-        foreach (var userEntity in ApplicationBuilderExtensions.GetTestUsers())
+        foreach (var userEntity in DatabaseExtensions.GetTestUsers())
         {
-          ApplicationBuilderExtensions.TryAddUser(userEntity, dbContext);
+          DatabaseExtensions.TryAddUser(userEntity, dbContext);
         }
       }
 

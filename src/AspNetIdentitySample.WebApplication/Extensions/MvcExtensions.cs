@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>Sets up services of the MVC pipeline.</summary>
     /// <param name="services">An object that specifies the contract for a collection of service descriptors.</param>
     /// <returns>An object that specifies the contract for a collection of service descriptors.</returns>
-    public static IServiceCollection SetUpMvcPipeline(this IServiceCollection services)
+    public static IServiceCollection SetUpPipeline(this IServiceCollection services)
     {
       services.AddControllersWithViews(options =>
       {

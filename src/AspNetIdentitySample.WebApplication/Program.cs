@@ -5,7 +5,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.SetUpDatabase(builder.Configuration);
-builder.Services.SetUpMvcPipeline();
+builder.Services.SetUpPipeline();
 builder.Services.SetUpIdentity();
 
 var app = builder.Build();
@@ -16,7 +16,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.InitializeDatabase();
+app.SetUpDatabase();
 
 app.Run();
