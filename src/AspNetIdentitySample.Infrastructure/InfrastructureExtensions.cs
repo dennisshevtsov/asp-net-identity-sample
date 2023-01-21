@@ -15,11 +15,11 @@ namespace Microsoft.Extensions.DependencyInjection
   /// <summary>Provides a simple API to register infrastructure services.</summary>
   public static class InfrastructureExtensions
   {
-    /// <summary>Registers database services.</summary>
+    /// <summary>Sets up services for the database.</summary>
     /// <param name="services">An object that specifies the contract for a collection of service descriptors.</param>
     /// <param name="configuration">An object that represents a set of key/value application configuration properties.</param>
     /// <returns>An object that specifies the contract for a collection of service descriptors.</returns>
-    public static IServiceCollection AddDatabase(
+    public static IServiceCollection SetUpDatabase(
       this IServiceCollection services, IConfiguration configuration)
     {
       services.Configure<DatabaseOptions>(configuration);
