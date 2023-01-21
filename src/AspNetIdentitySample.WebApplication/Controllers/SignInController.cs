@@ -17,7 +17,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("account")]
   public sealed class SignInController : Controller
   {
-    private const string ViewName = "SignInView";
+    public const string ViewName = "SignInView";
 
     private readonly SignInManager<UserEntity> _signInManager;
 

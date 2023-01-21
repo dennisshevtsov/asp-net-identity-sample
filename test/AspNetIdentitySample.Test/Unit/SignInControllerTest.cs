@@ -75,5 +75,15 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.IsTrue(_signInController.ControllerContext.ModelState.IsValid);
     }
+
+    [TestMethod]
+    public void Get_Should_Return_Action_Result_With_View_Name()
+    {
+      var actionResult = _signInController.Get(new SignInAccountViewModel());
+
+      Assert.IsNotNull(actionResult);
+      Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+      Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+    }
   }
 }
