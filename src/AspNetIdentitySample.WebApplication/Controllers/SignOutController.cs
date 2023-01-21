@@ -15,6 +15,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("account")]
   public sealed class SignOutController : Controller
   {
+    public const string ViewName = "SignOutView";
+
     private readonly SignInManager<UserEntity> _signInManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.SignOutController"/> class.</summary>
@@ -27,7 +29,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet("signout")]
     public IActionResult Get(SignOutAccountViewModel vm)
     {
-      return View("SignOutView", vm);
+      return View(SignOutController.ViewName, vm);
     }
 
     [HttpPost("signout")]
