@@ -85,5 +85,17 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
     }
+
+    [TestMethod]
+    public async Task Post_Should_Return_View_Result()
+    {
+      _signInController.ControllerContext.ModelState.AddModelError("test", "test");
+
+      var actionResult = await _signInController.Post(new SignInAccountViewModel());
+
+      Assert.IsNotNull(actionResult);
+      Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+      Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+    }
   }
 }
