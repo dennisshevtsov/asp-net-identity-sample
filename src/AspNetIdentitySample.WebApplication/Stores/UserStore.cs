@@ -7,7 +7,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Database;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
 
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
   {
