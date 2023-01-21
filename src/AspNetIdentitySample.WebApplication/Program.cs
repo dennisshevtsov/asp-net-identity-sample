@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Razor;
 
 using AspNetIdentitySample.ApplicationCore.Entities;
 using AspNetIdentitySample.WebApplication.Stores;
-using AspNetIdentitySample.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
