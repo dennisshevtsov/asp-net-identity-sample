@@ -79,6 +79,15 @@ namespace AspNetIdentitySample.Test.Integration
       Assert.AreEqual(EntityState.Detached, _dbContext.Entry(actualUserEntity).State);
     }
 
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_Null()
+    {
+      var actualUserEntity =
+        await _userRepository.GetUserAsync(Guid.NewGuid().ToString(), _cancellationToken);
+
+      Assert.IsNull(actualUserEntity);
+    }
+
     private async Task<UserEntity> CreateTestUserAsync()
     {
       var controlUserEntity = new UserEntity
