@@ -9,6 +9,7 @@ namespace AspNetIdentitySample.Test.Integration
   using Microsoft.Extensions.DependencyInjection;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.ApplicationCore.Entities;
 
   [TestClass]
   public sealed class UserRepositoryTest
@@ -17,6 +18,8 @@ namespace AspNetIdentitySample.Test.Integration
 
 #pragma warning disable CS8618
     private IDisposable _disposable;
+
+    private DbContext _dbContext;
 
     private IUserRepository _userRepository;
 #pragma warning restore CS8618
@@ -34,16 +37,44 @@ namespace AspNetIdentitySample.Test.Integration
                                          .CreateScope();
 
       _disposable = scope;
+      _dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
       _userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
-      scope.ServiceProvider.GetRequiredService<DbContext>().Database.EnsureCreated();
-
+      _dbContext.Database.EnsureCreated();
     }
 
     [TestCleanup]
     public void Cleanup()
     {
+      _dbContext?.Database.EnsureDeleted();
       _disposable?.Dispose();
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_User()
+    {
+      var userEmail = $"test@example.com";
+      var controlUserEntity = new UserEntity
+      {
+        Email = userEmail,
+        Name = Guid.NewGuid().ToString(),
+        PasswordHash= Guid.NewGuid().ToString(),
+      };
+
+      var controlUserEntityEntry = _dbContext.Add(controlUserEntity);
+      
+      await _dbContext.SaveChangesAsync(_cancellationToken);
+
+      controlUserEntityEntry.State = EntityState.Detached;
+
+      var actualUserEntity =
+        await _userRepository.GetUserAsync(userEmail.ToUpper(), _cancellationToken);
+
+      Assert.IsNotNull(actualUserEntity);
+
+      Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
+      Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
+      Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
     }
   }
 }
