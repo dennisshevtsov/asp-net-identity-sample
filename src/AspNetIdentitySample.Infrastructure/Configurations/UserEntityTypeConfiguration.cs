@@ -32,7 +32,7 @@ namespace AspNetIdentitySample.Infrastructure.Configurations
       builder.ToContainer(_containerName);
 
       builder.HasKey(entity => entity.Id);
-      builder.HasKey(entity => entity.UserId);
+      builder.HasPartitionKey(entity => entity.UserId);
 
       builder.Property(typeof(string), UserEntityTypeConfiguration.DescriminatorPropertyName)
              .HasValueGenerator<DescriminatorValueGenerator>();
