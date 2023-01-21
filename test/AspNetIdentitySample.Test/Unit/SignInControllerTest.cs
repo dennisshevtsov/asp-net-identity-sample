@@ -115,5 +115,26 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsTrue(_signInController.ModelState.ContainsKey(nameof(SignInAccountViewModel.Email)));
       Assert.AreEqual(SignInController.InvalidCredentialsErrorMessage, _signInController.ModelState[nameof(SignInAccountViewModel.Email)]!.Errors[0].ErrorMessage);
     }
+
+    [TestMethod]
+    public async Task Post_Should_Return_Local_Redirect_Result()
+    {
+      _signInManagerMock.Setup(manager => manager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                        .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success)
+                        .Verifiable();
+
+      var vm = new SignInAccountViewModel
+      {
+        ReturnUrl = Guid.NewGuid().ToString(),
+      };
+
+      var actionResult = await _signInController.Post(vm);
+
+      Assert.IsNotNull(actionResult);
+      Assert.IsInstanceOfType(actionResult, typeof(LocalRedirectResult));
+      Assert.AreEqual(vm.ReturnUrl, ((LocalRedirectResult)actionResult).Url);
+
+      Assert.IsTrue(_signInController.ModelState.IsValid);
+    }
   }
 }
