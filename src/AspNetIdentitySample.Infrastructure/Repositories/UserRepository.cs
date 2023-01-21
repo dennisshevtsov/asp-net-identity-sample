@@ -21,17 +21,6 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    /// <summary>Gets a user by a user ID.</summary>
-    /// <param name="userId">An object that represents an ID of a user.</param>
-    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
-    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task<UserEntity?> GetUserAsync(Guid userId, CancellationToken cancellationToken)
-      => _dbContext.Set<UserEntity>()
-                   .AsNoTracking()
-                   .WithPartitionKey(userId.ToString())
-                   .Where(entity => entity.Id == userId)
-                   .FirstOrDefaultAsync(cancellationToken);
-
     /// <summary>Gets a user by a user email.</summary>
     /// <param name="email">An object that represents an email of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
