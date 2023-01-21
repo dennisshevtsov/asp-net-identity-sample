@@ -19,6 +19,7 @@ namespace AspNetIdentitySample.Test.Unit
   public sealed class SignInControllerTest
   {
 #pragma warning disable CS8618
+    private Mock<ILogger<SignInManager<UserEntity>>> _signInManagerLoggerMock;
     private Mock<SignInManager<UserEntity>> _signInManagerMock;
 
     private SignInController _signInController;
@@ -27,6 +28,8 @@ namespace AspNetIdentitySample.Test.Unit
     [TestInitialize]
     public void Initialize()
     {
+      _signInManagerLoggerMock = new Mock<ILogger<SignInManager<UserEntity>>>();
+
       var userStoreMock = new Mock<IUserStore<UserEntity>>();
       var passwordHasherMock = new Mock<IPasswordHasher<UserEntity>>();
       var userValidatorMock = new Mock<IUserValidator<UserEntity>>();
@@ -38,7 +41,6 @@ namespace AspNetIdentitySample.Test.Unit
       var claimsFactoryMock = new Mock<IUserClaimsPrincipalFactory<UserEntity>>();
       var optionsAccessorMock = new Mock<IOptions<IdentityOptions>>();
       var userManagerLoggerMock = new Mock<ILogger<UserManager<UserEntity>>>();
-      var signInManagerLoggerMock = new Mock<ILogger<SignInManager<UserEntity>>>();
       var schemesMock = new Mock<IAuthenticationSchemeProvider>();
       var confirmationMock = new Mock<IUserConfirmation<UserEntity>>();
 
@@ -58,7 +60,7 @@ namespace AspNetIdentitySample.Test.Unit
         contextAccessorMock.Object,
         claimsFactoryMock.Object,
         optionsAccessorMock.Object,
-        signInManagerLoggerMock.Object,
+        _signInManagerLoggerMock.Object,
         schemesMock.Object,
         confirmationMock.Object);
 
@@ -74,6 +76,9 @@ namespace AspNetIdentitySample.Test.Unit
       _signInController.Get(new SignInAccountViewModel());
 
       Assert.IsTrue(_signInController.ControllerContext.ModelState.IsValid);
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -84,6 +89,9 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -96,6 +104,9 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -105,7 +116,14 @@ namespace AspNetIdentitySample.Test.Unit
                         .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed)
                         .Verifiable();
 
-      var actionResult = await _signInController.Post(new SignInAccountViewModel());
+      var vm = new SignInAccountViewModel
+      {
+        Email = Guid.NewGuid().ToString(),
+        Password = Guid.NewGuid().ToString(),
+        ReturnUrl = Guid.NewGuid().ToString(),
+      };
+
+      var actionResult = await _signInController.Post(vm);
 
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
@@ -114,6 +132,11 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsFalse(_signInController.ModelState.IsValid);
       Assert.IsTrue(_signInController.ModelState.ContainsKey(nameof(SignInAccountViewModel.Email)));
       Assert.AreEqual(SignInController.InvalidCredentialsErrorMessage, _signInController.ModelState[nameof(SignInAccountViewModel.Email)]!.Errors[0].ErrorMessage);
+
+      _signInManagerMock.Verify(manager => manager.PasswordSignInAsync(vm.Email, vm.Password, false, false));
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -125,6 +148,8 @@ namespace AspNetIdentitySample.Test.Unit
 
       var vm = new SignInAccountViewModel
       {
+        Email = Guid.NewGuid().ToString(),
+        Password = Guid.NewGuid().ToString(),
         ReturnUrl = Guid.NewGuid().ToString(),
       };
 
@@ -135,6 +160,11 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.AreEqual(vm.ReturnUrl, ((LocalRedirectResult)actionResult).Url);
 
       Assert.IsTrue(_signInController.ModelState.IsValid);
+
+      _signInManagerMock.Verify(manager => manager.PasswordSignInAsync(vm.Email, vm.Password, false, false));
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
     }
   }
 }
