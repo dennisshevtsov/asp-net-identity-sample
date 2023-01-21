@@ -29,9 +29,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the identifier for the specified <paramref name="user"/>.</returns>
     public Task<string> GetUserIdAsync(UserEntity user, CancellationToken cancellationToken)
-    {
-      return Task.FromResult(user.UserId.ToString());
-    }
+      => Task.FromResult(user.UserId.ToString());
 
     /// <summary>
     /// Gets the user name for the specified <paramref name="user"/>.
@@ -40,16 +38,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the name for the specified <paramref name="user"/>.</returns>
     public Task<string?> GetUserNameAsync(UserEntity user, CancellationToken cancellationToken)
-    {
-      string? username = null;
-
-      if (user != null && !string.IsNullOrWhiteSpace(user.Email)) 
-      {
-        username = user.Email;
-      }
-
-      return Task.FromResult(username);
-    }
+      => Task.FromResult(user?.Email);
 
     /// <summary>
     /// Sets the given <paramref name="userName" /> for the specified <paramref name="user"/>.
@@ -150,16 +139,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, returning the password hash for the specified <paramref name="user"/>.</returns>
     public Task<string?> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken)
-    {
-      string? passwordHash = null;
-
-      if (user != null)
-      {
-        passwordHash = user.PasswordHash;
-      }
-
-      return Task.FromResult(passwordHash);
-    }
+      => Task.FromResult(user?.PasswordHash);
 
     /// <summary>
     /// Gets a flag indicating whether the specified <paramref name="user"/> has a password.
