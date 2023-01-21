@@ -9,7 +9,6 @@ namespace AspNetIdentitySample.Test.Integration
   using Microsoft.Extensions.DependencyInjection;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using AspNetIdentitySample.ApplicationCore.Entities;
 
   [TestClass]
   public sealed class UserRepositoryTest

@@ -4,7 +4,6 @@
 
 namespace AspNetIdentitySample.Test.Integration
 {
-  using AspNetIdentitySample.ApplicationCore.Entities;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;

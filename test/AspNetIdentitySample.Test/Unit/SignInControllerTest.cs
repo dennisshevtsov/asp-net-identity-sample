@@ -7,7 +7,6 @@ namespace AspNetIdentitySample.Test.Unit
   using Microsoft.AspNetCore.Identity;
   using Moq;
 
-  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Controllers;
 
   [TestClass]
