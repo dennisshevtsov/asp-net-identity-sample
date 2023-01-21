@@ -87,7 +87,7 @@ namespace AspNetIdentitySample.Test.Unit
     }
 
     [TestMethod]
-    public async Task Post_Should_Return_View_Result()
+    public async Task Post_Should_Return_View_Result_If_Model_State_Is_Invalid()
     {
       _signInController.ControllerContext.ModelState.AddModelError("test", "test");
 
@@ -96,6 +96,24 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Return_View_Result_If_Credentials_Are_Invalid()
+    {
+      _signInManagerMock.Setup(manager => manager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                        .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed)
+                        .Verifiable();
+
+      var actionResult = await _signInController.Post(new SignInAccountViewModel());
+
+      Assert.IsNotNull(actionResult);
+      Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
+      Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
+
+      Assert.IsFalse(_signInController.ModelState.IsValid);
+      Assert.IsTrue(_signInController.ModelState.ContainsKey(nameof(SignInAccountViewModel.Email)));
+      Assert.AreEqual(SignInController.InvalidCredentialsErrorMessage, _signInController.ModelState[nameof(SignInAccountViewModel.Email)]!.Errors[0].ErrorMessage);
     }
   }
 }
