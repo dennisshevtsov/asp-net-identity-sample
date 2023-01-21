@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\AspNetIdentitySample.WebApplication\AspNetIdentitySample.WebApplication.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Unit\" />
+  </ItemGroup>
+
 </Project>
