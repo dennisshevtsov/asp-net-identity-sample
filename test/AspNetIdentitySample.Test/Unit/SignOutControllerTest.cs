@@ -80,5 +80,29 @@ namespace AspNetIdentitySample.Test.Unit
       _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
       _signInManagerMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task Post_Should_Return_Local_Redirect_Result()
+    {
+      _signInManagerMock.Setup(manager => manager.SignOutAsync())
+                        .Returns(Task.CompletedTask)
+                        .Verifiable();
+
+      var vm = new SignOutAccountViewModel
+      {
+        ReturnUrl = Guid.NewGuid().ToString(),
+      };
+
+      var actionResult = await _signOutController.Post(vm);
+
+      Assert.IsNotNull(actionResult);
+      Assert.IsInstanceOfType(actionResult, typeof(LocalRedirectResult));
+      Assert.AreEqual(vm.ReturnUrl, ((LocalRedirectResult)actionResult).Url);
+
+      _signInManagerMock.Verify(manager => manager.SignOutAsync());
+
+      _signInManagerMock.VerifySet(manager => manager.Logger = _signInManagerLoggerMock.Object);
+      _signInManagerMock.VerifyNoOtherCalls();
+    }
   }
 }
