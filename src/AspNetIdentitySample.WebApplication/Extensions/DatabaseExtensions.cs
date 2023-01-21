@@ -12,17 +12,17 @@ namespace Microsoft.Extensions.DependencyInjection
   public static class DatabaseExtensions
   {
     /// <summary>Set up the database.</summary>
-    /// <param name="app">An object that defines a class that provides the mechanisms to configure an application's request pipeline.</param>
+    /// <param name="app">An object that represents the web application used to configure the HTTP pipeline, and routes.</param>
     /// <returns>An object that defines a class that provides the mechanisms to configure an application's request pipeline.</returns>
-    public static IApplicationBuilder SetUpDatabase(this IApplicationBuilder app)
+    public static WebApplication SetUpDatabase(this WebApplication app)
     {
-      using (var scope = app.ApplicationServices.CreateScope())
+      using (var scope = app.Services.CreateScope())
       {
         var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
 
         dbContext.Database.EnsureCreated();
 
-        foreach (var userEntity in DatabaseExtensions.GetTestUsers())
+        foreach (var userEntity in DatabaseExtensions.GetTestUsers(app.Configuration))
         {
           DatabaseExtensions.TryAddUser(userEntity, dbContext);
         }
@@ -31,19 +31,19 @@ namespace Microsoft.Extensions.DependencyInjection
       return app;
     }
 
-    private static IEnumerable<UserEntity> GetTestUsers()
+    private static IEnumerable<UserEntity> GetTestUsers(IConfiguration configuration)
     {
       yield return new UserEntity
       {
-        Email = "test@test.test",
-        Name = "Test User",
-        PasswordHash = "AQAAAAIAAYagAAAAEK1J2OGSiw1GPjwtTfNlKBOTGZg0ktpqEd7YkwbfMRWOw35KYVpsAQzpC2qwjtN0wg==",
+        Email = configuration.GetValue<string>("TestUserEmail"),
+        Name = configuration.GetValue<string>("TestUserName"),
+        PasswordHash = configuration.GetValue<string>("TestUserPasswordHash"),
       };
     }
 
     private static void TryAddUser(UserEntity userEntity, DbContext dbContext)
     {
-      var userExists = dbContext.Set<UserEntity>().SingleOrDefaultAsync(entity => string.Equals(entity.Email, userEntity.Email, StringComparison.OrdinalIgnoreCase)) != null;
+      var userExists = dbContext.Set<UserEntity>().SingleOrDefault(entity => string.Equals(entity.Email, userEntity.Email, StringComparison.OrdinalIgnoreCase)) != null;
 
       if (!userExists)
       {
