@@ -53,28 +53,48 @@ namespace AspNetIdentitySample.Test.Integration
     [TestMethod]
     public async Task GetUserAsync_Should_Return_User()
     {
-      var userEmail = $"test@example.com";
-      var controlUserEntity = new UserEntity
-      {
-        Email = userEmail,
-        Name = Guid.NewGuid().ToString(),
-        PasswordHash= Guid.NewGuid().ToString(),
-      };
-
-      var controlUserEntityEntry = _dbContext.Add(controlUserEntity);
-      
-      await _dbContext.SaveChangesAsync(_cancellationToken);
-
-      controlUserEntityEntry.State = EntityState.Detached;
+      var controlUserEntity = await CreateTestUserAsync();
 
       var actualUserEntity =
-        await _userRepository.GetUserAsync(userEmail.ToUpper(), _cancellationToken);
+        await _userRepository.GetUserAsync(
+          controlUserEntity.Email!.ToUpper(), _cancellationToken);
 
       Assert.IsNotNull(actualUserEntity);
 
       Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
       Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
       Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_Untracking_User()
+    {
+      var controlUserEntity = await CreateTestUserAsync();
+
+      var actualUserEntity =
+        await _userRepository.GetUserAsync(
+          controlUserEntity.Email!.ToUpper(), _cancellationToken);
+
+      Assert.IsNotNull(actualUserEntity);
+      Assert.AreEqual(EntityState.Detached, _dbContext.Entry(actualUserEntity).State);
+    }
+
+    private async Task<UserEntity> CreateTestUserAsync()
+    {
+      var controlUserEntity = new UserEntity
+      {
+        Email = $"test${Guid.NewGuid()}@example.com",
+        Name = Guid.NewGuid().ToString(),
+        PasswordHash = Guid.NewGuid().ToString(),
+      };
+
+      var controlUserEntityEntry = _dbContext.Add(controlUserEntity);
+
+      await _dbContext.SaveChangesAsync(_cancellationToken);
+
+      controlUserEntityEntry.State = EntityState.Detached;
+
+      return controlUserEntity;
     }
   }
 }
