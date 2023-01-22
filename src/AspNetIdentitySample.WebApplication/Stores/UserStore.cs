@@ -9,7 +9,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
 
-  public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
+  public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserRoleStore<UserEntity>
   {
     private readonly IUserRepository _userRepository;
 
@@ -151,6 +151,63 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// otherwise false.
     /// </returns>
     public Task<bool> HasPasswordAsync(UserEntity user, CancellationToken cancellationToken)
+      => throw new NotImplementedException();
+
+    #endregion
+
+    #region Members of IUserRoleStore
+
+    /// <summary>
+    /// Add the specified <paramref name="user"/> to the named role.
+    /// </summary>
+    /// <param name="user">The user to add to the named role.</param>
+    /// <param name="roleName">The name of the role to add the user to.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public Task AddToRoleAsync(UserEntity user, string roleName, CancellationToken cancellationToken)
+      => throw new NotImplementedException();
+
+    /// <summary>
+    /// Remove the specified <paramref name="user"/> from the named role.
+    /// </summary>
+    /// <param name="user">The user to remove the named role from.</param>
+    /// <param name="roleName">The name of the role to remove.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public Task RemoveFromRoleAsync(UserEntity user, string roleName, CancellationToken cancellationToken)
+      => throw new NotImplementedException();
+
+    /// <summary>
+    /// Gets a list of role names the specified <paramref name="user"/> belongs to.
+    /// </summary>
+    /// <param name="user">The user whose role names to retrieve.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing a list of role names.</returns>
+    public Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
+      => Task.FromResult<IList<string>>(new List<string> { "admin" });
+
+    /// <summary>
+    /// Returns a flag indicating whether the specified <paramref name="user"/> is a member of the given named role.
+    /// </summary>
+    /// <param name="user">The user whose role membership should be checked.</param>
+    /// <param name="roleName">The name of the role to be checked.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation, containing a flag indicating whether the specified <paramref name="user"/> is
+    /// a member of the named role.
+    /// </returns>
+    public Task<bool> IsInRoleAsync(UserEntity user, string roleName, CancellationToken cancellationToken)
+      => throw new NotImplementedException();
+
+    /// <summary>
+    /// Returns a list of Users who are members of the named role.
+    /// </summary>
+    /// <param name="roleName">The name of the role whose membership should be returned.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation, containing a list of users who are in the named role.
+    /// </returns>
+    public Task<IList<UserEntity>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
       => throw new NotImplementedException();
 
     #endregion
