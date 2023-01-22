@@ -38,7 +38,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the name for the specified <paramref name="user"/>.</returns>
     public Task<string?> GetUserNameAsync(UserEntity user, CancellationToken cancellationToken)
-      => Task.FromResult(user?.Email);
+      => Task.FromResult(user.Email);
 
     /// <summary>
     /// Sets the given <paramref name="userName" /> for the specified <paramref name="user"/>.

@@ -47,5 +47,21 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.AreEqual(controlUserId, actualUserId);
     }
+
+    [TestMethod]
+    public async Task GetUserNameAsync_Should_Return_Email()
+    {
+      var controlEmail = Guid.NewGuid().ToString();
+      var userEntity = new UserEntity
+      {
+        Email = controlEmail,
+      };
+
+      var actualEmail =
+        await _userStore.GetUserNameAsync(userEntity, _cancellationToken);
+
+      Assert.IsNotNull(actualEmail);
+      Assert.AreEqual(controlEmail, actualEmail);
+    }
   }
 }
