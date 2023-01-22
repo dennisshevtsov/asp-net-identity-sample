@@ -1,0 +1,12 @@
+﻿.app-access-denied {
+  @extend .alert;
+  @extend .alert-danger;
+
+  &__title {
+    @extend .alert-heading;
+  }
+
+  &__body {
+    @extend .mb-0;
+  }
+}
