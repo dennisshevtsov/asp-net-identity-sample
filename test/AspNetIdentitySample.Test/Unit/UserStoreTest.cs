@@ -88,5 +88,23 @@ namespace AspNetIdentitySample.Test.Unit
       _userRepositoryMock.Verify(repository => repository.GetUserAsync(username, _cancellationToken));
       _userRepositoryMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task GetPasswordHashAsync_Should_Return_Password_Hash()
+    {
+      var controlPasswordHash = Guid.NewGuid().ToString();
+      var userEntity = new UserEntity
+      {
+        PasswordHash = controlPasswordHash,
+      };
+
+      var actualPasswordHash =
+        await _userStore.GetPasswordHashAsync(userEntity, _cancellationToken);
+
+      Assert.IsNotNull(actualPasswordHash);
+      Assert.AreEqual(controlPasswordHash, actualPasswordHash);
+
+      _userRepositoryMock.VerifyNoOtherCalls();
+    }
   }
 }

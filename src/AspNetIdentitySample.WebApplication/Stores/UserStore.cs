@@ -139,7 +139,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, returning the password hash for the specified <paramref name="user"/>.</returns>
     public Task<string?> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken)
-      => Task.FromResult(user?.PasswordHash);
+      => Task.FromResult(user.PasswordHash);
 
     /// <summary>
     /// Gets a flag indicating whether the specified <paramref name="user"/> has a password.
