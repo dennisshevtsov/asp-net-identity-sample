@@ -46,6 +46,8 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsTrue(Guid.TryParse(actualUserIdString, out actualUserId));
 
       Assert.AreEqual(controlUserId, actualUserId);
+
+      _userRepositoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -62,6 +64,8 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.IsNotNull(actualEmail);
       Assert.AreEqual(controlEmail, actualEmail);
+
+      _userRepositoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
