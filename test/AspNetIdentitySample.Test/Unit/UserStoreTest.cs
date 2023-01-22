@@ -63,5 +63,26 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsNotNull(actualEmail);
       Assert.AreEqual(controlEmail, actualEmail);
     }
+
+    [TestMethod]
+    public async Task FindByNameAsync_Should_Get_User_By_Email()
+    {
+      var controlUserEntity = new UserEntity();
+
+      _userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(controlUserEntity)
+                         .Verifiable();
+
+      var username = Guid.NewGuid().ToString();
+
+      var actualUserEntity =
+        await _userStore.FindByNameAsync(username, _cancellationToken);
+
+      Assert.IsNotNull(actualUserEntity);
+      Assert.AreEqual(controlUserEntity, actualUserEntity);
+
+      _userRepositoryMock.Verify(repository => repository.GetUserAsync(username, _cancellationToken));
+      _userRepositoryMock.VerifyNoOtherCalls();
+    }
   }
 }
