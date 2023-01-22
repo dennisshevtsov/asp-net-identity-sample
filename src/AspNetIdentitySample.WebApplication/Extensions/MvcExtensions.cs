@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
       services.AddControllersWithViews(options =>
       {
         var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
+                                                     .RequireRole("admin")
                                                      .Build();
         var filter = new AuthorizeFilter(policy);
 
