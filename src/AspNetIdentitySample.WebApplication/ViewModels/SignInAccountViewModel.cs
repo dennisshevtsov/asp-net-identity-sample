@@ -8,7 +8,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 
   using Microsoft.AspNetCore.Mvc;
 
-  /// <summary>Represents data to log in an account.</summary>
+  /// <summary>Represents data to sign in an account.</summary>
   public sealed class SignInAccountViewModel : AccountViewModelBase
   {
     /// <summary>Gets/sets an object that represents an email of an account.</summary>

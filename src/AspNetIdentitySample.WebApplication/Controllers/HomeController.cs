@@ -8,6 +8,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("")]
   public sealed class HomeController : Controller
   {
+    /// <summary>Handles the get todo list query request.</summary>
+    /// <returns>An object that defines a contract that represents the result of an action method.</returns>
     public IActionResult Get()
     {
       return View("HomeView");
