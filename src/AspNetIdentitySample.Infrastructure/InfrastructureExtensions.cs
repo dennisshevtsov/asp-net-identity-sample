@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.Options;
 
-  using AspNetIdentitySample.ApplicationCore.Database;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.Infrastructure;
   using AspNetIdentitySample.Infrastructure.Repositories;
 

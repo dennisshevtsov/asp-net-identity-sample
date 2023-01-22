@@ -17,7 +17,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("account")]
   public sealed class SignInController : Controller
   {
-    private const string ViewName = "SignInView";
+    public const string ViewName = "SignInView";
+    public const string InvalidCredentialsErrorMessage = "The credentials are not valid.";
 
     private readonly SignInManager<UserEntity> _signInManager;
 
@@ -49,7 +50,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
         }
 
         ModelState.Clear();
-        ModelState.AddModelError(nameof(SignInAccountViewModel.Email), "The credentials are not valid.");
+        ModelState.AddModelError(nameof(SignInAccountViewModel.Email), SignInController.InvalidCredentialsErrorMessage);
       }
 
       return View(SignInController.ViewName, vm);
