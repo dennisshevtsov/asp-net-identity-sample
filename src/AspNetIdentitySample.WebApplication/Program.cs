@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
+using Microsoft.AspNetCore.Rewrite;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.SetUpDatabase(builder.Configuration);
@@ -12,6 +14,8 @@ builder.Services.SetUpAuthorization();
 var app = builder.Build();
 
 app.UseStaticFiles();
+app.UseRewriter(new RewriteOptions().AddRedirect("(.*)/$", "$1")
+                                    .AddRedirect("^[/]?$", "home"));
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
