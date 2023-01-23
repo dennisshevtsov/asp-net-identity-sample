@@ -6,6 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
   using Microsoft.AspNetCore.Mvc.Authorization;
   using Microsoft.AspNetCore.Mvc.Razor;
+  using Microsoft.AspNetCore.Rewrite;
 
   /// <summary>Provides a simple API to set up the MVC pipeline.</summary>
   public static class MvcExtensions
@@ -38,6 +39,17 @@ namespace Microsoft.Extensions.DependencyInjection
       });
 
       return services;
+    }
+
+    public static IApplicationBuilder SetUpUrlRewriter(this IApplicationBuilder app)
+    {
+      var options =
+        new RewriteOptions().AddRedirect("(.*)/$", "$1")
+                            .AddRedirect("^[/]?$", "home");
+
+      app.UseRewriter(options);
+
+      return app;
     }
   }
 }
