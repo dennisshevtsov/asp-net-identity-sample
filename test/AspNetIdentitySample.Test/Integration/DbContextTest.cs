@@ -30,10 +30,10 @@ namespace AspNetIdentitySample.Test.Integration
 
       var actualUserEntity =
         await DbContext.Set<UserEntity>()
-                        .AsNoTracking()
-                        .WithPartitionKey(controlUserEntity.UserId.ToString())
-                        .Where(entity => entity.Id == controlUserEntity.Id)
-                        .FirstOrDefaultAsync(Token);
+                       .AsNoTracking()
+                       .WithPartitionKey(controlUserEntity.UserId.ToString())
+                       .Where(entity => entity.Id == controlUserEntity.Id)
+                       .FirstOrDefaultAsync(Token);
 
       Assert.IsNotNull(actualUserEntity);
       Assert.AreEqual(controlUserEntity.UserId, actualUserEntity.UserId);

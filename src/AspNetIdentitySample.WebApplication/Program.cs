@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.SetUpDatabase(builder.Configuration);
 builder.Services.SetUpPipeline();
 builder.Services.SetUpIdentity();
+builder.Services.SetUpAuthorization();
 
 var app = builder.Build();
 

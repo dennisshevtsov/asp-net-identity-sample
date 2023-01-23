@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
       services.ConfigureApplicationCookie(options =>
       {
+        options.AccessDeniedPath = "/account/access-denied";
         options.LoginPath = "/account/signin";
         options.ReturnUrlParameter = "returnUrl";
       });
