@@ -2,9 +2,12 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
+  [Authorize("AdminOnlyPolicy")]
   [Route("")]
   public sealed class HomeController : Controller
   {
