@@ -11,12 +11,14 @@ builder.Services.SetUpAuthorization();
 
 var app = builder.Build();
 
+app.SetUpDatabase();
+app.SetUpUrlRewriter();
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.SetUpDatabase();
 
 app.Run();
