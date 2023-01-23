@@ -6,10 +6,10 @@ namespace AspNetIdentitySample.ApplicationCore.Entities
 {
   using AspNetIdentitySample.ApplicationCore.Identities;
 
-  /// <summary>Represents details of a user and role relation.</summary>
-  public sealed class UserRoleEntity : UserEntityBase, IRoleIdentity
+  /// <summary>Represents a base of an entity for that a user is a root.</summary>
+  public abstract class UserEntityBase : IUserIdentity
   {
-    /// <summary>Gets/sets an object that represents a name of a role.</summary>
-    public string? RoleName { get; set; }
+    /// <summary>Gets/sets an object that represents an ID of a user.</summary>
+    public Guid UserId { get; set; }
   }
 }

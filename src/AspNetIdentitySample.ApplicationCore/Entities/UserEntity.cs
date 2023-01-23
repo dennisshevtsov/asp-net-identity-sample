@@ -7,13 +7,10 @@ namespace AspNetIdentitySample.ApplicationCore.Entities
   using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents details of a user.</summary>
-  public sealed class UserEntity : IUserIdentity
+  public sealed class UserEntity : UserEntityBase
   {
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid Id { get; set; }
-
-    /// <summary>Gets/sets an object that represents an ID of a user.</summary>
-    public Guid UserId { get; set; }
 
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     public string? Email { get; set; }
