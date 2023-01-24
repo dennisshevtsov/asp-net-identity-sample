@@ -48,7 +48,7 @@ namespace AspNetIdentitySample.Test.Integration
       var controlUserRoleEntity = new UserRoleEntity
       {
         UserId = Guid.NewGuid(),
-        RoleName = "test",
+        RoleName = Guid.NewGuid().ToString(),
       };
 
       var controlUserRoleEntityEntry = DbContext.Add(controlUserRoleEntity);
