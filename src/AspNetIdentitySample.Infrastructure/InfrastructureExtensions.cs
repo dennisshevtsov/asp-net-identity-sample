@@ -48,6 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
         });
 
       services.AddScoped<IUserRepository, UserRepository>();
+      services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
       return services;
     }
