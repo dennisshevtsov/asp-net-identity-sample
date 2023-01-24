@@ -43,11 +43,31 @@ namespace Microsoft.Extensions.DependencyInjection
 
     private static void TryAddUser(UserEntity userEntity, DbContext dbContext)
     {
-      var userExists = dbContext.Set<UserEntity>().SingleOrDefault(entity => string.Equals(entity.Email, userEntity.Email, StringComparison.OrdinalIgnoreCase)) != null;
+      var dbUserEntity =
+        dbContext.Set<UserEntity>()
+                 .Where(entity => string.Equals(entity.Email, userEntity.Email, StringComparison.OrdinalIgnoreCase))
+                 .SingleOrDefault();
 
-      if (!userExists)
+      if (dbUserEntity == null)
       {
         dbContext.Add(userEntity);
+        dbContext.SaveChanges();
+
+        dbUserEntity = userEntity;
+      }
+
+      var userRoleEntity = dbContext.Set<UserRoleEntity>()
+                                    .WithPartitionKey(dbUserEntity.Id.ToString())
+                                    .Where(entity => entity.RoleName == "admin")
+                                    .SingleOrDefault();
+
+      if (userRoleEntity == null)
+      {
+        dbContext.Add(new UserRoleEntity
+        {
+          UserId = userEntity.Id,
+          RoleName = "admin",
+        });
         dbContext.SaveChanges();
       }
     }
