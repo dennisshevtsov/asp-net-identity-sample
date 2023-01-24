@@ -18,7 +18,7 @@ namespace AspNetIdentitySample.Infrastructure.Configurations
 
     private readonly string _containerName;
 
-    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntityTypeConfiguration"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class.</summary>
     /// <param name="containerName">An object that represents a name of a container.</param>
     public UserEntityTypeConfiguration(string containerName)
     {

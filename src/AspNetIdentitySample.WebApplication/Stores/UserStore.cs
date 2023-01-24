@@ -12,12 +12,15 @@ namespace AspNetIdentitySample.WebApplication.Stores
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserRoleStore<UserEntity>
   {
     private readonly IUserRepository _userRepository;
+    private readonly IUserRoleRepository _userRoleRepository;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Stores.UserStore"/> class.</summary>
     /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    public UserStore(IUserRepository userRepository)
+    /// <param name="userRoleRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</param>
+    public UserStore(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
     {
       _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+      _userRoleRepository = userRoleRepository ?? throw new ArgumentNullException(nameof(userRepository));
     }
 
     #region Members of IUserStore
@@ -183,8 +186,14 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user whose role names to retrieve.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing a list of role names.</returns>
-    public Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
-      => Task.FromResult<IList<string>>(new List<string> { "admin" });
+    public async Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      var userRoleEntityCollection =
+        await _userRoleRepository.GetRolesAsync(user, cancellationToken);
+
+      return userRoleEntityCollection.Select(userRoleEntity => userRoleEntity.RoleName!)
+                                     .ToList();
+    }
 
     /// <summary>
     /// Returns a flag indicating whether the specified <paramref name="user"/> is a member of the given named role.

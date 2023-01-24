@@ -41,5 +41,32 @@ namespace AspNetIdentitySample.Test.Integration
       Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
       Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
     }
+
+    [TestMethod]
+    public async Task SaveChangesAsync_Should_Add_New_User_Role()
+    {
+      var controlUserRoleEntity = new UserRoleEntity
+      {
+        UserId = Guid.NewGuid(),
+        RoleName = Guid.NewGuid().ToString(),
+      };
+
+      var controlUserRoleEntityEntry = DbContext.Add(controlUserRoleEntity);
+
+      await DbContext.SaveChangesAsync(Token);
+
+      controlUserRoleEntityEntry.State = EntityState.Detached;
+
+      var actualUserRoleEntityCollection =
+        await DbContext.Set<UserRoleEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(controlUserRoleEntity.UserId.ToString())
+                       .ToListAsync(Token);
+
+      Assert.IsNotNull(actualUserRoleEntityCollection);
+      Assert.AreEqual(1, actualUserRoleEntityCollection.Count);
+      Assert.AreEqual(controlUserRoleEntity.UserId, actualUserRoleEntityCollection[0].UserId);
+      Assert.AreEqual(controlUserRoleEntity.RoleName, actualUserRoleEntityCollection[0].RoleName);
+    }
   }
 }

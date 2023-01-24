@@ -8,7 +8,8 @@ namespace AspNetIdentitySample.Test.Unit
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.Stores;
-  
+  using AspNetIdentitySample.ApplicationCore.Identities;
+
   [TestClass]
   public sealed class UserStoreTest
   {
@@ -16,6 +17,7 @@ namespace AspNetIdentitySample.Test.Unit
 
 #pragma warning disable CS8618
     private Mock<IUserRepository> _userRepositoryMock;
+    private Mock<IUserRoleRepository> _userRoleRepositoryMock;
 
     private UserStore _userStore;
 #pragma warning restore CS8618
@@ -24,8 +26,13 @@ namespace AspNetIdentitySample.Test.Unit
     public void Initialize()
     {
       _cancellationToken = CancellationToken.None;
+
       _userRepositoryMock = new Mock<IUserRepository>();
-      _userStore = new UserStore(_userRepositoryMock.Object);
+      _userRoleRepositoryMock = new Mock<IUserRoleRepository>();
+
+      _userStore = new UserStore(
+        _userRepositoryMock.Object,
+        _userRoleRepositoryMock.Object);
     }
 
     [TestMethod]
@@ -103,6 +110,36 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.IsNotNull(actualPasswordHash);
       Assert.AreEqual(controlPasswordHash, actualPasswordHash);
+
+      _userRepositoryMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task GetRolesAsync_Should_Return_Role_Collection_For_User()
+    {
+      var controlUserRoleEntity = new UserRoleEntity
+      {
+        UserId = Guid.NewGuid(),
+        RoleName = Guid.NewGuid().ToString(),
+      };
+      var controlUserRoleEntityCollection = new List<UserRoleEntity>
+      {
+        controlUserRoleEntity,
+      };
+
+      _userRoleRepositoryMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                             .ReturnsAsync(controlUserRoleEntityCollection)
+                             .Verifiable();
+
+      var userEntity = new UserEntity();
+      var roleCollection = await _userStore.GetRolesAsync(userEntity, _cancellationToken);
+
+      Assert.IsNotNull(roleCollection);
+      Assert.AreEqual(controlUserRoleEntityCollection.Count, roleCollection.Count);
+      Assert.IsTrue(controlUserRoleEntityCollection.All(entity => roleCollection.Contains(entity.RoleName!)));
+
+      _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(userEntity, _cancellationToken));
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
 
       _userRepositoryMock.VerifyNoOtherCalls();
     }
