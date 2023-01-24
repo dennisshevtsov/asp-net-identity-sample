@@ -65,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
       {
         dbContext.Add(new UserRoleEntity
         {
-          UserId = userEntity.Id,
+          UserId = dbUserEntity.Id,
           RoleName = "admin",
         });
         dbContext.SaveChanges();
