@@ -29,6 +29,7 @@ namespace AspNetIdentitySample.Infrastructure
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration(_databaseOptions.Value.UserContainerName));
+      modelBuilder.ApplyConfiguration(new UserRoleEntityTypeConfiguration(_databaseOptions.Value.UserContainerName));
     }
   }
 }
