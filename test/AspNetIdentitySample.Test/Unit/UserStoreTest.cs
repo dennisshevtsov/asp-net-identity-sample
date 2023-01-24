@@ -16,6 +16,7 @@ namespace AspNetIdentitySample.Test.Unit
 
 #pragma warning disable CS8618
     private Mock<IUserRepository> _userRepositoryMock;
+    private Mock<IUserRoleRepository> _userRoleRepositoryMock;
 
     private UserStore _userStore;
 #pragma warning restore CS8618
@@ -24,8 +25,13 @@ namespace AspNetIdentitySample.Test.Unit
     public void Initialize()
     {
       _cancellationToken = CancellationToken.None;
+
       _userRepositoryMock = new Mock<IUserRepository>();
-      _userStore = new UserStore(_userRepositoryMock.Object);
+      _userRoleRepositoryMock = new Mock<IUserRoleRepository>();
+
+      _userStore = new UserStore(
+        _userRepositoryMock.Object,
+        _userRoleRepositoryMock.Object);
     }
 
     [TestMethod]
