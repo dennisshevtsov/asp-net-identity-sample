@@ -115,5 +115,87 @@ namespace AspNetIdentitySample.Test.Unit
       _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
       _modelBindingContextMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task BindModelAsync_Should_Fill_Out_User()
+    {
+      var userEmail = Guid.NewGuid().ToString();
+
+      _identityMock.SetupGet(identity => identity.Name)
+                   .Returns(userEmail)
+                   .Verifiable();
+
+      _identityMock.SetupGet(identity => identity.IsAuthenticated)
+                   .Returns(true)
+                   .Verifiable();
+
+      _httpRequestMock.SetupGet(request => request.HasFormContentType)
+                      .Returns(false)
+                      .Verifiable();
+
+      _modelBindingContextMock.SetupGet(context => context.ModelType)
+                              .Returns(typeof(TestViewModel))
+                              .Verifiable();
+
+      ModelBindingResult modelBindingResult = default;
+
+#pragma warning disable CS0618
+      _modelBindingContextMock.SetupSet(context => context.Result)
+                              .Callback(result => modelBindingResult = result)
+                              .Verifiable();
+#pragma warning restore CS0618
+
+      var userRepositoryMock = new Mock<IUserRepository>();
+
+      userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(new UserEntity())
+                        .Verifiable();
+
+      var serviceProviderMock = new Mock<IServiceProvider>();
+
+      serviceProviderMock.Setup(provider => provider.GetService(It.IsAny<Type>()))
+                         .Returns(userRepositoryMock.Object)
+                         .Verifiable();
+
+      _httpContextMock.SetupGet(context => context.RequestServices)
+                      .Returns(serviceProviderMock.Object)
+                      .Verifiable();
+
+      await _viewModelBinder.BindModelAsync(_modelBindingContextMock.Object);
+
+      Assert.IsTrue(modelBindingResult.IsModelSet);
+
+      var vm = modelBindingResult.Model as TestViewModel;
+
+      Assert.IsNotNull(vm);
+      Assert.IsTrue(vm.User.IsAuthenticated);
+
+      userRepositoryMock.Verify(repository => repository.GetUserAsync(userEmail, CancellationToken.None));
+      userRepositoryMock.VerifyNoOtherCalls();
+
+      serviceProviderMock.Verify(provider => provider.GetService(typeof(IUserRepository)));
+      serviceProviderMock.VerifyNoOtherCalls();
+
+      _identityMock.Verify(identity => identity.Name);
+      _identityMock.Verify(identity => identity.IsAuthenticated);
+      _identityMock.VerifyNoOtherCalls();
+
+      _userMock.VerifyGet(user => user.Identity);
+      _userMock.VerifyNoOtherCalls();
+
+      _httpRequestMock.VerifyGet(request => request.HasFormContentType);
+      _httpRequestMock.VerifyNoOtherCalls();
+
+      _httpContextMock.VerifyGet(context => context.User);
+      _httpContextMock.VerifyGet(context => context.Request);
+      _httpContextMock.VerifyGet(context => context.RequestAborted);
+      _httpContextMock.VerifyGet(context => context.RequestServices);
+      _httpContextMock.VerifyNoOtherCalls();
+
+      _modelBindingContextMock.VerifyGet(context => context.HttpContext);
+      _modelBindingContextMock.VerifyGet(context => context.ModelType);
+      _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
+      _modelBindingContextMock.VerifyNoOtherCalls();
+    }
   }
 }
