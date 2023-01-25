@@ -4,28 +4,42 @@
 
 namespace AspNetIdentitySample.Test.Unit
 {
+  using System.Threading;
+
   using Microsoft.AspNetCore.Mvc;
+  using Moq;
 
   using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
 
   [TestClass]
   public sealed class SignOutControllerTest : ControllerTestBase
   {
+    private CancellationToken _cancellationToken;
+
 #pragma warning disable CS8618
+    private Mock<IUserRepository> _userRepositoryMock;
+
     private SignOutController _signOutController;
 #pragma warning restore CS8618
 
     protected override void InitializeInternal()
     {
-      _signOutController = new SignOutController(SignInManagerMock.Object);
+      _cancellationToken = CancellationToken.None;
+
+      _userRepositoryMock = new Mock<IUserRepository>();
+
+      _signOutController = new SignOutController(
+        SignInManagerMock.Object,
+        _userRepositoryMock.Object);
       _signOutController.ControllerContext = new ControllerContext();
     }
 
     [TestMethod]
-    public void Get_Should_Return_Action_Result_With_View_Name()
+    public async Task Get_Should_Return_Action_Result_With_View_Name()
     {
-      var actionResult = _signOutController.Get(new SignOutAccountViewModel());
+      var actionResult = await _signOutController.Get(new SignOutAccountViewModel(), _cancellationToken);
 
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));

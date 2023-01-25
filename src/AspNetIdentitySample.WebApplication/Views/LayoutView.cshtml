@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.ViewModelBase
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <base href="/" />
 
-  <title>ASP.NET Core Identity Sample</title>
+  <title>@Model.PageTitle</title>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,15 +18,18 @@
       <nav class="app-header__content">
         <a class="app__brand" asp-controller="Home" asp-action="Get"><span>ASP.NET Core Identity Sample</span></a>
 
-        <div class="app-header__profile profile-menu">
-          <a class="app-profile-menu__toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <span>John Smith</span>
-          </a>
-          <nav class="app-profile-menu__nav dropdown-menu">
-            <a class="app-profile-menu__item"><span>Profile</span></a>
-            <a class="app-profile-menu__item" asp-controller="SignOut" asp-action="Get"><span>Sign out</span></a>
-          </nav>
-        </div>
+        @if (Model.User.IsAuthenticated)
+        {
+          <div class="app-header__profile profile-menu">
+            <a class="app-profile-menu__toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <span>@Model.User.Name</span>
+            </a>
+            <nav class="app-profile-menu__nav dropdown-menu">
+              <a class="app-profile-menu__item"><span>Profile</span></a>
+              <a class="app-profile-menu__item" asp-controller="SignOut" asp-action="Get"><span>Sign out</span></a>
+            </nav>
+          </div>
+        }
       </nav>
     </div>
   </div>
