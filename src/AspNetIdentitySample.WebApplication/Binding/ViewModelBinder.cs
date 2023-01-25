@@ -4,14 +4,14 @@
 
 namespace AspNetIdentitySample.WebApplication.Binding
 {
+  using System.ComponentModel;
   using System.Security.Claims;
 
+  using Microsoft.AspNetCore.Http;
   using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-  using AspNetIdentitySample.WebApplication.ViewModels;
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using Microsoft.Extensions.Primitives;
-  using System.ComponentModel;
+  using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to create an instance of a model for an HTTP request.</summary>
   public sealed class ViewModelBinder : IModelBinder
@@ -24,13 +24,13 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
       var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-      await FillOutFormAsync(vm, bindingContext, cancellationToken);
-      await FillOutUserAsync(vm, bindingContext, cancellationToken);
+      await ViewModelBinder.FillOutFormAsync(vm, bindingContext, cancellationToken);
+      await ViewModelBinder.FillOutUserAsync(vm, bindingContext, cancellationToken);
 
       bindingContext.Result = ModelBindingResult.Success(vm);
     }
 
-    private async Task FillOutFormAsync(
+    private static async Task FillOutFormAsync(
       ViewModelBase vm, ModelBindingContext bindingContext, CancellationToken cancellationToken)
     {
       if (!bindingContext.HttpContext.Request.HasFormContentType)
@@ -38,31 +38,38 @@ namespace AspNetIdentitySample.WebApplication.Binding
         return;
       }
 
-      var formCollection = await bindingContext.HttpContext.Request.ReadFormAsync(cancellationToken);
+      var formCollection =
+        await bindingContext.HttpContext.Request.ReadFormAsync(cancellationToken);
 
       foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
       {
-        StringValues propertyValue;
-        TypeConverter? typeConverter;
-
-        if (propertyMetadata != null &&
-            propertyMetadata.PropertySetter != null &&
-            propertyMetadata.PropertyName != null &&
-            formCollection.TryGetValue(propertyMetadata.PropertyName, out propertyValue) &&
-            (typeConverter = TypeDescriptor.GetConverter(propertyMetadata.ModelType)) != null)
-        {
-          propertyMetadata.PropertySetter(vm, typeConverter.ConvertFrom(propertyValue.ToString()));
-        }
+        ViewModelBinder.FillOutFormProperty(vm, propertyMetadata, formCollection);
       }
     }
 
-    private bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
+    private static void FillOutFormProperty(
+      ViewModelBase vm, ModelMetadata propertyMetadata, IFormCollection formCollection)
+    {
+      TypeConverter? typeConverter;
+
+      if (propertyMetadata != null &&
+          propertyMetadata.PropertySetter != null &&
+          propertyMetadata.PropertyName != null &&
+          formCollection.TryGetValue(propertyMetadata.PropertyName, out var propertyValue) &&
+          (typeConverter = TypeDescriptor.GetConverter(propertyMetadata.ModelType)) != null)
+      {
+        propertyMetadata.PropertySetter(
+          vm, typeConverter.ConvertFrom(propertyValue.ToString()));
+      }
+    }
+
+    private static bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
       => user.Identity == null || user.Identity.Name == null || !user.Identity.IsAuthenticated;
 
-    private Task FillOutUserAsync(
+    private static Task FillOutUserAsync(
       ViewModelBase vm, ModelBindingContext bindingContext, CancellationToken cancellationToken)
     {
-      if (CheckIfRequestIsAuthenticated(bindingContext.HttpContext.User))
+      if (ViewModelBinder.CheckIfRequestIsAuthenticated(bindingContext.HttpContext.User))
       {
         return Task.CompletedTask;
       }
@@ -72,10 +79,10 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
       var userEmail = bindingContext.HttpContext.User.Identity!.Name!;
 
-      return FillOutUserAsync(vm, userEmail, userRepository, cancellationToken);
+      return ViewModelBinder.FillOutUserAsync(vm, userEmail, userRepository, cancellationToken);
     }
 
-    private async Task FillOutUserAsync(
+    private static async Task FillOutUserAsync(
       ViewModelBase vm, string userEmail, IUserRepository userRepository, CancellationToken cancellationToken)
     {
       var userEntity = await userRepository.GetUserAsync(userEmail, cancellationToken);
