@@ -9,6 +9,7 @@ namespace AspNetIdentitySample.Test.Unit
   using Moq;
 
   using AspNetIdentitySample.WebApplication.Binding;
+  using AspNetIdentitySample.WebApplication.ViewModels;
 
   [TestClass]
   public sealed class ViewModelBinderProviderTest
@@ -38,6 +39,27 @@ namespace AspNetIdentitySample.Test.Unit
         modelBinderProviderContextMock.Object);
 
       Assert.IsNull(modelBinder);
+    }
+
+    [TestMethod]
+    public void GetBinder_Should_Return_Model_Binder()
+    {
+      var modelBinderProviderContextMock = new Mock<ModelBinderProviderContext>();
+      var modelMetadataMock = new Mock<ModelMetadata>(
+        ModelMetadataIdentity.ForType(typeof(TestViewModel)));
+
+      modelBinderProviderContextMock.SetupGet(context => context.Metadata)
+                                    .Returns(modelMetadataMock.Object)
+                                    .Verifiable();
+
+      var modelBinder = _viewModelBinderProvider.GetBinder(
+        modelBinderProviderContextMock.Object);
+
+      Assert.IsNotNull(modelBinder);
+    }
+
+    private sealed class TestViewModel : ViewModelBase
+    {
     }
   }
 }
