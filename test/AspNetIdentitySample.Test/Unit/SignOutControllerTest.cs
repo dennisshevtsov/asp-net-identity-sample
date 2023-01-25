@@ -16,30 +16,20 @@ namespace AspNetIdentitySample.Test.Unit
   [TestClass]
   public sealed class SignOutControllerTest : ControllerTestBase
   {
-    private CancellationToken _cancellationToken;
-
 #pragma warning disable CS8618
-    private Mock<IUserRepository> _userRepositoryMock;
-
     private SignOutController _signOutController;
 #pragma warning restore CS8618
 
     protected override void InitializeInternal()
     {
-      _cancellationToken = CancellationToken.None;
-
-      _userRepositoryMock = new Mock<IUserRepository>();
-
-      _signOutController = new SignOutController(
-        SignInManagerMock.Object,
-        _userRepositoryMock.Object);
+      _signOutController = new SignOutController(SignInManagerMock.Object);
       _signOutController.ControllerContext = new ControllerContext();
     }
 
     [TestMethod]
-    public async Task Get_Should_Return_Action_Result_With_View_Name()
+    public void Get_Should_Return_Action_Result_With_View_Name()
     {
-      var actionResult = await _signOutController.Get(new SignOutAccountViewModel(), _cancellationToken);
+      var actionResult = _signOutController.Get(new SignOutAccountViewModel());
 
       Assert.IsNotNull(actionResult);
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));

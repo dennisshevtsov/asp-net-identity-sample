@@ -4,6 +4,7 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+  using AspNetIdentitySample.WebApplication.Binding;
   using Microsoft.AspNetCore.Mvc.Authorization;
   using Microsoft.AspNetCore.Mvc.Razor;
   using Microsoft.AspNetCore.Rewrite;
@@ -19,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
       services.AddControllersWithViews(options =>
       {
         options.Filters.Add(new AuthorizeFilter());
+        options.ModelBinderProviders.Insert(0, new ViewModelBinderProvider());
       });
       services.Configure<RazorViewEngineOptions>(options =>
       {
