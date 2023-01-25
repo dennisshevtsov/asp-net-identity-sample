@@ -10,6 +10,8 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
   using AspNetIdentitySample.WebApplication.ViewModels;
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using Microsoft.Extensions.Primitives;
+  using System.ComponentModel;
 
   /// <summary>Provides a simple API to create an instance of a model for an HTTP request.</summary>
   public sealed class ViewModelBinder : IModelBinder
@@ -22,45 +24,53 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
       var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-      await FillOutFormAsync(vm, bindingContext.HttpContext, cancellationToken);
-      await FillOutUserAsync(vm, bindingContext.HttpContext, cancellationToken);
+      await FillOutFormAsync(vm, bindingContext, cancellationToken);
+      await FillOutUserAsync(vm, bindingContext, cancellationToken);
 
       bindingContext.Result = ModelBindingResult.Success(vm);
     }
 
-    private Task FillOutFormAsync(
-      ViewModelBase vm, HttpContext httpContext, CancellationToken cancellationToken)
+    private async Task FillOutFormAsync(
+      ViewModelBase vm, ModelBindingContext bindingContext, CancellationToken cancellationToken)
     {
-      if (vm is SignInAccountViewModel svm)
+      if (!bindingContext.HttpContext.Request.HasFormContentType)
       {
-        svm.ReturnUrl = "/";
-        svm.Email = "test@test.test";
-        svm.Password = "test";
+        return;
       }
 
-      //if (httpContext.Request.HasFormContentType)
-      //{
-      //  var form = await httpContext.Request.ReadFormAsync();
-      //}
+      var formCollection = await bindingContext.HttpContext.Request.ReadFormAsync(cancellationToken);
 
-      return Task.CompletedTask;
+      foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
+      {
+        StringValues propertyValue;
+        TypeConverter? typeConverter;
+
+        if (propertyMetadata != null &&
+            propertyMetadata.PropertySetter != null &&
+            propertyMetadata.PropertyName != null &&
+            formCollection.TryGetValue(propertyMetadata.PropertyName, out propertyValue) &&
+            (typeConverter = TypeDescriptor.GetConverter(propertyMetadata.ModelType)) != null)
+        {
+          propertyMetadata.PropertySetter(vm, typeConverter.ConvertFrom(propertyValue.ToString()));
+        }
+      }
     }
 
     private bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
       => user.Identity == null || user.Identity.Name == null || !user.Identity.IsAuthenticated;
 
     private Task FillOutUserAsync(
-      ViewModelBase vm, HttpContext httpContext, CancellationToken cancellationToken)
+      ViewModelBase vm, ModelBindingContext bindingContext, CancellationToken cancellationToken)
     {
-      if (CheckIfRequestIsAuthenticated(httpContext.User))
+      if (CheckIfRequestIsAuthenticated(bindingContext.HttpContext.User))
       {
         return Task.CompletedTask;
       }
 
       var userRepository =
-        httpContext.RequestServices.GetRequiredService<IUserRepository>();
+        bindingContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
 
-      var userEmail = httpContext.User.Identity!.Name!;
+      var userEmail = bindingContext.HttpContext.User.Identity!.Name!;
 
       return FillOutUserAsync(vm, userEmail, userRepository, cancellationToken);
     }
