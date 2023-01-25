@@ -12,6 +12,7 @@ namespace AspNetIdentitySample.Test.Unit
   using Moq;
 
   using AspNetIdentitySample.WebApplication.Binding;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
 
   [TestClass]
   public sealed class ViewModelBinderTest
@@ -35,9 +36,9 @@ namespace AspNetIdentitySample.Test.Unit
       _userMock = new Mock<ClaimsPrincipal>();
       _identityMock = new Mock<IIdentity>();
 
-      //_httpContextMock.SetupGet(context => context.RequestAborted)
-      //                .Returns(CancellationToken.None)
-      //                .Verifiable();
+      _httpContextMock.SetupGet(context => context.RequestAborted)
+                      .Returns(CancellationToken.None)
+                      .Verifiable();
 
       _httpContextMock.SetupGet(context => context.Request)
                       .Returns(_httpRequestMock.Object)
@@ -77,7 +78,7 @@ namespace AspNetIdentitySample.Test.Unit
                               .Returns(typeof(TestViewModel))
                               .Verifiable();
 
-      ModelBindingResult modelBindingResult;
+      ModelBindingResult modelBindingResult = default;
 
 #pragma warning disable CS0618
       _modelBindingContextMock.SetupSet(context => context.Result)
@@ -86,6 +87,13 @@ namespace AspNetIdentitySample.Test.Unit
 #pragma warning restore CS0618
 
       await _viewModelBinder.BindModelAsync(_modelBindingContextMock.Object);
+
+      Assert.IsTrue(modelBindingResult.IsModelSet);
+
+      var vm = modelBindingResult.Model as TestViewModel;
+
+      Assert.IsNotNull(vm);
+      Assert.IsFalse(vm.User.IsAuthenticated);
 
       _identityMock.Verify(identity => identity.Name);
       _identityMock.Verify(identity => identity.IsAuthenticated);
