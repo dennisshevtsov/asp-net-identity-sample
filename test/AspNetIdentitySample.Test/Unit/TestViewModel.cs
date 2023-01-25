@@ -10,6 +10,10 @@ namespace AspNetIdentitySample.Test.Unit
 #pragma warning disable CS0659
   public sealed class TestViewModel : ViewModelBase
   {
+    public string? ModelId0 { get; set; }
+
+    public Guid? ModelId1 { get; set; }
+
     public override bool Equals(object? obj)
     {
       return true;
