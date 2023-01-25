@@ -8,6 +8,8 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
   using AspNetIdentitySample.WebApplication.ViewModels;
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using System.Security.Claims;
+  using AspNetIdentitySample.ApplicationCore.Entities;
 
   public sealed class ViewModelBinder : IModelBinder
   {
@@ -18,23 +20,14 @@ namespace AspNetIdentitySample.WebApplication.Binding
     {
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
 
-      if (bindingContext.HttpContext.User.Identity != null &&
-          bindingContext.HttpContext.User.Identity.Name != null &&
-          bindingContext.HttpContext.User.Identity.IsAuthenticated)
-      {
-        var userRepository =
-          bindingContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-        var userEntity =
-          await userRepository.GetUserAsync(
-            bindingContext.HttpContext.User.Identity.Name,
-            bindingContext.HttpContext.RequestAborted);
+      var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-        if (userEntity != null)
-        {
-          vm.User.Name = userEntity.Name;
-          vm.User.IsAuthenticated = true;
-        }
+      if (bindingContext.HttpContext.Request.HasFormContentType)
+      {
+        var form = await bindingContext.HttpContext.Request.ReadFormAsync();
       }
+
+      await FillOutUserAsync(vm, bindingContext.HttpContext, cancellationToken);
 
       if (vm is SignInAccountViewModel svm)
       {
@@ -44,6 +37,39 @@ namespace AspNetIdentitySample.WebApplication.Binding
       }
 
       bindingContext.Result = ModelBindingResult.Success(vm);
+    }
+
+    private bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
+      => user.Identity == null || user.Identity.Name == null || !user.Identity.IsAuthenticated;
+
+    private Task FillOutUserAsync(
+      ViewModelBase vm, HttpContext httpContext, CancellationToken cancellationToken)
+    {
+      if (CheckIfRequestIsAuthenticated(httpContext.User))
+      {
+        return Task.CompletedTask;
+      }
+
+      var userRepository =
+        httpContext.RequestServices.GetRequiredService<IUserRepository>();
+
+      var userEmail = httpContext.User.Identity!.Name!;
+
+      return FillOutUserAsync(vm, userEmail, userRepository, cancellationToken);
+    }
+
+    private async Task FillOutUserAsync(
+      ViewModelBase vm, string userEmail, IUserRepository userRepository, CancellationToken cancellationToken)
+    {
+      var userEntity = await userRepository.GetUserAsync(userEmail, cancellationToken);
+
+      if (userEntity == null)
+      {
+        throw new Exception($"There is no user with email ${userEmail}");
+      }
+
+      vm.User.Name = userEntity.Name;
+      vm.User.IsAuthenticated = true;
     }
   }
 }
