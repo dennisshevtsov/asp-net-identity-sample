@@ -57,9 +57,5 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.IsNotNull(modelBinder);
     }
-
-    private sealed class TestViewModel : ViewModelBase
-    {
-    }
   }
 }
