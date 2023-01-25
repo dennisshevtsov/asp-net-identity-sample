@@ -4,6 +4,10 @@
 
 namespace AspNetIdentitySample.Test.Unit
 {
+  using Microsoft.AspNetCore.Mvc.ModelBinding;
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+  using Moq;
+
   using AspNetIdentitySample.WebApplication.Binding;
 
   [TestClass]
@@ -17,6 +21,23 @@ namespace AspNetIdentitySample.Test.Unit
     public void Initialize()
     {
       _viewModelBinderProvider = new ViewModelBinderProvider();
+    }
+
+    [TestMethod]
+    public void GetBinder_Should_Return_Null()
+    {
+      var modelBinderProviderContextMock = new Mock<ModelBinderProviderContext>();
+      var modelMetadataMock = new Mock<ModelMetadata>(
+        ModelMetadataIdentity.ForType(typeof(object)));
+
+      modelBinderProviderContextMock.SetupGet(context => context.Metadata)
+                                    .Returns(modelMetadataMock.Object)
+                                    .Verifiable();
+
+      var modelBinder = _viewModelBinderProvider.GetBinder(
+        modelBinderProviderContextMock.Object);
+
+      Assert.IsNull(modelBinder);
     }
   }
 }
