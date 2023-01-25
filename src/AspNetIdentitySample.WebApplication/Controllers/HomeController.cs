@@ -16,7 +16,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the get todo list query request.</summary>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
     [HttpGet]
-    public IActionResult Get(HomeViewModel vm, CancellationToken cancellationToken)
+    public IActionResult Get(HomeViewModel vm)
     {
       return View("HomeView", vm);
     }
