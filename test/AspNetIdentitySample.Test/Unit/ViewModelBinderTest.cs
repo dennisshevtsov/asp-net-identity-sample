@@ -197,5 +197,52 @@ namespace AspNetIdentitySample.Test.Unit
       _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
       _modelBindingContextMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task BindModelAsync_Should_Not_Fill_Out_Form()
+    {
+      _identityMock.SetupGet(identity => identity.Name)
+                   .Returns(Guid.NewGuid().ToString())
+                   .Verifiable();
+
+      _identityMock.SetupGet(identity => identity.IsAuthenticated)
+                   .Returns(false)
+                   .Verifiable();
+
+      _httpRequestMock.SetupGet(request => request.HasFormContentType)
+                      .Returns(false)
+                      .Verifiable();
+
+      _modelBindingContextMock.SetupGet(context => context.ModelType)
+                              .Returns(typeof(TestViewModel))
+                              .Verifiable();
+
+#pragma warning disable CS0618
+      _modelBindingContextMock.SetupSet(context => context.Result)
+                              .Verifiable();
+#pragma warning restore CS0618
+
+      await _viewModelBinder.BindModelAsync(_modelBindingContextMock.Object);
+
+      _identityMock.Verify(identity => identity.Name);
+      _identityMock.Verify(identity => identity.IsAuthenticated);
+      _identityMock.VerifyNoOtherCalls();
+
+      _userMock.VerifyGet(user => user.Identity);
+      _userMock.VerifyNoOtherCalls();
+
+      _httpRequestMock.VerifyGet(request => request.HasFormContentType);
+      _httpRequestMock.VerifyNoOtherCalls();
+
+      _httpContextMock.VerifyGet(context => context.User);
+      _httpContextMock.VerifyGet(context => context.Request);
+      _httpContextMock.VerifyGet(context => context.RequestAborted);
+      _httpContextMock.VerifyNoOtherCalls();
+
+      _modelBindingContextMock.VerifyGet(context => context.HttpContext);
+      _modelBindingContextMock.VerifyGet(context => context.ModelType);
+      _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
+      _modelBindingContextMock.VerifyNoOtherCalls();
+    }
   }
 }
