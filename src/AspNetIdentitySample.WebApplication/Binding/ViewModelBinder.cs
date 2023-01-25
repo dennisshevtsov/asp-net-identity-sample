@@ -4,13 +4,14 @@
 
 namespace AspNetIdentitySample.WebApplication.Binding
 {
+  using System.Security.Claims;
+
   using Microsoft.AspNetCore.Mvc.ModelBinding;
 
   using AspNetIdentitySample.WebApplication.ViewModels;
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using System.Security.Claims;
-  using AspNetIdentitySample.ApplicationCore.Entities;
 
+  /// <summary>Provides a simple API to create an instance of a model for an HTTP request.</summary>
   public sealed class ViewModelBinder : IModelBinder
   {
     /// <summary>Attempts to bind a model.</summary>
@@ -19,16 +20,17 @@ namespace AspNetIdentitySample.WebApplication.Binding
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
-
       var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-      if (bindingContext.HttpContext.Request.HasFormContentType)
-      {
-        var form = await bindingContext.HttpContext.Request.ReadFormAsync();
-      }
-
+      await FillOutFormAsync(vm, bindingContext.HttpContext, cancellationToken);
       await FillOutUserAsync(vm, bindingContext.HttpContext, cancellationToken);
 
+      bindingContext.Result = ModelBindingResult.Success(vm);
+    }
+
+    private Task FillOutFormAsync(
+      ViewModelBase vm, HttpContext httpContext, CancellationToken cancellationToken)
+    {
       if (vm is SignInAccountViewModel svm)
       {
         svm.ReturnUrl = "/";
@@ -36,7 +38,12 @@ namespace AspNetIdentitySample.WebApplication.Binding
         svm.Password = "test";
       }
 
-      bindingContext.Result = ModelBindingResult.Success(vm);
+      //if (httpContext.Request.HasFormContentType)
+      //{
+      //  var form = await httpContext.Request.ReadFormAsync();
+      //}
+
+      return Task.CompletedTask;
     }
 
     private bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
