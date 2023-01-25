@@ -6,6 +6,8 @@ namespace AspNetIdentitySample.WebApplication.Binding
 {
   using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+  using AspNetIdentitySample.WebApplication.ViewModels;
+
   /// <summary>Provides a simple API to create an instance of the <see cref="Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder"/> class.</summary>
   public sealed class ViewModelBinderProvider : IModelBinderProvider
   {
@@ -14,6 +16,11 @@ namespace AspNetIdentitySample.WebApplication.Binding
     /// <returns>An object that defines an interface for model binders.</returns>
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
+      if (!context.Metadata.ModelType.IsAssignableTo(typeof(ViewModelBase)))
+      {
+        return null;
+      }
+
       return new ViewModelBinder();
     }
   }
