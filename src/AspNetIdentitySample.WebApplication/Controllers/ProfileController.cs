@@ -5,8 +5,8 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
-
   using Microsoft.AspNetCore.Identity;
+
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.ViewModels;
@@ -32,12 +32,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> Get(Guid userId, ProfileViewModel vm, CancellationToken cancellationToken)
+    [HttpGet]
+    public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
-      vm.UserId = userId;
-      var userEntity = await _userRepository.GetUserAsync(vm, cancellationToken);
-      vm.FromEntity(userEntity);
+      var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
+      vm.FromEntity(userEntity!);
 
       return View(ProfileController.ViewName, vm);
     }

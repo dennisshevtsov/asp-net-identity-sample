@@ -5,14 +5,10 @@
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents the view model for the profile action.</summary>
-  public sealed class ProfileViewModel : ViewModelBase, IUserIdentity
+  public sealed class ProfileViewModel : ViewModelBase
   {
-    /// <summary>Gets/sets an object that represents an ID of a user.</summary>
-    public Guid UserId { get; set; }
-
     /// <summary>Gets/sets an object that represents a name of a user.</summary>
     public string? Name { get; set; }
 
@@ -23,7 +19,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <param name="userEntity">An object that represents details of a user.</param>
     public void FromEntity(UserEntity userEntity)
     {
-      UserId = userEntity.Id;
       Name = userEntity.Name;
       Email = userEntity.Email;
     }
