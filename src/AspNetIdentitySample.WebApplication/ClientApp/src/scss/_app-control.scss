@@ -2,7 +2,13 @@
   @extend .form-floating;
 
   &__field {
-    @extend .form-control;
+    @at-root input#{&} {
+      @extend .form-control;
+    }
+
+    @at-root span#{&} {
+      @extend .form-control-plaintext;
+    }
   }
 
   &__label {

@@ -6,4 +6,11 @@
   &__button {
     @extend .btn;
   }
+
+  &__buttons {
+    @extend .d-grid;
+    @extend .gap-2;
+    @extend .d-md-flex;
+    @extend .justify-content-md-end;
+  }
 }

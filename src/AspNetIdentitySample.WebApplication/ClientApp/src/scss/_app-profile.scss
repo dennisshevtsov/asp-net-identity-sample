@@ -1,0 +1,32 @@
+﻿.app-profile {
+  @extend .mt-3;
+
+  &__title {
+    @extend .text-center;
+    @extend .mb-3;
+  }
+
+  &__form {
+  }
+
+  &__buttons {
+    @extend .mt-3;
+  }
+
+  &__ok, &__cancel {
+    @extend .btn-lg;
+    width: 200px;
+  }
+
+  &__ok + &__cancel {
+    @extend .ms-3;
+  }
+
+  &__ok {
+    @extend .btn-primary;
+  }
+
+  &__cancel {
+    @extend .btn-outline-primary;
+  }
+}
