@@ -6,16 +6,10 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using AspNetIdentitySample.ApplicationCore.Identities;
 
-  /// <summary>Represents details of the authenticated user.</summary>
-  public sealed class UserViewModel : IUserIdentity
+  /// <summary>Represents the view model for the profile action.</summary>
+  public sealed class ProfileViewModel : ViewModelBase, IUserIdentity
   {
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }
-
-    /// <summary>Gets/sets an object that represents a name of a user.</summary>
-    public string? Name { get; set; }
-
-    /// <summary>Gets/sets an object that indicates if the user is authenticated.</summary>
-    public bool IsAuthenticated { get; set; }
   }
 }

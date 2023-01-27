@@ -4,14 +4,17 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using AspNetIdentitySample.WebApplication.ViewModels;
+
   [Route("profile")]
   public sealed class ProfileController : Controller
   {
     public const string ViewName = "ProfileView";
 
-    public IActionResult Get()
+    [HttpGet("{userId}")]
+    public IActionResult Get(ProfileViewModel vm)
     {
-      return View(ProfileController.ViewName);
+      return View(ProfileController.ViewName, vm);
     }
   }
 }
