@@ -7,5 +7,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("profile")]
   public sealed class ProfileController : Controller
   {
+    public const string ViewName = "ProfileView";
+
+    public IActionResult Get()
+    {
+      return View(ProfileController.ViewName);
+    }
   }
 }
