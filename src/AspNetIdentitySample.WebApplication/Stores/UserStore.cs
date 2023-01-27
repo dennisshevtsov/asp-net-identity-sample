@@ -108,7 +108,14 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="userId"/> if it exists.
     /// </returns>
     public Task<UserEntity?> FindByIdAsync(string userId, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      var userEntity = new UserEntity
+      {
+        UserId = Guid.Parse(userId),
+      };
+
+      return _userRepository.GetUserAsync(userEntity, cancellationToken);
+    }
 
     /// <summary>
     /// Finds and returns a user, if any, who has the specified normalized user name.

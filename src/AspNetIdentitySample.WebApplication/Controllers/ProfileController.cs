@@ -4,16 +4,41 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using System;
+
+  using Microsoft.AspNetCore.Identity;
+  using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
+  /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [Route("profile")]
   public sealed class ProfileController : Controller
   {
     public const string ViewName = "ProfileView";
 
-    [HttpGet("{userId}")]
-    public IActionResult Get(ProfileViewModel vm)
+    private readonly SignInManager<UserEntity> _signInManager;
+    private readonly IUserRepository _userRepository;
+
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.ProfileController"/> class.</summary>
+    /// <param name="signInManager">An object that provides the APIs for user sign in.</param>
+    /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
+    public ProfileController(SignInManager<UserEntity> signInManager, IUserRepository userRepository)
     {
+      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+      _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+    }
+
+    /// <summary>Handles the GET request.</summary>
+    /// <param name="vm">An object that represents the view model for the profile action.</param>
+    /// <returns>An object that defines a contract that represents the result of an action method.</returns>
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> Get(Guid userId, ProfileViewModel vm, CancellationToken cancellationToken)
+    {
+      vm.UserId = userId;
+      var userEntity = await _userRepository.GetUserAsync(vm, cancellationToken);
+      vm.FromEntity(userEntity);
+
       return View(ProfileController.ViewName, vm);
     }
   }
