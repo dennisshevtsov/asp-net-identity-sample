@@ -17,16 +17,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "ProfileView";
 
-    private readonly SignInManager<UserEntity> _signInManager;
     private readonly IUserRepository _userRepository;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.ProfileController"/> class.</summary>
-    /// <param name="signInManager">An object that provides the APIs for user sign in.</param>
     /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    public ProfileController(SignInManager<UserEntity> signInManager, IUserRepository userRepository)
+    public ProfileController(IUserRepository userRepository)
     {
       _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-      _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
     }
 
     /// <summary>Handles the GET request.</summary>
@@ -36,9 +33,22 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
       var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
+
       vm.FromEntity(userEntity!);
 
       return View(ProfileController.ViewName, vm);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(ProfileViewModel vm, CancellationToken cancellationToken)
+    {
+      var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
+
+      vm.ToEntity(userEntity!);
+
+      await _userRepository.UpdateUserAsync(userEntity!, cancellationToken);
+
+      return RedirectToAction(nameof(ProfileController.Get), new { rerturnUrl = vm.ReturnUrl });
     }
   }
 }
