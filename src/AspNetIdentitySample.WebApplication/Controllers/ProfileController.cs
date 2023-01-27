@@ -5,9 +5,7 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
-  using Microsoft.AspNetCore.Identity;
 
-  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
