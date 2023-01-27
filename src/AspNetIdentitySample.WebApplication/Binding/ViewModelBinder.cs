@@ -92,8 +92,7 @@ namespace AspNetIdentitySample.WebApplication.Binding
         throw new Exception($"There is no user with email ${userEmail}");
       }
 
-      vm.User.Name = userEntity.Name;
-      vm.User.IsAuthenticated = true;
+      vm.User.FromEntity(userEntity);
     }
   }
 }

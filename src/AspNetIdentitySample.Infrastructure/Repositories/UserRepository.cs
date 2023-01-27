@@ -7,6 +7,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
   using Microsoft.EntityFrameworkCore;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
 
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</summary>
@@ -21,6 +22,17 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
+    /// <summary>Gets a user by a user ID.</summary>
+    /// <param name="identity">An object that represents conditions to query a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task<UserEntity?> GetUserAsync(IUserIdentity identity, CancellationToken cancellationToken)
+        => _dbContext.Set<UserEntity>()
+                     .AsNoTracking()
+                     .WithPartitionKey(identity.UserId.ToString())
+                     .Where(entity => entity.Id == identity.UserId)
+                     .FirstOrDefaultAsync(cancellationToken);
+
     /// <summary>Gets a user by a user email.</summary>
     /// <param name="email">An object that represents an email of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
@@ -30,5 +42,16 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
                    .AsNoTracking()
                    .Where(entity => string.Equals(entity.Email, email, StringComparison.OrdinalIgnoreCase))
                    .FirstOrDefaultAsync(cancellationToken);
+
+    /// <summary>Updates a user.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task UpdateUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    {
+      _dbContext.Update(userEntity);
+
+      return _dbContext.SaveChangesAsync(cancellationToken);
+    }
   }
 }

@@ -35,11 +35,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet("signin")]
     public IActionResult Get(SignInAccountViewModel vm)
     {
-      if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
-      {
-        return RedirectToAction(nameof(HomeController.Get), "home");
-      }
-
       ModelState.Clear();
 
       return View(SignInController.ViewName, vm);
@@ -51,11 +46,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpPost("signin")]
     public async Task<IActionResult> Post(SignInAccountViewModel vm)
     {
-      if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
-      {
-        return RedirectToAction(nameof(HomeController.Get), "home");
-      }
-
       if (ModelState.IsValid)
       {
         var signInResult = await _signInManager.PasswordSignInAsync(vm.Email!, vm.Password!, false, false);

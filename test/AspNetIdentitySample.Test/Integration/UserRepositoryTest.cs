@@ -22,7 +22,49 @@ namespace AspNetIdentitySample.Test.Integration
     }
 
     [TestMethod]
-    public async Task GetUserAsync_Should_Return_User()
+    public async Task GetUserAsync_Should_Return_User_By_Id()
+    {
+      var controlUserEntity = await CreateTestUserAsync();
+
+      var actualUserEntity =
+        await _userRepository.GetUserAsync(controlUserEntity, Token);
+
+      Assert.IsNotNull(actualUserEntity);
+
+      Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
+      Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
+      Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_Untracking_User_By_Id()
+    {
+      var controlUserEntity = await CreateTestUserAsync();
+
+      var actualUserEntity =
+        await _userRepository.GetUserAsync(controlUserEntity, Token);
+
+      Assert.IsNotNull(actualUserEntity);
+      Assert.AreEqual(EntityState.Detached, DbContext.Entry(actualUserEntity).State);
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_Null_By_Id()
+    {
+      var inexistingUserId = Guid.NewGuid();
+      var inexistingUserEntity = new UserEntity
+      {
+        Id = inexistingUserId,
+        UserId = inexistingUserId,
+      };
+
+      var actualUserEntity = await _userRepository.GetUserAsync(inexistingUserEntity, Token);
+
+      Assert.IsNull(actualUserEntity);
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_User_By_Email()
     {
       var controlUserEntity = await CreateTestUserAsync();
 
@@ -38,7 +80,7 @@ namespace AspNetIdentitySample.Test.Integration
     }
 
     [TestMethod]
-    public async Task GetUserAsync_Should_Return_Untracking_User()
+    public async Task GetUserAsync_Should_Return_Untracking_User_By_Email()
     {
       var controlUserEntity = await CreateTestUserAsync();
 
@@ -51,12 +93,34 @@ namespace AspNetIdentitySample.Test.Integration
     }
 
     [TestMethod]
-    public async Task GetUserAsync_Should_Return_Null()
+    public async Task GetUserAsync_Should_Return_Null_By_Email()
     {
       var actualUserEntity =
         await _userRepository.GetUserAsync(Guid.NewGuid().ToString(), Token);
 
       Assert.IsNull(actualUserEntity);
+    }
+
+    [TestMethod]
+    public async Task UpdateUserAsync_Should_Return_Save_User()
+    {
+      var updatingUserEntity = await CreateTestUserAsync();
+
+      updatingUserEntity.Email = Guid.NewGuid().ToString();
+      updatingUserEntity.Name = Guid.NewGuid().ToString();
+
+      await _userRepository.UpdateUserAsync(updatingUserEntity, Token);
+
+      var updatedUserEntity =
+        await DbContext.Set<UserEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(updatingUserEntity.UserId.ToString())
+                       .Where(entity => entity.Id == updatingUserEntity.Id)
+                       .FirstOrDefaultAsync(Token);
+
+      Assert.IsNotNull(updatedUserEntity);
+      Assert.AreEqual(updatingUserEntity.Email, updatedUserEntity.Email);
+      Assert.AreEqual(updatingUserEntity.Name, updatedUserEntity.Name);
     }
 
     private async Task<UserEntity> CreateTestUserAsync()
