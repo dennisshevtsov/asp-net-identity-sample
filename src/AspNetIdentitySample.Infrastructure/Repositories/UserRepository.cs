@@ -42,5 +42,16 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
                    .AsNoTracking()
                    .Where(entity => string.Equals(entity.Email, email, StringComparison.OrdinalIgnoreCase))
                    .FirstOrDefaultAsync(cancellationToken);
+
+    /// <summary>Updates a user.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task UpdateUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    {
+      _dbContext.Update(userEntity);
+
+      return _dbContext.SaveChangesAsync(cancellationToken);
+    }
   }
 }
