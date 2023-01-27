@@ -7,8 +7,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
   using Microsoft.EntityFrameworkCore;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.ApplicationCore.Identities;
+  using AspNetIdentitySample.ApplicationCore.Repositories;
 
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</summary>
   public sealed class UserRepository : IUserRepository
