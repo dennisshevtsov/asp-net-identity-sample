@@ -54,6 +54,7 @@ namespace AspNetIdentitySample.Test.Unit
 
       Assert.IsNotNull(viewResult);
       Assert.IsNotNull(viewResult.Model);
+      Assert.AreEqual(ProfileController.ViewName, viewResult.ViewName);
 
       var actualViewModel = viewResult.Model as ProfileViewModel;
 
@@ -62,6 +63,48 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.AreEqual(userEntity.Email, actualViewModel.Email);
 
       _userRepositoryMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));
+      _userRepositoryMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Update_Current_User()
+    {
+      var userName = Guid.NewGuid().ToString();
+      var userEmail = Guid.NewGuid().ToString();
+      var userEntity = new UserEntity
+      {
+        Name = userName,
+        Email = userEmail,
+      };
+
+      _userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(userEntity)
+                         .Verifiable();
+
+      _userRepositoryMock.Setup(repository => repository.UpdateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                         .Returns(Task.CompletedTask)
+                         .Verifiable();
+
+      var viewModel = new ProfileViewModel
+      {
+        Name = Guid.NewGuid().ToString(),
+        Email = Guid.NewGuid().ToString(),
+      };
+
+      var actionResult = await _profileController.Post(viewModel, _cancellationToken);
+
+      Assert.IsNotNull(actionResult);
+
+      var redirectResult = actionResult as RedirectToActionResult;
+
+      Assert.IsNotNull(redirectResult);
+      Assert.AreEqual(nameof(ProfileController.Get), redirectResult.ActionName);
+
+      Assert.AreEqual(viewModel.Name, userEntity.Name);
+      Assert.AreEqual(userEmail, userEntity.Email);
+
+      _userRepositoryMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));
+      _userRepositoryMock.Verify(repository => repository.UpdateUserAsync(userEntity, _cancellationToken));
       _userRepositoryMock.VerifyNoOtherCalls();
     }
   }
