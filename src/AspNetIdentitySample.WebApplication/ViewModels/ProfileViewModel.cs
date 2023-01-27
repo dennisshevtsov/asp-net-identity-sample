@@ -15,6 +15,10 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     public string? Email { get; set; }
 
+    /// <summary>Gets/sets an object that represents a return URL.</summary>
+    [FromQuery]
+    public string ReturnUrl { get; set; } = "/";
+
     /// <summary>Populates the view model with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
     public void FromEntity(UserEntity userEntity)
