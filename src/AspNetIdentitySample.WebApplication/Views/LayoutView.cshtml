@@ -26,7 +26,7 @@
             </a>
             <nav class="app-profile-menu__nav dropdown-menu">
               <a class="app-profile-menu__item" asp-controller="Profile" asp-action="Get" asp-route-returnUrl="@Context.Request.Path"><span>Profile</span></a>
-              <a class="app-profile-menu__item" asp-controller="SignOut" asp-action="Get"><span>Sign out</span></a>
+              <a class="app-profile-menu__item" asp-controller="SignOut" asp-action="Get" asp-route-returnUrl="@Context.Request.Path"><span>Sign out</span></a>
             </nav>
           </div>
         }
