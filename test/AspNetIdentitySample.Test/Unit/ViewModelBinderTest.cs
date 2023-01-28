@@ -21,6 +21,10 @@ namespace AspNetIdentitySample.Test.Unit
   {
 #pragma warning disable CS8618
     private Mock<ModelBindingContext> _modelBindingContextMock;
+    private Mock<ModelMetadata> _modelMetadataMock;
+    private Mock<ModelMetadata> _modelId0MetadataMock;
+    private Mock<ModelMetadata> _modelId1MetadataMock;
+
     private Mock<HttpContext> _httpContextMock;
     private Mock<HttpRequest> _httpRequestMock;
     private Mock<ClaimsPrincipal> _userMock;
@@ -56,6 +60,48 @@ namespace AspNetIdentitySample.Test.Unit
 
       _modelBindingContextMock.SetupGet(context => context.HttpContext)
                               .Returns(_httpContextMock.Object)
+                              .Verifiable();
+
+      _modelMetadataMock = new Mock<ModelMetadata>(
+        ModelMetadataIdentity.ForType(typeof(TestViewModel)));
+
+      _modelId0MetadataMock = new Mock<ModelMetadata>(
+        ModelMetadataIdentity.ForProperty(
+          typeof(TestViewModel).GetProperty(nameof(TestViewModel.ModelId0))!,
+          typeof(string),
+          typeof(TestViewModel)));
+
+      _modelId0MetadataMock.SetupGet(metadata => metadata.PropertySetter)
+                           .Returns((object a, object? b) => ((TestViewModel)a).ModelId0 = (string)b!)
+                           .Verifiable();
+
+      _modelId1MetadataMock = new Mock<ModelMetadata>(
+        ModelMetadataIdentity.ForProperty(
+          typeof(TestViewModel).GetProperty(nameof(TestViewModel.ModelId1))!,
+          typeof(Guid),
+          typeof(TestViewModel)));
+
+      _modelId1MetadataMock.SetupGet(metadata => metadata.PropertySetter)
+                           .Returns((object a, object? b) => ((TestViewModel)a).ModelId1 = (Guid)b!)
+                           .Verifiable();
+
+      var properties = new ModelPropertyCollection(
+        new[]
+        {
+          _modelId0MetadataMock.Object,
+          _modelId1MetadataMock.Object,
+        });
+
+      _modelMetadataMock.Setup(metadata => metadata.Properties)
+                        .Returns(properties)
+                        .Verifiable();
+
+      _modelBindingContextMock.SetupGet(context => context.ModelMetadata)
+                              .Returns(_modelMetadataMock.Object)
+                              .Verifiable();
+
+      _modelBindingContextMock.SetupGet(context => context.ModelType)
+                              .Returns(typeof(TestViewModel))
                               .Verifiable();
 
       _viewModelBinder = new ViewModelBinder();
@@ -97,6 +143,15 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.IsNotNull(vm);
       Assert.IsFalse(vm.User.IsAuthenticated);
 
+      _modelMetadataMock.Verify(metadata => metadata.Properties);
+      _modelMetadataMock.VerifyNoOtherCalls();
+
+      _modelId0MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId0MetadataMock.VerifyNoOtherCalls();
+
+      _modelId1MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId1MetadataMock.VerifyNoOtherCalls();
+
       _identityMock.Verify(identity => identity.Name);
       _identityMock.Verify(identity => identity.IsAuthenticated);
       _identityMock.VerifyNoOtherCalls();
@@ -112,6 +167,7 @@ namespace AspNetIdentitySample.Test.Unit
       _httpContextMock.VerifyGet(context => context.RequestAborted);
       _httpContextMock.VerifyNoOtherCalls();
 
+      _modelBindingContextMock.VerifyGet(context => context.ModelMetadata);
       _modelBindingContextMock.VerifyGet(context => context.HttpContext);
       _modelBindingContextMock.VerifyGet(context => context.ModelType);
       _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
@@ -178,6 +234,15 @@ namespace AspNetIdentitySample.Test.Unit
       serviceProviderMock.Verify(provider => provider.GetService(typeof(IUserRepository)));
       serviceProviderMock.VerifyNoOtherCalls();
 
+      _modelMetadataMock.Verify(metadata => metadata.Properties);
+      _modelMetadataMock.VerifyNoOtherCalls();
+
+      _modelId0MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId0MetadataMock.VerifyNoOtherCalls();
+
+      _modelId1MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId1MetadataMock.VerifyNoOtherCalls();
+
       _identityMock.Verify(identity => identity.Name);
       _identityMock.Verify(identity => identity.IsAuthenticated);
       _identityMock.VerifyNoOtherCalls();
@@ -194,6 +259,7 @@ namespace AspNetIdentitySample.Test.Unit
       _httpContextMock.VerifyGet(context => context.RequestServices);
       _httpContextMock.VerifyNoOtherCalls();
 
+      _modelBindingContextMock.VerifyGet(context => context.ModelMetadata);
       _modelBindingContextMock.VerifyGet(context => context.HttpContext);
       _modelBindingContextMock.VerifyGet(context => context.ModelType);
       _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
@@ -226,6 +292,15 @@ namespace AspNetIdentitySample.Test.Unit
 
       await _viewModelBinder.BindModelAsync(_modelBindingContextMock.Object);
 
+      _modelMetadataMock.Verify(metadata => metadata.Properties);
+      _modelMetadataMock.VerifyNoOtherCalls();
+
+      _modelId0MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId0MetadataMock.VerifyNoOtherCalls();
+
+      _modelId1MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId1MetadataMock.VerifyNoOtherCalls();
+
       _identityMock.Verify(identity => identity.Name);
       _identityMock.Verify(identity => identity.IsAuthenticated);
       _identityMock.VerifyNoOtherCalls();
@@ -241,6 +316,7 @@ namespace AspNetIdentitySample.Test.Unit
       _httpContextMock.VerifyGet(context => context.RequestAborted);
       _httpContextMock.VerifyNoOtherCalls();
 
+      _modelBindingContextMock.VerifyGet(context => context.ModelMetadata);
       _modelBindingContextMock.VerifyGet(context => context.HttpContext);
       _modelBindingContextMock.VerifyGet(context => context.ModelType);
       _modelBindingContextMock.VerifySet(context => context.Result = ModelBindingResult.Success(new TestViewModel()));
@@ -273,48 +349,6 @@ namespace AspNetIdentitySample.Test.Unit
                       }))
                       .Verifiable();
 
-      var modelMetadataMock = new Mock<ModelMetadata>(
-        ModelMetadataIdentity.ForType(typeof(TestViewModel)));
-
-      var modelId0MetadataMock = new Mock<ModelMetadata>(
-        ModelMetadataIdentity.ForProperty(
-          typeof(TestViewModel).GetProperty(nameof(TestViewModel.ModelId0))!,
-          typeof(string),
-          typeof(TestViewModel)));
-
-      modelId0MetadataMock.SetupGet(metadata => metadata.PropertySetter)
-                          .Returns((object a, object? b) => ((TestViewModel)a).ModelId0 = (string)b!)
-                          .Verifiable();
-
-      var modelId1MetadataMock = new Mock<ModelMetadata>(
-        ModelMetadataIdentity.ForProperty(
-          typeof(TestViewModel).GetProperty(nameof(TestViewModel.ModelId1))!,
-          typeof(Guid),
-          typeof(TestViewModel)));
-
-      modelId1MetadataMock.SetupGet(metadata => metadata.PropertySetter)
-                          .Returns((object a, object? b) => ((TestViewModel)a).ModelId1 = (Guid)b!)
-                          .Verifiable();
-
-      var properties = new ModelPropertyCollection(
-        new[]
-        {
-          modelId0MetadataMock.Object,
-          modelId1MetadataMock.Object,
-        });
-
-      modelMetadataMock.Setup(metadata => metadata.Properties)
-                       .Returns(properties)
-                       .Verifiable();
-
-      _modelBindingContextMock.SetupGet(context => context.ModelMetadata)
-                              .Returns(modelMetadataMock.Object)
-                              .Verifiable();
-
-      _modelBindingContextMock.SetupGet(context => context.ModelType)
-                              .Returns(typeof(TestViewModel))
-                              .Verifiable();
-
       ModelBindingResult modelBindingResult = default;
 
 #pragma warning disable CS0618
@@ -333,14 +367,14 @@ namespace AspNetIdentitySample.Test.Unit
       Assert.AreEqual(modelId0, vm.ModelId0);
       Assert.AreEqual(modelId1, vm.ModelId1);
 
-      modelMetadataMock.Verify(metadata => metadata.Properties);
-      modelMetadataMock.VerifyNoOtherCalls();
+      _modelMetadataMock.Verify(metadata => metadata.Properties);
+      _modelMetadataMock.VerifyNoOtherCalls();
 
-      modelId0MetadataMock.Verify(metadata => metadata.PropertySetter);
-      modelId0MetadataMock.VerifyNoOtherCalls();
+      _modelId0MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId0MetadataMock.VerifyNoOtherCalls();
 
-      modelId1MetadataMock.Verify(metadata => metadata.PropertySetter);
-      modelId1MetadataMock.VerifyNoOtherCalls();
+      _modelId1MetadataMock.Verify(metadata => metadata.PropertySetter);
+      _modelId1MetadataMock.VerifyNoOtherCalls();
 
       _identityMock.Verify(identity => identity.Name);
       _identityMock.Verify(identity => identity.IsAuthenticated);
