@@ -8,7 +8,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   public abstract class AccountViewModelBase : ViewModelBase
   {
     /// <summary>Gets/sets an object that represents a URL to that the app should return after an successful login.</summary>
-    [FromQuery]
     public string ReturnUrl { get; set; } = "/";
   }
 }
