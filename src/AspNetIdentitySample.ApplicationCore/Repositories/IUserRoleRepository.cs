@@ -11,9 +11,15 @@ namespace AspNetIdentitySample.ApplicationCore.Repositories
   public interface IUserRoleRepository
   {
     /// <summary>Gets a collection of user and role relations.</summary>
-    /// <param name="userIdentity">An object that represents conditions to query a user.</param>
+    /// <param name="identity">An object that represents conditions to query a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task<List<UserRoleEntity>> GetRolesAsync(IUserIdentity userIdentity, CancellationToken cancellationToken);
+    public Task<List<UserRoleEntity>> GetRolesAsync(IUserIdentity identity, CancellationToken cancellationToken);
+
+    /// <summary>Gets a collection of user and role relations.</summary>
+    /// <param name="identities">An object that represents conditions to query a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task<Dictionary<IUserIdentity, List<UserRoleEntity>>> GetRolesAsync(IUserIdentity[] identities, CancellationToken cancellationToken);
   }
 }
