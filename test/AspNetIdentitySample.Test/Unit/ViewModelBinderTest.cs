@@ -8,15 +8,15 @@ namespace AspNetIdentitySample.Test.Unit
   using System.Security.Principal;
 
   using Microsoft.AspNetCore.Http;
+  using Microsoft.AspNetCore.Mvc;
   using Microsoft.AspNetCore.Mvc.ModelBinding;
   using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+  using Microsoft.AspNetCore.Routing;
   using Microsoft.Extensions.Primitives;
   using Moq;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.Binding;
-  using Microsoft.AspNetCore.Mvc;
-  using Microsoft.AspNetCore.Routing;
 
   [TestClass]
   public sealed class ViewModelBinderTest
