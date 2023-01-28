@@ -7,7 +7,6 @@ namespace AspNetIdentitySample.WebApplication.Binding
   using System.ComponentModel;
   using System.Security.Claims;
 
-  using Microsoft.AspNetCore.Http;
   using Microsoft.AspNetCore.Mvc.ModelBinding;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
@@ -24,14 +23,19 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
       var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-      await ViewModelBinder.FillOutFormAsync(vm, bindingContext, cancellationToken);
+      var properties = ViewModelBinder.GetProperties(bindingContext);
+
+      await ViewModelBinder.FillOutFormAsync(vm, properties, bindingContext, cancellationToken);
       await ViewModelBinder.FillOutUserAsync(vm, bindingContext, cancellationToken);
 
       bindingContext.Result = ModelBindingResult.Success(vm);
     }
 
     private static async Task FillOutFormAsync(
-      ViewModelBase vm, ModelBindingContext bindingContext, CancellationToken cancellationToken)
+      ViewModelBase vm,
+      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      ModelBindingContext bindingContext,
+      CancellationToken cancellationToken)
     {
       if (!bindingContext.HttpContext.Request.HasFormContentType)
       {
@@ -41,26 +45,36 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var formCollection =
         await bindingContext.HttpContext.Request.ReadFormAsync(cancellationToken);
 
-      foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
+      foreach (var formValue in formCollection)
       {
-        ViewModelBinder.FillOutFormProperty(vm, propertyMetadata, formCollection);
+        if (properties.TryGetValue(formValue.Key, out var property))
+        {
+          property.Item1(vm, property.Item2.ConvertFrom(formValue.Value.ToString()));
+        }
       }
     }
 
-    private static void FillOutFormProperty(
-      ViewModelBase vm, ModelMetadata propertyMetadata, IFormCollection formCollection)
+    private static IDictionary<string, (Action<object, object?>, TypeConverter)> GetProperties(
+      ModelBindingContext bindingContext)
     {
-      TypeConverter? typeConverter;
+      var properties = new Dictionary<string, (Action<object, object?>, TypeConverter)>();
 
-      if (propertyMetadata != null &&
+      foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
+      {
+        TypeConverter? typeConverter;
+
+        if (propertyMetadata != null &&
           propertyMetadata.PropertySetter != null &&
           propertyMetadata.PropertyName != null &&
-          formCollection.TryGetValue(propertyMetadata.PropertyName, out var propertyValue) &&
           (typeConverter = TypeDescriptor.GetConverter(propertyMetadata.ModelType)) != null)
-      {
-        propertyMetadata.PropertySetter(
-          vm, typeConverter.ConvertFrom(propertyValue.ToString()));
+        {
+          properties.Add(
+            propertyMetadata.PropertyName,
+            (propertyMetadata.PropertySetter, typeConverter));
+        }
       }
+
+      return properties;
     }
 
     private static bool CheckIfRequestIsAuthenticated(ClaimsPrincipal user)
