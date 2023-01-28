@@ -25,13 +25,45 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
       var properties = ViewModelBinder.GetProperties(bindingContext);
 
-      await ViewModelBinder.FillOutFormAsync(vm, properties, bindingContext, cancellationToken);
+      await ViewModelBinder.FillOutFormValuesAsync(vm, properties, bindingContext, cancellationToken);
+      ViewModelBinder.FillOutRouteValues(vm, properties, bindingContext);
+      ViewModelBinder.FillOutQueryStringValues(vm, properties, bindingContext);
+
       await ViewModelBinder.FillOutUserAsync(vm, bindingContext, cancellationToken);
 
       bindingContext.Result = ModelBindingResult.Success(vm);
     }
 
-    private static async Task FillOutFormAsync(
+    private static void FillOutQueryStringValues(
+      ViewModelBase vm,
+      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      ModelBindingContext bindingContext)
+    {
+      foreach (var queryValue in bindingContext.HttpContext.Request.Query)
+      {
+        if (properties.TryGetValue(queryValue.Key, out var property))
+        {
+          property.Item1(vm, property.Item2.ConvertFrom(queryValue.Value.ToString()));
+        }
+      }
+    }
+
+    private static void FillOutRouteValues(
+      ViewModelBase vm,
+      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      ModelBindingContext bindingContext)
+    {
+      foreach (var routeValue in bindingContext.ActionContext.RouteData.Values)
+      {
+        if (routeValue.Value != null &&
+            properties.TryGetValue(routeValue.Key, out var property))
+        {
+          property.Item1(vm, property.Item2.ConvertFrom(routeValue.Value));
+        }
+      }
+    }
+
+    private static async Task FillOutFormValuesAsync(
       ViewModelBase vm,
       IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
       ModelBindingContext bindingContext,
@@ -57,7 +89,8 @@ namespace AspNetIdentitySample.WebApplication.Binding
     private static IDictionary<string, (Action<object, object?>, TypeConverter)> GetProperties(
       ModelBindingContext bindingContext)
     {
-      var properties = new Dictionary<string, (Action<object, object?>, TypeConverter)>();
+      var properties = new Dictionary<string, (Action<object, object?>, TypeConverter)>(
+        StringComparer.OrdinalIgnoreCase);
 
       foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
       {
