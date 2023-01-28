@@ -38,7 +38,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
     /// <param name="identities">An object that represents a collection of the <see cref="AspNetIdentitySample.ApplicationCore.Identities.IUserIdentity"/>.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public async Task<Dictionary<IUserIdentity, List<UserRoleEntity>>> GetRolesAsync(IUserIdentity[] identities, CancellationToken cancellationToken)
+    public async Task<Dictionary<IUserIdentity, List<UserRoleEntity>>> GetRolesAsync(IEnumerable<IUserIdentity> identities, CancellationToken cancellationToken)
     {
       var userIdCollection = identities.Select(entity => entity.UserId)
                                        .ToArray();
