@@ -1,0 +1,28 @@
+﻿.app-user-list {
+  @extend .w-100;
+
+  &__header {
+  }
+
+  &__body {
+  }
+
+  &__cell {
+    @extend .p-1;
+
+    &_name {
+    }
+
+    &_email {
+    }
+
+    &_roles {
+    }
+
+    &_actions {
+    }
+  }
+
+  &__action {
+  }
+}
