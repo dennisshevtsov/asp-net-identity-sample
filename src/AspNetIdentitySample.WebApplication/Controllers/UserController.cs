@@ -4,6 +4,9 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using System;
+
+  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
@@ -12,9 +15,20 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "UserListView";
 
-    [HttpGet]
-    public IActionResult Get(UserListViewModel vm)
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
     {
+      _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get(UserListViewModel vm, CancellationToken cancellationToken)
+    {
+      var userEntityCollection = await _userService.GetUsersAsync(cancellationToken);
+
+      vm.WithUsers(userEntityCollection);
+
       return View(UserController.ViewName, vm);
     }
   }

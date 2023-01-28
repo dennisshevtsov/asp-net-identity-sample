@@ -4,6 +4,7 @@
 
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents the view model for the user list action.</summary>
@@ -11,6 +12,19 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   {
     /// <summary>Gets/sets an object that represents a collection of user records.</summary>
     public IList<UserViewModel> Users { get; set; } = new List<UserViewModel>();
+
+    public void WithUsers(List<UserEntity> userEnittyCollection)
+    {
+      foreach (var userEntity in userEnittyCollection)
+      {
+        Users.Add(new UserViewModel
+        {
+          UserId = userEntity.UserId,
+          Name = userEntity.Name,
+          Email = userEntity.Email,
+        });
+      }
+    }
 
     /// <summary>Represents the view model for the user record.</summary>
     public sealed class UserViewModel : IUserIdentity
