@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   [Route("user")]
   public class UserController : Controller
   {
-    public const string ViewName = "UserView";
+    public const string ViewName = "UserListView";
 
     [HttpGet]
     public IActionResult Get(UserListViewModel vm)

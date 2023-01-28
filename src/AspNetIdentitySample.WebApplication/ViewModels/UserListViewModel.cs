@@ -23,6 +23,9 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 
       /// <summary>Gets/sets an object that represents an email of a user.</summary>
       public string? Email { get; set; }
+
+      /// <summary>Gets/sets an object that represents a string of user roles.</summary>
+      public string? Roles { get; set; }
     }
   }
 }
