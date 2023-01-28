@@ -8,6 +8,7 @@ namespace AspNetIdentitySample.WebApplication.Binding
   using System.Security.Claims;
 
   using Microsoft.AspNetCore.Mvc.ModelBinding;
+  using Microsoft.Extensions.Primitives;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
   using AspNetIdentitySample.WebApplication.ViewModels;
@@ -23,11 +24,11 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var vm = (ViewModelBase)Activator.CreateInstance(bindingContext.ModelType)!;
       var cancellationToken = bindingContext.HttpContext.RequestAborted;
 
-      var properties = ViewModelBinder.GetProperties(bindingContext);
+      var propertySetters = ViewModelBinder.GetPropertySetters(bindingContext);
 
-      await ViewModelBinder.FillOutFormValuesAsync(vm, properties, bindingContext, cancellationToken);
-      ViewModelBinder.FillOutRouteValues(vm, properties, bindingContext);
-      ViewModelBinder.FillOutQueryStringValues(vm, properties, bindingContext);
+      await ViewModelBinder.FillOutFormValuesAsync(vm, propertySetters, bindingContext, cancellationToken);
+      ViewModelBinder.FillOutRouteValues(vm, propertySetters, bindingContext);
+      ViewModelBinder.FillOutQueryStringValues(vm, propertySetters, bindingContext);
 
       await ViewModelBinder.FillOutUserAsync(vm, bindingContext, cancellationToken);
 
@@ -36,36 +37,29 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
     private static void FillOutQueryStringValues(
       ViewModelBase vm,
-      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      IDictionary<string, Action<object, object>> propertySetters,
       ModelBindingContext bindingContext)
-    {
-      foreach (var queryValue in bindingContext.HttpContext.Request.Query)
-      {
-        if (properties.TryGetValue(queryValue.Key, out var property))
-        {
-          property.Item1(vm, property.Item2.ConvertFrom(queryValue.Value.ToString()));
-        }
-      }
-    }
+      => ViewModelBinder.FillOutProperties(
+        vm, propertySetters, bindingContext.HttpContext.Request.Query);
 
     private static void FillOutRouteValues(
       ViewModelBase vm,
-      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      IDictionary<string, Action<object, object>> propertySetters,
       ModelBindingContext bindingContext)
     {
       foreach (var routeValue in bindingContext.ActionContext.RouteData.Values)
       {
         if (routeValue.Value != null &&
-            properties.TryGetValue(routeValue.Key, out var property))
+            propertySetters.TryGetValue(routeValue.Key, out var propertySetter))
         {
-          property.Item1(vm, property.Item2.ConvertFrom(routeValue.Value));
+          propertySetter(vm, routeValue.Value);
         }
       }
     }
 
     private static async Task FillOutFormValuesAsync(
       ViewModelBase vm,
-      IDictionary<string, (Action<object, object?>, TypeConverter)> properties,
+      IDictionary<string, Action<object, object>> propertySetters,
       ModelBindingContext bindingContext,
       CancellationToken cancellationToken)
     {
@@ -77,33 +71,42 @@ namespace AspNetIdentitySample.WebApplication.Binding
       var formCollection =
         await bindingContext.HttpContext.Request.ReadFormAsync(cancellationToken);
 
-      foreach (var formValue in formCollection)
+      ViewModelBinder.FillOutProperties(vm, propertySetters, formCollection);
+    }
+
+    private static void FillOutProperties(
+      ViewModelBase vm,
+      IDictionary<string, Action<object, object>> propertySetters,
+      IEnumerable<KeyValuePair<string, StringValues>> values)
+    {
+      foreach (var value in values)
       {
-        if (properties.TryGetValue(formValue.Key, out var property))
+        if (propertySetters.TryGetValue(value.Key, out var propertySetter))
         {
-          property.Item1(vm, property.Item2.ConvertFrom(formValue.Value.ToString()));
+          propertySetter(vm, value.Value.ToString());
         }
       }
     }
 
-    private static IDictionary<string, (Action<object, object?>, TypeConverter)> GetProperties(
+    private static IDictionary<string, Action<object, object>> GetPropertySetters(
       ModelBindingContext bindingContext)
     {
-      var properties = new Dictionary<string, (Action<object, object?>, TypeConverter)>(
+      var properties = new Dictionary<string, Action<object, object>>(
         StringComparer.OrdinalIgnoreCase);
 
-      foreach (var propertyMetadata in bindingContext.ModelMetadata.Properties)
+      foreach (var property in bindingContext.ModelMetadata.Properties)
       {
         TypeConverter? typeConverter;
 
-        if (propertyMetadata != null &&
-          propertyMetadata.PropertySetter != null &&
-          propertyMetadata.PropertyName != null &&
-          (typeConverter = TypeDescriptor.GetConverter(propertyMetadata.ModelType)) != null)
+        if (property != null &&
+            property.PropertySetter != null &&
+            property.PropertyName != null &&
+            (typeConverter = TypeDescriptor.GetConverter(property.ModelType)) != null)
         {
           properties.Add(
-            propertyMetadata.PropertyName,
-            (propertyMetadata.PropertySetter, typeConverter));
+            property.PropertyName,
+            (vm, value) => property.PropertySetter(
+              vm, typeConverter.ConvertFrom(value)));
         }
       }
 
