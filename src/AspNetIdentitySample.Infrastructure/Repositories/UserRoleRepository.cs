@@ -66,7 +66,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       return userRoleEntityDictionary;
     }
 
-    private sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
+    public sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
     {
       public bool Equals(IUserIdentity? a, IUserIdentity? b)
       {
