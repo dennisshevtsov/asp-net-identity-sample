@@ -1,14 +1,15 @@
 ﻿.app-user-list {
-  @extend .w-100;
+  @extend .table;
 
   &__header {
+    @extend .table-primary;
   }
 
   &__body {
   }
 
   &__cell {
-    @extend .p-1;
+    @extend .p-3;
 
     &_name {
     }
