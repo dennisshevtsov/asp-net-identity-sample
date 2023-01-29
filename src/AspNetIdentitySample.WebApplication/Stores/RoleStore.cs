@@ -1,8 +1,13 @@
-﻿using AspNetIdentitySample.ApplicationCore.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿// Copyright (c) Dennis Shevtsov. All rights reserved.
+// Licensed under the MIT License.
+// See LICENSE in the project root for license information.
 
 namespace AspNetIdentitySample.WebApplication.Stores
 {
+  using Microsoft.AspNetCore.Identity;
+
+  using AspNetIdentitySample.ApplicationCore.Entities;
+
   public sealed class RoleStore : IRoleStore<RoleEntity>
   {
     /// <summary>
