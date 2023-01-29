@@ -1,0 +1,29 @@
+﻿.app-user-list {
+  @extend .table;
+
+  &__header {
+    @extend .table-primary;
+  }
+
+  &__body {
+  }
+
+  &__cell {
+    @extend .p-3;
+
+    &_name {
+    }
+
+    &_email {
+    }
+
+    &_roles {
+    }
+
+    &_actions {
+    }
+  }
+
+  &__action {
+  }
+}

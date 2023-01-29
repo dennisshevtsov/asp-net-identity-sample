@@ -4,8 +4,6 @@
 
 namespace AspNetIdentitySample.ApplicationCore.Entities
 {
-  using AspNetIdentitySample.ApplicationCore.Identities;
-
   /// <summary>Represents details of a user.</summary>
   public sealed class UserEntity : UserEntityBase
   {
@@ -20,5 +18,8 @@ namespace AspNetIdentitySample.ApplicationCore.Entities
 
     /// <summary>Gets/sets an object that represents a password hash of a user.</summary>
     public string? PasswordHash { get; set; }
+
+    /// <summary>Gets/sets an object that represents a collection of user roles.</summary>
+    public List<UserRoleEntity>? Roles { get; set; }
   }
 }

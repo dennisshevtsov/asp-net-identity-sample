@@ -1,0 +1,26 @@
+﻿@model AspNetIdentitySample.WebApplication.ViewModels.UserListViewModel
+
+<table class="app-user-list">
+  <thead class="app-user-list__header">
+    <tr>
+      <th class="app-user-list__cell app-user-list__cell_name"><span>Name</span></th>
+      <th class="app-user-list__cell app-user-list__cell_email"><span>Email</span></th>
+      <th class="app-user-list__cell app-user-list__cell_roles"><span>Roles</span></th>
+      <th class="app-user-list__cell app-user-list__cell_actions"><span>Actions</span></th>
+    </tr>
+  </thead>
+  <tbody class="app-user-list__body">
+    @foreach (var user in Model.Users)
+    {
+      <tr>
+        <td class="app-user-list__cell app-user-list__cell_name"><span>@user.Name</span></td>
+        <td class="app-user-list__cell app-user-list__cell_email"><span>@user.Email</span></td>
+        <td class="app-user-list__cell app-user-list__cell_roles"><span>@user.Roles</span></td>
+        <td class="app-user-list__cell app-user-list__cell_actions">
+          <a class="app-user-list__action" href="#"><span>Edit</span></a>
+          <a class="app-user-list__action" href="#"><span>Delete</span></a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

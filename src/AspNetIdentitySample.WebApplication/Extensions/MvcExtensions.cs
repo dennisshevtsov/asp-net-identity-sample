@@ -4,10 +4,11 @@
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-  using AspNetIdentitySample.WebApplication.Binding;
   using Microsoft.AspNetCore.Mvc.Authorization;
   using Microsoft.AspNetCore.Mvc.Razor;
   using Microsoft.AspNetCore.Rewrite;
+
+  using AspNetIdentitySample.WebApplication.Binding;
 
   /// <summary>Provides a simple API to set up the MVC pipeline.</summary>
   public static class MvcExtensions
@@ -47,7 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
       var options =
         new RewriteOptions().AddRedirect("(.*)/$", "$1")
-                            .AddRedirect("^[/]?$", "home");
+                            .AddRedirect("^[/]?$", "user");
 
       app.UseRewriter(options);
 
