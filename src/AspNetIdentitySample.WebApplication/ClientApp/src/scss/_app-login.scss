@@ -8,11 +8,6 @@
     @extend .card-body;
   }
 
-  &__title {
-    @extend .card-title;
-    @extend .text-center;
-  }
-
   &__text {
     @extend .card-text;
     @extend .text-center;
