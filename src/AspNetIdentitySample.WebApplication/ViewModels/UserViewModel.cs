@@ -21,8 +21,5 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     [Required]
     public string? Email { get; set; }
-
-    /// <summary>Gets/sets an object that represents a return URL.</summary>
-    public string ReturnUrl { get; set; } = "/";
   }
 }
