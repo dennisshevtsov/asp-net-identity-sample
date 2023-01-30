@@ -5,7 +5,7 @@
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   /// <summary>Represents data to sign out an account.</summary>
-  public sealed class SignOutAccountViewModel : AccountViewModelBase
+  public sealed class SignOutAccountViewModel : ViewModelBase
   {
   }
 }

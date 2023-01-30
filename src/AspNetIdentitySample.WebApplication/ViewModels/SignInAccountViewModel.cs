@@ -7,7 +7,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   using System.ComponentModel.DataAnnotations;
 
   /// <summary>Represents data to sign in an account.</summary>
-  public sealed class SignInAccountViewModel : AccountViewModelBase
+  public sealed class SignInAccountViewModel : ViewModelBase
   {
     /// <summary>Gets/sets an object that represents an email of an account.</summary>
     [Required]

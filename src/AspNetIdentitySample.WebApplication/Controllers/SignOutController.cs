@@ -9,10 +9,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("account")]
+  [Route(Routing.AccountRoute)]
   public sealed class SignOutController : Controller
   {
     public const string ViewName = "SignOutView";
@@ -29,7 +30,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents data to sign out an account.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet("signout")]
+    [HttpGet(Routing.SignOutEndpoint)]
     public IActionResult Get(SignOutAccountViewModel vm)
     {
       return View(SignOutController.ViewName, vm);
@@ -38,7 +39,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the POST request.</summary>
     /// <param name="vm">An object that represents data to sign out an account.</param>
     /// <returns>An object that represents an asynchronous operation that produces a result at some time in the future. The result is an object that defines a contract that represents the result of an action method.</returns>
-    [HttpPost("signout")]
+    [HttpPost(Routing.SignOutEndpoint)]
     public async Task<IActionResult> Post(SignOutAccountViewModel vm)
     {
       await _signInManager.SignOutAsync();

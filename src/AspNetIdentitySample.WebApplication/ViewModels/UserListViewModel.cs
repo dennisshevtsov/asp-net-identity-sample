@@ -13,6 +13,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents a collection of user records.</summary>
     public IList<UserViewModel> Users { get; set; } = new List<UserViewModel>();
 
+    /// <summary>Fills out the view model with a collection of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</summary>
+    /// <param name="userEnittyCollection">An object that represents a collection of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</param>
     public void WithUsers(List<UserEntity> userEnittyCollection)
     {
       foreach (var userEntity in userEnittyCollection)

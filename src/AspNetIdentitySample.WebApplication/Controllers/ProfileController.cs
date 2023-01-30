@@ -7,10 +7,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using System;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("account")]
+  [Route(Routing.AccountRoute)]
   public sealed class ProfileController : Controller
   {
     public const string ViewName = "ProfileView";
@@ -26,7 +27,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
-    /// <returns>An object that defines a contract that represents the result of an action method.</returns>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     [HttpGet]
     public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
@@ -37,6 +39,10 @@ namespace AspNetIdentitySample.WebApplication.Controllers
       return View(ProfileController.ViewName, vm);
     }
 
+    /// <summary>Handles the POST request.</summary>
+    /// <param name="vm">An object that represents the view model for the profile action.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     [HttpPost]
     public async Task<IActionResult> Post(ProfileViewModel vm, CancellationToken cancellationToken)
     {

@@ -11,6 +11,9 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     public string PageTitle { get; set; } = "ASP.NET Core Identity Sample";
 
     /// <summary>Gets/sets an object that represents the current user.</summary>
-    public UserViewModel User { get; set; } = new UserViewModel();
+    public CurrentUserViewModel User { get; set; } = new CurrentUserViewModel();
+
+    /// <summary>Gets/sets an object that represents a URL to that the app should return after an successful login.</summary>
+    public string ReturnUrl { get; set; } = "/";
   }
 }

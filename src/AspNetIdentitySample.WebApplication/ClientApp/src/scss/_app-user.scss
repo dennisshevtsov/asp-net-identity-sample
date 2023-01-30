@@ -1,0 +1,24 @@
+﻿.app-user {
+  @extend .mt-3;
+
+  &__buttons {
+    @extend .mt-3;
+  }
+
+  &__ok, &__cancel {
+    @extend .btn-lg;
+    width: 200px;
+  }
+
+  &__ok + &__cancel {
+    @extend .ms-3;
+  }
+
+  &__ok {
+    @extend .btn-primary;
+  }
+
+  &__cancel {
+    @extend .btn-outline-primary;
+  }
+}

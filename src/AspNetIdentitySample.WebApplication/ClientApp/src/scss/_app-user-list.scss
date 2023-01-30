@@ -1,4 +1,5 @@
 ﻿.app-user-list {
+  @extend .mt-3;
   @extend .table;
 
   &__header {
