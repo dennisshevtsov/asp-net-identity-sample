@@ -1,0 +1,13 @@
+﻿.app-action-bar {
+  @extend .d-grid;
+  @extend .gap-2;
+  @extend .d-md-flex;
+  @extend .justify-content-md-end;
+
+  &__action {
+    @extend .btn;
+    @extend .btn-lg;
+    @extend .btn-primary;
+    width: 200px;
+  }
+}
