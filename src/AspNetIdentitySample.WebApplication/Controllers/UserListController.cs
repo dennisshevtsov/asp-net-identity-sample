@@ -11,13 +11,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [Route("user")]
-  public class UserController : Controller
+  public sealed class UserListController : Controller
   {
     public const string ViewName = "UserListView";
 
     private readonly IUserService _userService;
 
-    public UserController(IUserService userService)
+    public UserListController(IUserService userService)
     {
       _userService = userService ?? throw new ArgumentNullException(nameof(userService));
     }
@@ -29,7 +29,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
       vm.WithUsers(userEntityCollection);
 
-      return View(UserController.ViewName, vm);
+      return View(UserListController.ViewName, vm);
     }
   }
 }
