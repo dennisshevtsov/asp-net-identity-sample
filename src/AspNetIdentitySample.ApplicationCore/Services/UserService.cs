@@ -7,6 +7,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services
   using System;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
+  using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
 
   /// <summary>Provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</summary>
@@ -41,6 +42,25 @@ namespace AspNetIdentitySample.ApplicationCore.Services
       }
 
       return userEntityCollection;
+    }
+
+    /// <summary>Gets a user by a user identity.</summary>
+    /// <param name="identity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public async Task<UserEntity?> GetUserAsync(IUserIdentity identity, CancellationToken cancellationToken)
+    {
+      var userEntity = await _userRepository.GetUserAsync(identity, cancellationToken);
+
+      if (userEntity != null)
+      {
+        var userRoleEntityCollection =
+          await _userRoleRepository.GetRolesAsync(userEntity, cancellationToken);
+
+        userEntity.Roles = userRoleEntityCollection;
+      }
+
+      return userEntity;
     }
   }
 }
