@@ -16,7 +16,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     public string? Email { get; set; }
 
     /// <summary>Gets/sets an object that represents a return URL.</summary>
-    [FromQuery]
     public string ReturnUrl { get; set; } = "/";
 
     /// <summary>Populates the view model with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</summary>
