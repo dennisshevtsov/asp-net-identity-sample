@@ -7,10 +7,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using System;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("account")]
+  [Route(Routing.UserRoute)]
   public sealed class ProfileController : Controller
   {
     public const string ViewName = "ProfileView";

@@ -4,24 +4,22 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
-  using Microsoft.AspNetCore.Authorization;
-
   using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [AllowAnonymous]
   [Route(Routing.UserRoute)]
-  public sealed class AccessDeniedController : Controller
+  public sealed class UserController : Controller
   {
-    public const string ViewName = "AccessDeniedView";
+    public const string ViewName = "UserView";
 
     /// <summary>Handles the GET request.</summary>
+    /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet(Routing.AccessDeniedEndpoint)]
-    public IActionResult Get(AccessDeniedViewModel vm)
+    [HttpGet]
+    public IActionResult Get(UserViewModel vm)
     {
-      return View(AccessDeniedController.ViewName, vm);
+      return View(UserController.ViewName, vm);
     }
   }
 }

@@ -7,10 +7,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using System;
 
   using AspNetIdentitySample.ApplicationCore.Services;
+  using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route("user")]
+  [Route(Routing.UserRoute)]
   public sealed class UserListController : Controller
   {
     public const string ViewName = "UserListView";
