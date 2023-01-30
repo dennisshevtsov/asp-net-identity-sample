@@ -16,7 +16,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet]
+    [HttpGet(Routing.UserEndpoint)]
+    [HttpGet(Routing.NewUserEndpoint)]
     public IActionResult Get(UserViewModel vm)
     {
       return View(UserController.ViewName, vm);

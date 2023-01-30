@@ -15,5 +15,9 @@ namespace AspNetIdentitySample.WebApplication.Defaults
     public const string SignInEndpoint = "signin";
 
     public const string SignOutEndpoint = "signout";
+
+    public const string UserEndpoint = "{userId}";
+
+    public const string NewUserEndpoint = "new";
   }
 }
