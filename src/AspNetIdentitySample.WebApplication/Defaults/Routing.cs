@@ -23,7 +23,7 @@ namespace AspNetIdentitySample.WebApplication.Defaults
     public const string SignOutEndpoint = "signout";
 
     /// <summary>A value that represents an endpoint for a user page.</summary>
-    public const string UserEndpoint = "{userId}";
+    public const string UserEndpoint = "{userId:guid}";
 
     /// <summary>A value that represents an endpoint for a new user page.</summary>
     public const string NewUserEndpoint = "new";
