@@ -6,6 +6,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using System.ComponentModel.DataAnnotations;
 
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents the view model of the user action.</summary>
@@ -21,5 +22,13 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     [Required]
     public string? Email { get; set; }
+
+    /// <summary>Fills out the view model with the data of the an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    public void FromEntity(UserEntity userEntity)
+    {
+      Name = userEntity.Name;
+      Email = userEntity.Email;
+    }
   }
 }
