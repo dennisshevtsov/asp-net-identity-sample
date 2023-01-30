@@ -51,6 +51,17 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
                    .Where(entity => string.Equals(entity.Email, email, StringComparison.OrdinalIgnoreCase))
                    .FirstOrDefaultAsync(cancellationToken);
 
+    /// <summary>Adds a user.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    public Task AddUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    {
+      _dbContext.Add(userEntity);
+
+      return _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     /// <summary>Updates a user.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
