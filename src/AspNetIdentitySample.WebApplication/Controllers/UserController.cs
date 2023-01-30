@@ -20,6 +20,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet(Routing.NewUserEndpoint)]
     public IActionResult Get(UserViewModel vm)
     {
+      ModelState.Clear();
+
       return View(UserController.ViewName, vm);
     }
   }
