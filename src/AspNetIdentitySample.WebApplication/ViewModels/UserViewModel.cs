@@ -30,5 +30,13 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       Name = userEntity.Name;
       Email = userEntity.Email;
     }
+
+    /// <summary>Fills out the an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class with data of the view model.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    public void ToEntity(UserEntity userEntity)
+    {
+      userEntity.Name = Name;
+      userEntity.Email = Email;
+    }
   }
 }
