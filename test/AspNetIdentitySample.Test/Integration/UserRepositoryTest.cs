@@ -123,6 +123,33 @@ namespace AspNetIdentitySample.Test.Integration
       Assert.AreEqual(updatingUserEntity.Name, updatedUserEntity.Name);
     }
 
+    [TestMethod]
+    public async Task AddUserAsync_Should_Return_Save_User()
+    {
+      var creatingUserEntity = new UserEntity
+      {
+        Email = Guid.NewGuid().ToString(),
+        Name = Guid.NewGuid().ToString(),
+      };
+
+      await _userRepository.AddUserAsync(creatingUserEntity, Token);
+
+      Assert.AreNotEqual(default, creatingUserEntity.Id);
+      Assert.AreEqual(creatingUserEntity.Id, creatingUserEntity.UserId);
+      Assert.AreEqual(EntityState.Detached, DbContext.Entry(creatingUserEntity).State);
+
+      var createdUserEntity =
+        await DbContext.Set<UserEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(creatingUserEntity.UserId.ToString())
+                       .Where(entity => entity.Id == creatingUserEntity.Id)
+                       .FirstOrDefaultAsync(Token);
+
+      Assert.IsNotNull(createdUserEntity);
+      Assert.AreEqual(creatingUserEntity.Email, createdUserEntity.Email);
+      Assert.AreEqual(creatingUserEntity.Name, createdUserEntity.Name);
+    }
+
     private async Task<UserEntity> CreateTestUserAsync()
     {
       var controlUserEntity = new UserEntity
