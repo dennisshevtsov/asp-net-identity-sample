@@ -102,29 +102,7 @@ namespace AspNetIdentitySample.Test.Integration
     }
 
     [TestMethod]
-    public async Task UpdateUserAsync_Should_Return_Save_User()
-    {
-      var updatingUserEntity = await CreateTestUserAsync();
-
-      updatingUserEntity.Email = Guid.NewGuid().ToString();
-      updatingUserEntity.Name = Guid.NewGuid().ToString();
-
-      await _userRepository.UpdateUserAsync(updatingUserEntity, Token);
-
-      var updatedUserEntity =
-        await DbContext.Set<UserEntity>()
-                       .AsNoTracking()
-                       .WithPartitionKey(updatingUserEntity.UserId.ToString())
-                       .Where(entity => entity.Id == updatingUserEntity.Id)
-                       .FirstOrDefaultAsync(Token);
-
-      Assert.IsNotNull(updatedUserEntity);
-      Assert.AreEqual(updatingUserEntity.Email, updatedUserEntity.Email);
-      Assert.AreEqual(updatingUserEntity.Name, updatedUserEntity.Name);
-    }
-
-    [TestMethod]
-    public async Task AddUserAsync_Should_Return_Save_User()
+    public async Task AddUserAsync_Should_Return_Create_User()
     {
       var creatingUserEntity = new UserEntity
       {
@@ -148,6 +126,49 @@ namespace AspNetIdentitySample.Test.Integration
       Assert.IsNotNull(createdUserEntity);
       Assert.AreEqual(creatingUserEntity.Email, createdUserEntity.Email);
       Assert.AreEqual(creatingUserEntity.Name, createdUserEntity.Name);
+    }
+
+    [TestMethod]
+    public async Task UpdateUserAsync_Should_Return_Save_User()
+    {
+      var updatingUserEntity = await CreateTestUserAsync();
+
+      updatingUserEntity.Email = Guid.NewGuid().ToString();
+      updatingUserEntity.Name = Guid.NewGuid().ToString();
+
+      await _userRepository.UpdateUserAsync(updatingUserEntity, Token);
+
+      Assert.AreEqual(EntityState.Detached, DbContext.Entry(updatingUserEntity).State);
+
+      var updatedUserEntity =
+        await DbContext.Set<UserEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(updatingUserEntity.UserId.ToString())
+                       .Where(entity => entity.Id == updatingUserEntity.Id)
+                       .FirstOrDefaultAsync(Token);
+
+      Assert.IsNotNull(updatedUserEntity);
+      Assert.AreEqual(updatingUserEntity.Email, updatedUserEntity.Email);
+      Assert.AreEqual(updatingUserEntity.Name, updatedUserEntity.Name);
+    }
+
+    [TestMethod]
+    public async Task DeleteUserAsync_Should_Return_Delete_User()
+    {
+      var deletingUserEntity = await CreateTestUserAsync();
+
+      await _userRepository.DeleteUserAsync(deletingUserEntity, Token);
+
+      Assert.AreEqual(EntityState.Detached, DbContext.Entry(deletingUserEntity).State);
+
+      var deletedUserEntity =
+        await DbContext.Set<UserEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(deletingUserEntity.UserId.ToString())
+                       .Where(entity => entity.Id == deletingUserEntity.Id)
+                       .FirstOrDefaultAsync(Token);
+
+      Assert.IsNull(deletedUserEntity);
     }
 
     private async Task<UserEntity> CreateTestUserAsync()
