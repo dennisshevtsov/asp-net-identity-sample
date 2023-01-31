@@ -16,6 +16,7 @@
 
   &__close, &__ok {
     @extend .btn;
+    width: 80px;
   }
 
   &__close {
