@@ -66,6 +66,17 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       return userRoleEntityDictionary;
     }
 
+    /// <summary>Deletes roles for a user.</summary>
+    /// <param name="userRoleEntityCollection">An object that represents a collection of roles for a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task DeleteRolesAsync(IEnumerable<UserRoleEntity> userRoleEntityCollection, CancellationToken cancellationToken)
+    {
+      _dbContext.RemoveRange(userRoleEntityCollection);
+
+      return _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     public sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
     {
       public bool Equals(IUserIdentity? a, IUserIdentity? b)
