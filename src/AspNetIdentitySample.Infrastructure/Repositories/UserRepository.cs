@@ -72,5 +72,16 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
 
       return _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    /// <summary>Deletes a user.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    public Task DeleteUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    {
+      _dbContext.Remove(userEntity);
+
+      return _dbContext.SaveChangesAsync(cancellationToken);
+    }
   }
 }
