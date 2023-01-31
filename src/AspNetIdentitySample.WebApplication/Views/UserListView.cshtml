@@ -25,21 +25,21 @@
           <a class="app-user-list__action" data-bs-toggle="modal" data-bs-target="#deleteDlg-@(user.UserId)"><span>Delete</span></a>
 
           <div class="modal fade" id="deleteDlg-@(user.UserId)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p>Are you sure you want to delete user (@user.Name, @user.Email)?</p>
+            <div class="app-modal modal-dialog">
+              <div class="app-modal__content">
+                <div class="app-modal__body">
+                  <p class="app-modal__text">Are you sure you want to delete user (@user.Name, @user.Email)?</p>
                 </div>
-                <div class="modal-footer">
-                  <a class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                <div class="app-modal__footer">
+                  <a class="app-modal__close" data-bs-dismiss="modal"><span>Close</span></a>
                   <form method="post" asp-controller="UserList" asp-action="Delete" asp-route-userId="@user.UserId">
-                    <button type="submit" class="btn btn-primary">Ok</button>
+                    <button class="app-modal__ok" type="submit"><span>Ok</span></button>
                   </form>
                 </div>
               </div>
             </div>
-
           </div>
+
         </td>
       </tr>
     }
