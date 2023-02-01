@@ -3,5 +3,6 @@
 // See LICENSE in the project root for license information.
 
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using Moq;
 
 global using AspNetIdentitySample.ApplicationCore.Entities;
