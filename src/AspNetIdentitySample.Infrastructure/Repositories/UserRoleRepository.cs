@@ -48,6 +48,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
         await _dbContext.Set<UserRoleEntity>()
                         .AsNoTracking()
                         .Where(entity => userIdCollection.Contains(entity.UserId))
+                        .OrderBy(entity => entity.RoleName)
                         .ToListAsync(cancellationToken);
 
       var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>(new UserIdentityComparer());
