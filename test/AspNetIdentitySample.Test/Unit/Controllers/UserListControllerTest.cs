@@ -9,6 +9,7 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using AspNetIdentitySample.ApplicationCore.Identities;
 
   [TestClass]
   public sealed class UserListControllerTest
@@ -69,6 +70,28 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
       Assert.AreEqual(userEntityCollection[0].Name, model.Users[0].Name);
 
       _userServiceMock.Verify(service => service.GetUsersAsync(_cancellationToken));
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task Delete_Should_Delete_User()
+    {
+      _userServiceMock.Setup(service => service.DeleteUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                      .Returns(Task.CompletedTask)
+                      .Verifiable();
+
+      var vm = new DeleteUserViewModel();
+
+      var actionResult = await _userListController.Delete(vm, _cancellationToken);
+
+      Assert.IsNotNull(actionResult);
+
+      var redirectResult = actionResult as RedirectToActionResult;
+
+      Assert.IsNotNull(redirectResult);
+      Assert.AreEqual(nameof(UserListController.Get), redirectResult.ActionName);
+
+      _userServiceMock.Verify(service => service.DeleteUserAsync(vm, _cancellationToken));
       _userServiceMock.VerifyNoOtherCalls();
     }
   }
