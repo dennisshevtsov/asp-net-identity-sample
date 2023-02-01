@@ -10,7 +10,6 @@ namespace AspNetIdentitySample.Test.Integration
   using Microsoft.Extensions.DependencyInjection;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using Microsoft.Azure.Cosmos;
 
   [TestClass]
   public sealed class UserRoleRepositoryTest : IntegrationTestBase
@@ -27,21 +26,21 @@ namespace AspNetIdentitySample.Test.Integration
     [TestMethod]
     public async Task GetRolesAsync_Should_Return_Roles_Collection_By_User_Id()
     {
-      var userId = Guid.NewGuid();
-      var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(userId);
+      var controlUserId = Guid.NewGuid();
+      var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(controlUserId);
 
       var actualUserRoleEntityCollection =
         await _userRoleRepository.GetRolesAsync(
-          new UserEntity { UserId = userId }, Token);
+          new UserEntity { UserId = controlUserId }, Token);
 
       Assert.IsNotNull(actualUserRoleEntityCollection);
 
       Assert.AreEqual(controlUserRoleEntityCollection.Count, actualUserRoleEntityCollection.Count);
 
-      Assert.AreEqual(userId, actualUserRoleEntityCollection[0].UserId);
+      Assert.AreEqual(controlUserId, actualUserRoleEntityCollection[0].UserId);
       Assert.AreEqual(controlUserRoleEntityCollection[0].RoleName, actualUserRoleEntityCollection[0].RoleName);
 
-      Assert.AreEqual(userId, actualUserRoleEntityCollection[1].UserId);
+      Assert.AreEqual(controlUserId, actualUserRoleEntityCollection[1].UserId);
       Assert.AreEqual(controlUserRoleEntityCollection[1].RoleName, actualUserRoleEntityCollection[1].RoleName);
     }
 
@@ -79,6 +78,29 @@ namespace AspNetIdentitySample.Test.Integration
       Assert.AreEqual(controlUserRoleEntityCollection[1][1].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[1]][1].RoleName);
 
       Assert.IsFalse(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[2]));
+    }
+
+    [TestMethod]
+    public async Task DeleteRolesAsync_Should_Delete_Roles()
+    {
+      var controlUserId = Guid.NewGuid();
+      var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(controlUserId);
+
+      await _userRoleRepository.DeleteRolesAsync(controlUserRoleEntityCollection, Token);
+
+      foreach (var controlUserRoleEntity in controlUserRoleEntityCollection)
+      {
+        Assert.AreEqual(EntityState.Detached, DbContext.Entry(controlUserRoleEntity).State);
+      }
+
+      var actualUserRoleEntityCollection =
+        await DbContext.Set<UserRoleEntity>()
+                       .AsNoTracking()
+                       .WithPartitionKey(controlUserId.ToString())
+                       .ToArrayAsync(Token);
+
+      Assert.IsNotNull(actualUserRoleEntityCollection);
+      Assert.AreEqual(0, actualUserRoleEntityCollection.Length);
     }
 
     private async Task<UserRoleEntity> CreateTestUserRoleAsync(Guid userId)

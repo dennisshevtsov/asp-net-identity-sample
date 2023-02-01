@@ -11,6 +11,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using Microsoft.EntityFrameworkCore.ChangeTracking;
 
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</summary>
   public sealed class UserRoleRepository : IUserRoleRepository
@@ -72,11 +73,23 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
     /// <param name="userRoleEntityCollection">An object that represents a collection of roles for a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task DeleteRolesAsync(IEnumerable<UserRoleEntity> userRoleEntityCollection, CancellationToken cancellationToken)
+    public async Task DeleteRolesAsync(
+      IEnumerable<UserRoleEntity> userRoleEntityCollection,
+      CancellationToken cancellationToken)
     {
-      _dbContext.RemoveRange(userRoleEntityCollection);
+      var userRoleEntityEntryCollection = new List<EntityEntry<UserRoleEntity>>();
 
-      return _dbContext.SaveChangesAsync(cancellationToken);
+      foreach (var userRoleEntity in userRoleEntityCollection)
+      {
+        userRoleEntityEntryCollection.Add(_dbContext.Remove(userRoleEntity));
+      }
+
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      foreach (var userRoleEntityEntry in userRoleEntityEntryCollection)
+      {
+        userRoleEntityEntry.State = EntityState.Detached;
+      }
     }
 
     public sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
