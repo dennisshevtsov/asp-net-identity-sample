@@ -12,6 +12,7 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using AspNetIdentitySample.ApplicationCore.Entities;
 
   [TestClass]
   public sealed class UserControllerTest
@@ -61,6 +62,55 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
       Assert.IsNotNull(model);
       Assert.AreEqual(userEntity.Email, model.Email);
       Assert.AreEqual(userEntity.Name, model.Name);
+
+      _userServiceMock.Verify(service => service.GetUserAsync(vm, _cancellationToken));
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Return_View_Result()
+    {
+      _userController.ControllerContext.ModelState.AddModelError("test", "test");
+
+      var vm = new UserViewModel();
+
+      var actionResult = await _userController.Post(vm, _cancellationToken);
+
+      Assert.IsNotNull(actionResult);
+
+      var viewResult = actionResult as ViewResult;
+
+      Assert.IsNotNull(viewResult);
+      Assert.AreEqual(UserController.ViewName, viewResult.ViewName);
+      Assert.AreEqual(vm, viewResult.Model);
+
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Create_New_User()
+    {
+      _userServiceMock.Setup(service => service.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                      .ReturnsAsync(default(UserEntity))
+                      .Verifiable();
+
+      _userServiceMock.Setup(service => service.AddUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                      .Returns(Task.CompletedTask)
+                      .Verifiable();
+
+      var vm = new UserViewModel();
+
+      var actionResult = await _userController.Post(vm, _cancellationToken);
+
+      Assert.IsNotNull(actionResult);
+
+      var redirectResult = actionResult as RedirectToActionResult;
+
+      Assert.IsNotNull(redirectResult);
+      Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
+
+      _userServiceMock.Verify();
+      _userServiceMock.VerifyNoOtherCalls();
     }
   }
 }
