@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Test.Integration
+namespace AspNetIdentitySample.Infrastructure.Test
 {
   using Microsoft.EntityFrameworkCore;
 

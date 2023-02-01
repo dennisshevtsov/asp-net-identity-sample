@@ -2,17 +2,16 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Test.Unit.Controllers
+namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
   using System.Threading;
 
   using Microsoft.AspNetCore.Mvc;
 
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Services;
-  using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
-  using AspNetIdentitySample.ApplicationCore.Entities;
 
   [TestClass]
   public sealed class UserControllerTest

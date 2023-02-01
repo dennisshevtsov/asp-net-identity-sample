@@ -2,18 +2,15 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Test.Unit.Controllers
+namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
   using Microsoft.AspNetCore.Mvc;
 
-  using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   [TestClass]
   public sealed class AccessDeniedControllerTest
   {
-    private CancellationToken _cancellationToken;
-
 #pragma warning disable CS8618
     private AccessDeniedController _accessDeniedController;
 #pragma warning restore CS8618
@@ -21,7 +18,6 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
     [TestInitialize]
     public void Initialize()
     {
-      _cancellationToken = CancellationToken.None;
       _accessDeniedController = new AccessDeniedController();
     }
 
