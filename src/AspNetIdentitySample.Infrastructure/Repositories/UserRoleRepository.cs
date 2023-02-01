@@ -32,6 +32,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       => _dbContext.Set<UserRoleEntity>()
                    .AsNoTracking()
                    .WithPartitionKey(identity.UserId.ToString())
+                   .OrderBy(entity => entity.RoleName)
                    .ToListAsync(cancellationToken);
 
     /// <summary>Gets a collection of user and role relations.</summary>
