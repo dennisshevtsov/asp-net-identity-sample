@@ -55,22 +55,39 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
     /// <param name="userEntity">An object that represents details of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation.</returns>
-    public Task AddUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    public async Task AddUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
     {
-      _dbContext.Add(userEntity);
+      var userEntityEntry = _dbContext.Add(userEntity);
 
-      return _dbContext.SaveChangesAsync(cancellationToken);
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      userEntityEntry.State = EntityState.Detached;
     }
 
     /// <summary>Updates a user.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task UpdateUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    public async Task UpdateUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
     {
-      _dbContext.Update(userEntity);
+      var userEntityEntry = _dbContext.Update(userEntity);
 
-      return _dbContext.SaveChangesAsync(cancellationToken);
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      userEntityEntry.State = EntityState.Detached;
+    }
+
+    /// <summary>Deletes a user.</summary>
+    /// <param name="userEntity">An object that represents details of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    public async Task DeleteUserAsync(UserEntity userEntity, CancellationToken cancellationToken)
+    {
+      var userEntityEntry = _dbContext.Remove(userEntity);
+
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      userEntityEntry.State = EntityState.Detached;
     }
   }
 }

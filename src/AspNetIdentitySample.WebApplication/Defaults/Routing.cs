@@ -25,7 +25,10 @@ namespace AspNetIdentitySample.WebApplication.Defaults
     /// <summary>A value that represents an endpoint for a user page.</summary>
     public const string UserEndpoint = "{userId:guid}";
 
+    /// <summary>A value that represents an endpoint for a user page.</summary>
+    public const string DeleteUserEndpoint = "{userId:guid}/delete";
+
     /// <summary>A value that represents an endpoint for a new user page.</summary>
-    public const string NewUserEndpoint = "new";
+    public const string NewUserEndpoint = "add";
   }
 }

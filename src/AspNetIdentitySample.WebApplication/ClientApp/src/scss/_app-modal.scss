@@ -1,0 +1,29 @@
+﻿.app-modal {
+  &__content {
+    @extend .modal-content;
+  }
+
+  &__body {
+    @extend .modal-body;
+  }
+
+  &__text {
+  }
+
+  &__footer {
+    @extend .modal-footer;
+  }
+
+  &__close, &__ok {
+    @extend .btn;
+    width: 80px;
+  }
+
+  &__close {
+    @extend .btn-secondary;
+  }
+
+  &__ok {
+    @extend .btn-primary;
+  }
+}

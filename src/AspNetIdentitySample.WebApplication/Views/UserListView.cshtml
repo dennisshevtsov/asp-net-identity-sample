@@ -22,7 +22,24 @@
         <td class="app-user-list__cell app-user-list__cell_roles"><span>@user.Roles</span></td>
         <td class="app-user-list__cell app-user-list__cell_actions">
           <a class="app-user-list__action" asp-controller="User" asp-action="Get" asp-route-userId="@user.UserId" asp-route-returnUrl="@Context.Request.Path"><span>Edit</span></a>
-          <a class="app-user-list__action" href="#"><span>Delete</span></a>
+          <a class="app-user-list__action" data-bs-toggle="modal" data-bs-target="#deleteDlg-@(user.UserId)"><span>Delete</span></a>
+
+          <div class="modal fade" id="deleteDlg-@(user.UserId)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="app-modal modal-dialog">
+              <div class="app-modal__content">
+                <div class="app-modal__body">
+                  <p class="app-modal__text">Are you sure you want to delete user (@user.Name, @user.Email)?</p>
+                </div>
+                <div class="app-modal__footer">
+                  <a class="app-modal__close" data-bs-dismiss="modal"><span>Close</span></a>
+                  <form method="post" asp-controller="UserList" asp-action="Delete" asp-route-userId="@user.UserId">
+                    <button class="app-modal__ok" type="submit"><span>Ok</span></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </td>
       </tr>
     }

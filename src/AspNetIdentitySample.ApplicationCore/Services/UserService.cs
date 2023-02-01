@@ -80,5 +80,23 @@ namespace AspNetIdentitySample.ApplicationCore.Services
     {
       return _userRepository.UpdateUserAsync(userEntity, cancellationToken);
     }
+
+    /// <summary>Deletes a user.</summary>
+    /// <param name="identity">An object that represents conditions to query a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    public async Task DeleteUserAsync(IUserIdentity identity, CancellationToken cancellationToken)
+    {
+      var userRoleEntityCollection = await _userRoleRepository.GetRolesAsync(identity, cancellationToken);
+
+      await _userRoleRepository.DeleteRolesAsync(userRoleEntityCollection, cancellationToken);
+
+      var userEntity = await _userRepository.GetUserAsync(identity, cancellationToken);
+
+      if (userEntity != null )
+      {
+        await _userRepository.DeleteUserAsync(userEntity, cancellationToken);
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using Microsoft.EntityFrameworkCore.ChangeTracking;
 
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</summary>
   public sealed class UserRoleRepository : IUserRoleRepository
@@ -32,6 +33,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       => _dbContext.Set<UserRoleEntity>()
                    .AsNoTracking()
                    .WithPartitionKey(identity.UserId.ToString())
+                   .OrderBy(entity => entity.RoleName)
                    .ToListAsync(cancellationToken);
 
     /// <summary>Gets a collection of user and role relations.</summary>
@@ -47,9 +49,10 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
         await _dbContext.Set<UserRoleEntity>()
                         .AsNoTracking()
                         .Where(entity => userIdCollection.Contains(entity.UserId))
+                        .OrderBy(entity => entity.RoleName)
                         .ToListAsync(cancellationToken);
 
-      var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>();
+      var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>(new UserIdentityComparer());
 
       foreach (var userRoleEntity in userRoleEntityCollection)
       {
@@ -64,6 +67,29 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       }
 
       return userRoleEntityDictionary;
+    }
+
+    /// <summary>Deletes roles for a user.</summary>
+    /// <param name="userRoleEntityCollection">An object that represents a collection of roles for a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public async Task DeleteRolesAsync(
+      IEnumerable<UserRoleEntity> userRoleEntityCollection,
+      CancellationToken cancellationToken)
+    {
+      var userRoleEntityEntryCollection = new List<EntityEntry<UserRoleEntity>>();
+
+      foreach (var userRoleEntity in userRoleEntityCollection)
+      {
+        userRoleEntityEntryCollection.Add(_dbContext.Remove(userRoleEntity));
+      }
+
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      foreach (var userRoleEntityEntry in userRoleEntityEntryCollection)
+      {
+        userRoleEntityEntry.State = EntityState.Detached;
+      }
     }
 
     public sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
