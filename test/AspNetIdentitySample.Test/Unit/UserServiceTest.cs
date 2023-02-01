@@ -134,5 +134,22 @@ namespace AspNetIdentitySample.Test.Unit
       _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identity, _cancellationToken));
       _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task AddUserAsync_Should_Create_New_User()
+    {
+      _userRepositoryMock.Setup(repository => repository.AddUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                         .Returns(Task.CompletedTask)
+                         .Verifiable();
+
+      var userEntity = new UserEntity();
+
+      await _userService.AddUserAsync(userEntity, _cancellationToken);
+
+      _userRepositoryMock.Verify(repository => repository.AddUserAsync(userEntity, _cancellationToken));
+      _userRepositoryMock.VerifyNoOtherCalls();
+
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
+    }
   }
 }
