@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-namespace AspNetIdentitySample.Test.Integration
+namespace AspNetIdentitySample.Infrastructure.Repositories.Test
 {
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.Infrastructure.Test;
 
   [TestClass]
   public sealed class UserRepositoryTest : IntegrationTestBase
