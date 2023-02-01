@@ -7,11 +7,11 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
   using System;
 
   using Microsoft.EntityFrameworkCore;
+  using Microsoft.EntityFrameworkCore.ChangeTracking;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using Microsoft.EntityFrameworkCore.ChangeTracking;
 
   /// <summary>Provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</summary>
   public sealed class UserRoleRepository : IUserRoleRepository
