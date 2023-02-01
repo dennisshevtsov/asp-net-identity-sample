@@ -6,10 +6,10 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
 {
   using Microsoft.AspNetCore.Mvc;
 
+  using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Controllers;
   using AspNetIdentitySample.WebApplication.ViewModels;
-  using AspNetIdentitySample.ApplicationCore.Identities;
 
   [TestClass]
   public sealed class UserListControllerTest
