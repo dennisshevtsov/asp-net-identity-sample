@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
     using AspNetIdentitySample.WebApplication.ViewModels;
 
     [TestClass]
-    public sealed class SignInControllerTest : ControllerTestBase
+    public sealed class SignInControllerTest : IdentityControllerTestBase
     {
 #pragma warning disable CS8618
         private SignInController _signInController;

@@ -11,7 +11,7 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
     using Microsoft.Extensions.Options;
 
     [TestClass]
-    public abstract class ControllerTestBase
+    public abstract class IdentityControllerTestBase
     {
 #pragma warning disable CS8618
         private Mock<ILogger<SignInManager<UserEntity>>> _signInManagerLoggerMock;

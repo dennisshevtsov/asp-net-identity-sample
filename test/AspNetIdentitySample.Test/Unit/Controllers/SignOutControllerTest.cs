@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
     using AspNetIdentitySample.WebApplication.ViewModels;
 
     [TestClass]
-    public sealed class SignOutControllerTest : ControllerTestBase
+    public sealed class SignOutControllerTest : IdentityControllerTestBase
     {
 #pragma warning disable CS8618
         private SignOutController _signOutController;
