@@ -39,7 +39,7 @@ namespace AspNetIdentitySample.Test.Unit
     }
 
     [TestMethod]
-    public async Task GetUsersAsync_Should_Get_Users_With_Roles()
+    public async Task GetUsersAsync_Should_Return_Users_With_Roles()
     {
       var controlUserEntity = new UserEntity
       {
@@ -91,7 +91,7 @@ namespace AspNetIdentitySample.Test.Unit
                          .Verifiable();
 
       var identity = new UserEntity();
-      
+
       var actualUserEntity = await _userService.GetUserAsync(identity, _cancellationToken);
 
       Assert.IsNull(actualUserEntity);
@@ -99,6 +99,39 @@ namespace AspNetIdentitySample.Test.Unit
       _userRepositoryMock.Verify(repository => repository.GetUserAsync(identity, _cancellationToken));
       _userRepositoryMock.VerifyNoOtherCalls();
 
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_User_With_Roles()
+    {
+      var controlUserEntity = new UserEntity
+      {
+        UserId = Guid.NewGuid(),
+      };
+
+      _userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(controlUserEntity)
+                         .Verifiable();
+
+      var controlUserRoleEntityCollection = new List<UserRoleEntity>();
+
+      _userRoleRepositoryMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                             .ReturnsAsync(controlUserRoleEntityCollection)
+                             .Verifiable();
+
+      var identity = controlUserEntity;
+
+      var actualUserEntity = await _userService.GetUserAsync(identity, _cancellationToken);
+
+      Assert.IsNotNull(actualUserEntity);
+      Assert.AreEqual(actualUserEntity, controlUserEntity);
+      Assert.AreEqual(actualUserEntity.Roles, controlUserRoleEntityCollection);
+
+      _userRepositoryMock.Verify(repository => repository.GetUserAsync(identity, _cancellationToken));
+      _userRepositoryMock.VerifyNoOtherCalls();
+
+      _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identity, _cancellationToken));
       _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
   }
