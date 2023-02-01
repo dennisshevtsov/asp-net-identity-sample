@@ -82,5 +82,24 @@ namespace AspNetIdentitySample.Test.Unit
       _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(controlUserEntityCollection, _cancellationToken));
       _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task GetUserAsync_Should_Return_Null()
+    {
+      _userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(default(UserEntity))
+                         .Verifiable();
+
+      var identity = new UserEntity();
+      
+      var actualUserEntity = await _userService.GetUserAsync(identity, _cancellationToken);
+
+      Assert.IsNull(actualUserEntity);
+
+      _userRepositoryMock.Verify(repository => repository.GetUserAsync(identity, _cancellationToken));
+      _userRepositoryMock.VerifyNoOtherCalls();
+
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
+    }
   }
 }
