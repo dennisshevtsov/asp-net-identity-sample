@@ -10,6 +10,7 @@ namespace AspNetIdentitySample.Test.Integration
   using Microsoft.Extensions.DependencyInjection;
 
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using Microsoft.Azure.Cosmos;
 
   [TestClass]
   public sealed class UserRoleRepositoryTest : IntegrationTestBase
@@ -24,7 +25,7 @@ namespace AspNetIdentitySample.Test.Integration
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles_By_User_Id()
+    public async Task GetRolesAsync_Should_Return_Roles_Collection_By_User_Id()
     {
       var userId = Guid.NewGuid();
       var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(userId);
@@ -42,6 +43,42 @@ namespace AspNetIdentitySample.Test.Integration
 
       Assert.AreEqual(userId, actualUserRoleEntityCollection[1].UserId);
       Assert.AreEqual(controlUserRoleEntityCollection[1].RoleName, actualUserRoleEntityCollection[1].RoleName);
+    }
+
+    [TestMethod]
+    public async Task GetRolesAsync_Should_Return_Roles_Dictionary_By_User_Id()
+    {
+      var controlUserEntityCollection = new[]
+      {
+        new UserEntity { UserId = Guid.NewGuid(), },
+        new UserEntity { UserId = Guid.NewGuid(), },
+        new UserEntity { UserId = Guid.NewGuid(), },
+      };
+
+      var controlUserRoleEntityCollection = new[]
+      {
+        await CreateTestUserRolesAsync(controlUserEntityCollection[0].UserId),
+        await CreateTestUserRolesAsync(controlUserEntityCollection[1].UserId),
+        new List<UserRoleEntity>(),
+      };
+
+      var actualUserRoleEntityCollection =
+        await _userRoleRepository.GetRolesAsync(controlUserEntityCollection, Token);
+
+      Assert.IsNotNull(actualUserRoleEntityCollection);
+      Assert.AreEqual(2, actualUserRoleEntityCollection.Count);
+
+      Assert.IsTrue(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[0]));
+      Assert.AreEqual(controlUserRoleEntityCollection[0].Count, actualUserRoleEntityCollection[controlUserEntityCollection[0]].Count);
+      Assert.AreEqual(controlUserRoleEntityCollection[0][0].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[0]][0].RoleName);
+      Assert.AreEqual(controlUserRoleEntityCollection[0][1].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[0]][1].RoleName);
+
+      Assert.IsTrue(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[1]));
+      Assert.AreEqual(controlUserRoleEntityCollection[1].Count, actualUserRoleEntityCollection[controlUserEntityCollection[1]].Count);
+      Assert.AreEqual(controlUserRoleEntityCollection[1][0].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[1]][0].RoleName);
+      Assert.AreEqual(controlUserRoleEntityCollection[1][1].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[1]][1].RoleName);
+
+      Assert.IsFalse(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[2]));
     }
 
     private async Task<UserRoleEntity> CreateTestUserRoleAsync(Guid userId)
@@ -63,7 +100,7 @@ namespace AspNetIdentitySample.Test.Integration
 
     private async Task<List<UserRoleEntity>> CreateTestUserRolesAsync(Guid userId)
     {
-      var userRoleEntityCollection =  new List<UserRoleEntity>
+      var userRoleEntityCollection = new List<UserRoleEntity>
       {
         await CreateTestUserRoleAsync(userId),
         await CreateTestUserRoleAsync(userId),
