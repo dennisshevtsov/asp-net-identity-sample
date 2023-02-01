@@ -50,7 +50,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
                         .Where(entity => userIdCollection.Contains(entity.UserId))
                         .ToListAsync(cancellationToken);
 
-      var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>();
+      var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>(new UserIdentityComparer());
 
       foreach (var userRoleEntity in userRoleEntityCollection)
       {
