@@ -112,5 +112,44 @@ namespace AspNetIdentitySample.Test.Unit.Controllers
       _userServiceMock.Verify();
       _userServiceMock.VerifyNoOtherCalls();
     }
+
+    [TestMethod]
+    public async Task Post_Should_Update_User()
+    {
+      var userEntity = new UserEntity();
+
+      _userServiceMock.Setup(service => service.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                      .ReturnsAsync(userEntity)
+                      .Verifiable();
+
+      _userServiceMock.Setup(service => service.UpdateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                      .Returns(Task.CompletedTask)
+                      .Verifiable();
+
+      var email = Guid.NewGuid().ToString();
+      var name = Guid.NewGuid().ToString();
+
+      var vm = new UserViewModel
+      {
+        Email = email,
+        Name = name,
+      };
+
+      var actionResult = await _userController.Post(vm, _cancellationToken);
+
+      Assert.IsNotNull(actionResult);
+
+      var redirectResult = actionResult as RedirectToActionResult;
+
+      Assert.IsNotNull(redirectResult);
+      Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
+
+      Assert.AreEqual(email, userEntity.Email);
+      Assert.AreEqual(name, userEntity.Name);
+
+      _userServiceMock.Verify(service => service.GetUserAsync(vm, _cancellationToken));
+      _userServiceMock.Verify(service => service.UpdateUserAsync(userEntity, _cancellationToken));
+      _userServiceMock.VerifyNoOtherCalls();
+    }
   }
 }
