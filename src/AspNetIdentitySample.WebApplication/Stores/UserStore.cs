@@ -70,7 +70,11 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
     public Task SetNormalizedUserNameAsync(UserEntity user, string? normalizedName, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      user.Email = normalizedName;
+
+      return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Creates the specified <paramref name="user"/> in the user store.
@@ -78,8 +82,12 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user to create.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the creation operation.</returns>
-    public Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    public async Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      await _userRepository.AddUserAsync(user, cancellationToken);
+
+      return IdentityResult.Success;
+    }
 
     /// <summary>
     /// Updates the specified <paramref name="user"/> in the user store.
@@ -140,7 +148,11 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
     public Task SetPasswordHashAsync(UserEntity user, string? passwordHash, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      user.PasswordHash = passwordHash;
+
+      return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Gets the password hash for the specified <paramref name="user"/>.
