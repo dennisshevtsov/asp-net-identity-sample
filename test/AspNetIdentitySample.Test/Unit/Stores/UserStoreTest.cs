@@ -4,6 +4,8 @@
 
 namespace AspNetIdentitySample.WebApplication.Stores.Test
 {
+  using Microsoft.AspNetCore.Identity;
+
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Services;
 
@@ -73,7 +75,7 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
-    public async Task SetNormalizedUserNameAsync_Should_Return_Email()
+    public async Task SetNormalizedUserNameAsync_Should_Update_Email()
     {
       var controlEmail = Guid.NewGuid().ToString();
       var userEntity = new UserEntity
@@ -93,13 +95,32 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
+    public async Task CreateAsync_Should_Create_New_User()
+    {
+      _userServiceMock.Setup(repository => repository.AddUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                      .Returns(Task.CompletedTask)
+                      .Verifiable();
+
+      var userEntity = new UserEntity();
+
+      var identityResult =
+        await _userStore.CreateAsync(userEntity, _cancellationToken);
+
+      Assert.IsNotNull(identityResult);
+      Assert.AreEqual(IdentityResult.Success, identityResult);
+
+      _userServiceMock.Verify(repository => repository.AddUserAsync(userEntity, _cancellationToken));
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
     public async Task FindByNameAsync_Should_Get_User_By_Email()
     {
       var controlUserEntity = new UserEntity();
 
       _userServiceMock.Setup(repository => repository.GetUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                         .ReturnsAsync(controlUserEntity)
-                         .Verifiable();
+                      .ReturnsAsync(controlUserEntity)
+                      .Verifiable();
 
       var username = Guid.NewGuid().ToString();
 
