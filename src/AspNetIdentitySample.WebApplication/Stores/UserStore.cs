@@ -95,8 +95,12 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user to update.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the update operation.</returns>
-    public Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    public async Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      await _userRepository.UpdateUserAsync(user, cancellationToken);
+
+      return IdentityResult.Success;
+    }
 
     /// <summary>
     /// Deletes the specified <paramref name="user"/> from the user store.
