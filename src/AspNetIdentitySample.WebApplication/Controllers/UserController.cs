@@ -9,7 +9,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
@@ -19,12 +18,10 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "UserView";
 
-    private IUserService _userService;
     private UserManager<UserEntity> _userManager;
 
-    public UserController(IUserService userService, UserManager<UserEntity> userManager)
+    public UserController(UserManager<UserEntity> userManager)
     {
-      _userService = userService ?? throw new ArgumentNullException(nameof(userService));
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
@@ -37,7 +34,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       ModelState.Clear();
 
-      var userEntity = await _userService.GetUserAsync(vm, cancellationToken);
+      var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
 
       if (userEntity != null)
       {
