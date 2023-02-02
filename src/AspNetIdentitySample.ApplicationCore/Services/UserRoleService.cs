@@ -4,7 +4,6 @@
 
 namespace AspNetIdentitySample.ApplicationCore.Services
 {
-  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
 
@@ -24,7 +23,13 @@ namespace AspNetIdentitySample.ApplicationCore.Services
     /// <param name="identity">An object that represents conditions to query a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public Task<List<UserRoleEntity>> GetRolesAsync(IUserIdentity identity, CancellationToken cancellationToken)
-      => _userRoleRepository.GetRolesAsync(identity, cancellationToken);
+    public async Task<IList<string>> GetRolesAsync(IUserIdentity identity, CancellationToken cancellationToken)
+    {
+      var userRoleEntityCollection =
+        await _userRoleRepository.GetRolesAsync(identity, cancellationToken);
+
+      return userRoleEntityCollection.Select(userRoleEntity => userRoleEntity.RoleName!)
+                                     .ToList();
+    }
   }
 }
