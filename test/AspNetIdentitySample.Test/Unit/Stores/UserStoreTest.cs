@@ -133,7 +133,7 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
-    public async Task FindByIdAsync_Should_Get_User_By_Id()
+    public async Task FindByIdAsync_Should_Return_User()
     {
       var controlUserEntity = new UserEntity();
 
@@ -150,6 +150,19 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
       Assert.AreEqual(controlUserEntity, actualUserEntity);
 
       _userServiceMock.Verify();
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task FindByIdAsync_Should_Return_Null()
+    {
+      var userId = Guid.NewGuid().ToString() + "test";
+
+      var actualUserEntity =
+        await _userStore.FindByIdAsync(userId, _cancellationToken);
+
+      Assert.IsNull(actualUserEntity);
+
       _userServiceMock.VerifyNoOtherCalls();
     }
 

@@ -123,12 +123,17 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// </returns>
     public Task<UserEntity?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-      var userEntity = new UserEntity
+      if (Guid.TryParse(userId, out var userIdValue))
       {
-        UserId = Guid.Parse(userId),
-      };
+        var userEntity = new UserEntity
+        {
+          UserId = userIdValue,
+        };
 
-      return _userService.GetUserAsync(userEntity, cancellationToken);
+        return _userService.GetUserAsync(userEntity, cancellationToken);
+      }
+
+      return Task.FromResult(default(UserEntity));
     }
 
     /// <summary>
