@@ -21,6 +21,12 @@ namespace AspNetIdentitySample.ApplicationCore.Services
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     public Task<UserEntity?> GetUserAsync(IUserIdentity identity, CancellationToken cancellationToken);
 
+    /// <summary>Gets a user by a user email.</summary>
+    /// <param name="email">An object that represents an email of a user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
+    /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
+    public Task<UserEntity?> GetUserAsync(string email, CancellationToken cancellationToken);
+
     /// <summary>Creates a new user.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
