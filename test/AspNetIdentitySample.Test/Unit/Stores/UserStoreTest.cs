@@ -133,6 +133,27 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
+    public async Task FindByIdAsync_Should_Get_User_By_Id()
+    {
+      var controlUserEntity = new UserEntity();
+
+      _userServiceMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                      .ReturnsAsync(controlUserEntity)
+                      .Verifiable();
+
+      var userId = Guid.NewGuid().ToString();
+
+      var actualUserEntity =
+        await _userStore.FindByIdAsync(userId, _cancellationToken);
+
+      Assert.IsNotNull(actualUserEntity);
+      Assert.AreEqual(controlUserEntity, actualUserEntity);
+
+      _userServiceMock.Verify();
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
     public async Task FindByNameAsync_Should_Get_User_By_Email()
     {
       var controlUserEntity = new UserEntity();
