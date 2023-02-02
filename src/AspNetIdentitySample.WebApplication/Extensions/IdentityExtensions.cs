@@ -17,7 +17,15 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <returns>An object that specifies the contract for a collection of service descriptors.</returns>
     public static IServiceCollection SetUpIdentity(this IServiceCollection services)
     {
-      services.AddIdentity<UserEntity, RoleEntity>()
+      services.AddIdentity<UserEntity, RoleEntity>(options =>
+              {
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+              })
               .AddUserStore<UserStore>()
               .AddRoleStore<RoleStore>()
               .AddDefaultTokenProviders();
