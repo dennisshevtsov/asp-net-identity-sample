@@ -73,6 +73,26 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
+    public async Task SetNormalizedUserNameAsync_Should_Return_Email()
+    {
+      var controlEmail = Guid.NewGuid().ToString();
+      var userEntity = new UserEntity
+      {
+        Email = controlEmail,
+      };
+
+      var nomolizedUserName = Guid.NewGuid().ToString();
+
+      await _userStore.SetNormalizedUserNameAsync(
+        userEntity, nomolizedUserName, _cancellationToken);
+
+      Assert.AreNotEqual(controlEmail, userEntity.Email);
+      Assert.AreEqual(nomolizedUserName, userEntity.Email);
+
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
     public async Task FindByNameAsync_Should_Get_User_By_Email()
     {
       var controlUserEntity = new UserEntity();
