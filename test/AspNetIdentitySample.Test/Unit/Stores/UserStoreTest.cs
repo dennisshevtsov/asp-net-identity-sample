@@ -114,6 +114,25 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
+    public async Task UpdateAsync_Should_Update_User()
+    {
+      _userServiceMock.Setup(repository => repository.UpdateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                      .Returns(Task.CompletedTask)
+                      .Verifiable();
+
+      var userEntity = new UserEntity();
+
+      var identityResult =
+        await _userStore.UpdateAsync(userEntity, _cancellationToken);
+
+      Assert.IsNotNull(identityResult);
+      Assert.AreEqual(IdentityResult.Success, identityResult);
+
+      _userServiceMock.Verify(repository => repository.UpdateUserAsync(userEntity, _cancellationToken));
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
     public async Task FindByNameAsync_Should_Get_User_By_Email()
     {
       var controlUserEntity = new UserEntity();
