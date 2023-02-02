@@ -32,7 +32,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
     [HttpGet(Routing.UserEndpoint, Order = 1)]
     [HttpGet(Routing.NewUserEndpoint, Order = 2)]
-    public async Task<IActionResult> Get(UserViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(UserViewModel vm)
     {
       ModelState.Clear();
 
