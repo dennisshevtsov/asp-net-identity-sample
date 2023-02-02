@@ -5,31 +5,25 @@
 namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
   using System.Threading;
+  using System.Security.Claims;
 
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
-  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using Microsoft.AspNetCore.Identity;
 
   [TestClass]
-  public sealed class UserControllerTest
+  public sealed class UserControllerTest : IdentityControllerTestBase
   {
 #pragma warning disable CS8618
-    private Mock<IUserService> _userServiceMock;
-
     private UserController _userController;
 #pragma warning restore CS8618
 
-    private CancellationToken _cancellationToken;
-
-    [TestInitialize]
-    public void Initialize()
+    protected override void InitializeInternal()
     {
-      _userServiceMock = new Mock<IUserService>();
-      _userController = new UserController(_userServiceMock.Object);
-      _cancellationToken = CancellationToken.None;
+      _userController = new UserController(UserManagerMock.Object);
     }
 
     [TestMethod]
@@ -41,13 +35,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         Name = Guid.NewGuid().ToString(),
       };
 
-      _userServiceMock.Setup(service => service.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                      .ReturnsAsync(userEntity)
-                      .Verifiable();
+      UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(userEntity)
+                     .Verifiable();
 
       var vm = new UserViewModel();
 
-      var actionResult = await _userController.Get(vm, _cancellationToken);
+      var actionResult = await _userController.Get(vm);
 
       Assert.IsNotNull(actionResult);
 
@@ -62,8 +56,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(userEntity.Email, model.Email);
       Assert.AreEqual(userEntity.Name, model.Name);
 
-      _userServiceMock.Verify(service => service.GetUserAsync(vm, _cancellationToken));
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -73,7 +67,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       var vm = new UserViewModel();
 
-      var actionResult = await _userController.Post(vm, _cancellationToken);
+      var actionResult = await _userController.Post(vm);
 
       Assert.IsNotNull(actionResult);
 
@@ -83,23 +77,23 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(UserController.ViewName, viewResult.ViewName);
       Assert.AreEqual(vm, viewResult.Model);
 
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
     public async Task Post_Should_Create_New_User()
     {
-      _userServiceMock.Setup(service => service.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                      .ReturnsAsync(default(UserEntity))
-                      .Verifiable();
+      UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(default(UserEntity))
+                     .Verifiable();
 
-      _userServiceMock.Setup(service => service.AddUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
-                      .Returns(Task.CompletedTask)
-                      .Verifiable();
+      UserManagerMock.Setup(service => service.CreateAsync(It.IsAny<UserEntity>(), It.IsAny<string>()))
+                     .Returns(Task.FromResult(IdentityResult.Success))
+                     .Verifiable();
 
       var vm = new UserViewModel();
 
-      var actionResult = await _userController.Post(vm, _cancellationToken);
+      var actionResult = await _userController.Post(vm);
 
       Assert.IsNotNull(actionResult);
 
@@ -108,8 +102,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsNotNull(redirectResult);
       Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
 
-      _userServiceMock.Verify();
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -117,13 +111,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     {
       var userEntity = new UserEntity();
 
-      _userServiceMock.Setup(service => service.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                      .ReturnsAsync(userEntity)
-                      .Verifiable();
+      UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(userEntity)
+                     .Verifiable();
 
-      _userServiceMock.Setup(service => service.UpdateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
-                      .Returns(Task.CompletedTask)
-                      .Verifiable();
+      UserManagerMock.Setup(service => service.UpdateAsync(It.IsAny<UserEntity>()))
+                     .Returns(Task.FromResult(IdentityResult.Success))
+                     .Verifiable();
 
       var email = Guid.NewGuid().ToString();
       var name = Guid.NewGuid().ToString();
@@ -134,7 +128,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         Name = name,
       };
 
-      var actionResult = await _userController.Post(vm, _cancellationToken);
+      var actionResult = await _userController.Post(vm);
 
       Assert.IsNotNull(actionResult);
 
@@ -146,9 +140,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(email, userEntity.Email);
       Assert.AreEqual(name, userEntity.Name);
 
-      _userServiceMock.Verify(service => service.GetUserAsync(vm, _cancellationToken));
-      _userServiceMock.Verify(service => service.UpdateUserAsync(userEntity, _cancellationToken));
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
   }
 }

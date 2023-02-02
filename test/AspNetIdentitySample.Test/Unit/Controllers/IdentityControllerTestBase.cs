@@ -14,14 +14,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
   public abstract class IdentityControllerTestBase
   {
 #pragma warning disable CS8618
-    private Mock<ILogger<SignInManager<UserEntity>>> _signInManagerLoggerMock;
+    private Mock<UserManager<UserEntity>> _userManagerMock;
+
     private Mock<SignInManager<UserEntity>> _signInManagerMock;
 #pragma warning restore CS8618
 
     [TestInitialize]
     public void Initialize()
     {
-      _signInManagerLoggerMock = new Mock<ILogger<SignInManager<UserEntity>>>();
+      var signInManagerLoggerMock = new Mock<ILogger<SignInManager<UserEntity>>>();
 
       var userStoreMock = new Mock<IUserStore<UserEntity>>();
       var passwordHasherMock = new Mock<IPasswordHasher<UserEntity>>();
@@ -37,7 +38,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       var schemesMock = new Mock<IAuthenticationSchemeProvider>();
       var confirmationMock = new Mock<IUserConfirmation<UserEntity>>();
 
-      var userManagerMock = new Mock<UserManager<UserEntity>>(
+      _userManagerMock = new Mock<UserManager<UserEntity>>(
         userStoreMock.Object,
         optionsAccessorMock.Object,
         passwordHasherMock.Object,
@@ -49,18 +50,21 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         userManagerLoggerMock.Object);
 
       _signInManagerMock = new Mock<SignInManager<UserEntity>>(
-        userManagerMock.Object,
+        _userManagerMock.Object,
         contextAccessorMock.Object,
         claimsFactoryMock.Object,
         optionsAccessorMock.Object,
-        _signInManagerLoggerMock.Object,
+        signInManagerLoggerMock.Object,
         schemesMock.Object,
         confirmationMock.Object);
 
       InitializeInternal();
+
+      _userManagerMock.Reset();
+      _signInManagerMock.Reset();
     }
 
-    protected Mock<ILogger<SignInManager<UserEntity>>> SignInManagerLoggerMock { get => _signInManagerLoggerMock; }
+    protected Mock<UserManager<UserEntity>> UserManagerMock { get => _userManagerMock; }
 
     protected Mock<SignInManager<UserEntity>> SignInManagerMock { get => _signInManagerMock; }
 

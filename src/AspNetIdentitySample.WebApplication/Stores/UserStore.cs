@@ -7,20 +7,22 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.ApplicationCore.Services;
 
+  /// <summary>Provides an abstraction for a store which manages user accounts.</summary>
+  /// <typeparam name="TUser">The type encapsulating a user.</typeparam>
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserRoleStore<UserEntity>
   {
-    private readonly IUserRepository _userRepository;
-    private readonly IUserRoleRepository _userRoleRepository;
+    private readonly IUserService _userService;
+    private readonly IUserRoleService _userRoleService;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Stores.UserStore"/> class.</summary>
-    /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    /// <param name="userRoleRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</param>
-    public UserStore(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
+    /// <param name="userService">An object that provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</param>
+    /// <param name="userRoleService">An object that provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/>.</param>
+    public UserStore(IUserService userService, IUserRoleService userRoleService)
     {
-      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-      _userRoleRepository = userRoleRepository ?? throw new ArgumentNullException(nameof(userRepository));
+      _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+      _userRoleService = userRoleService ?? throw new ArgumentNullException(nameof(userRoleService));
     }
 
     #region Members of IUserStore
@@ -70,7 +72,11 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
     public Task SetNormalizedUserNameAsync(UserEntity user, string? normalizedName, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      user.Email = normalizedName;
+
+      return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Creates the specified <paramref name="user"/> in the user store.
@@ -78,8 +84,12 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user to create.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the creation operation.</returns>
-    public Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    public async Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      await _userService.AddUserAsync(user, cancellationToken);
+
+      return IdentityResult.Success;
+    }
 
     /// <summary>
     /// Updates the specified <paramref name="user"/> in the user store.
@@ -87,8 +97,12 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user to update.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the update operation.</returns>
-    public Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    public async Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      await _userService.UpdateUserAsync(user, cancellationToken);
+
+      return IdentityResult.Success;
+    }
 
     /// <summary>
     /// Deletes the specified <paramref name="user"/> from the user store.
@@ -109,12 +123,17 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// </returns>
     public Task<UserEntity?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-      var userEntity = new UserEntity
+      if (Guid.TryParse(userId, out var userIdValue))
       {
-        UserId = Guid.Parse(userId),
-      };
+        var userEntity = new UserEntity
+        {
+          UserId = userIdValue,
+        };
 
-      return _userRepository.GetUserAsync(userEntity, cancellationToken);
+        return _userService.GetUserAsync(userEntity, cancellationToken);
+      }
+
+      return Task.FromResult(default(UserEntity));
     }
 
     /// <summary>
@@ -126,7 +145,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// The <see cref="Task"/> that represents the asynchronous operation, containing the user matching the specified <paramref name="normalizedUserName"/> if it exists.
     /// </returns>
     public Task<UserEntity?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-      => _userRepository.GetUserAsync(normalizedUserName, cancellationToken);
+      => _userService.GetUserAsync(normalizedUserName, cancellationToken);
 
     #endregion
 
@@ -140,7 +159,11 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
     public Task SetPasswordHashAsync(UserEntity user, string? passwordHash, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    {
+      user.PasswordHash = passwordHash;
+
+      return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Gets the password hash for the specified <paramref name="user"/>.
@@ -193,14 +216,8 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user whose role names to retrieve.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing a list of role names.</returns>
-    public async Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
-    {
-      var userRoleEntityCollection =
-        await _userRoleRepository.GetRolesAsync(user, cancellationToken);
-
-      return userRoleEntityCollection.Select(userRoleEntity => userRoleEntity.RoleName!)
-                                     .ToList();
-    }
+    public Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
+      => _userRoleService.GetRolesAsync(user, cancellationToken);
 
     /// <summary>
     /// Returns a flag indicating whether the specified <paramref name="user"/> is a member of the given named role.

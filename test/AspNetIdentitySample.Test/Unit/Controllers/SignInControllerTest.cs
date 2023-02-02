@@ -29,7 +29,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       Assert.IsTrue(_signInController.ControllerContext.ModelState.IsValid);
 
-      SignInManagerMock.VerifySet(manager => manager.Logger = SignInManagerLoggerMock.Object);
       SignInManagerMock.VerifyNoOtherCalls();
     }
 
@@ -42,7 +41,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
 
-      SignInManagerMock.VerifySet(manager => manager.Logger = SignInManagerLoggerMock.Object);
       SignInManagerMock.VerifyNoOtherCalls();
     }
 
@@ -57,7 +55,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsInstanceOfType(actionResult, typeof(ViewResult));
       Assert.AreEqual(SignInController.ViewName, ((ViewResult)actionResult).ViewName);
 
-      SignInManagerMock.VerifySet(manager => manager.Logger = SignInManagerLoggerMock.Object);
       SignInManagerMock.VerifyNoOtherCalls();
     }
 
@@ -87,7 +84,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       SignInManagerMock.Verify(manager => manager.PasswordSignInAsync(vm.Email, vm.Password, false, false));
 
-      SignInManagerMock.VerifySet(manager => manager.Logger = SignInManagerLoggerMock.Object);
       SignInManagerMock.VerifyNoOtherCalls();
     }
 
@@ -115,7 +111,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       SignInManagerMock.Verify(manager => manager.PasswordSignInAsync(vm.Email, vm.Password, false, false));
 
-      SignInManagerMock.VerifySet(manager => manager.Logger = SignInManagerLoggerMock.Object);
       SignInManagerMock.VerifyNoOtherCalls();
     }
   }

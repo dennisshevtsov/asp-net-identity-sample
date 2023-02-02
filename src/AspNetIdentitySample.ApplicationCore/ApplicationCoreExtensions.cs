@@ -15,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static IServiceCollection SetUpApplicationCore(this IServiceCollection services)
     {
       services.AddScoped<IUserService, UserService>();
+      services.AddScoped<IUserRoleService, UserRoleService>();
 
       return services;
     }
