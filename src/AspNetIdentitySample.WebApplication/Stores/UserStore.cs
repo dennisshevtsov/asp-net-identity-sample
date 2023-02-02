@@ -9,6 +9,8 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
 
+  /// <summary>Provides an abstraction for a store which manages user accounts.</summary>
+  /// <typeparam name="TUser">The type encapsulating a user.</typeparam>
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserRoleStore<UserEntity>
   {
     private readonly IUserRepository _userRepository;

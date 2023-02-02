@@ -6,6 +6,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using System.ComponentModel.DataAnnotations;
   using System.Security.Claims;
+
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
 
@@ -39,6 +40,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       userEntity.Email = Email;
     }
 
+    /// <summary>Creates an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class from the view model.</summary>
+    /// <returns>An object that represents details of a user.</returns>
     public UserEntity ToEntity()
     {
       var userEntity = new UserEntity
@@ -50,6 +53,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       return userEntity;
     }
 
+    /// <summary>Creates an instace of the <see cref="System.Security.Claims.ClaimsPrincipal"/> class.</summary>
+    /// <returns>An object that contains a user identity.</returns>
     public ClaimsPrincipal ToPrincipal()
     {
       var identityClaim = new Claim(ClaimTypes.NameIdentifier, UserId.ToString());
@@ -59,5 +64,5 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 
       return claimsPrincipal;
     }
-}
+  }
 }

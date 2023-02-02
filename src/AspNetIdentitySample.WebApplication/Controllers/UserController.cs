@@ -20,6 +20,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     private UserManager<UserEntity> _userManager;
 
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.UserController"/> class.</summary>
+    /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
     public UserController(UserManager<UserEntity> userManager)
     {
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
