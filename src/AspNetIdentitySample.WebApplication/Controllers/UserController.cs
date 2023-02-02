@@ -6,6 +6,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
 
+  using Microsoft.AspNetCore.Identity;
+
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Defaults;
@@ -18,10 +20,12 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     public const string ViewName = "UserView";
 
     private IUserService _userService;
+    private UserManager<UserEntity> _userManager;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, UserManager<UserEntity> userManager)
     {
       _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+      _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
     /// <summary>Handles the GET request.</summary>
@@ -48,25 +52,23 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <returns>AAn object that represents an asynchronous operation.</returns>
     [HttpPost(Routing.UserEndpoint, Order = 1)]
     [HttpPost(Routing.NewUserEndpoint, Order = 2)]
-    public async Task<IActionResult> Post(UserViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(UserViewModel vm)
     {
       if (ModelState.IsValid)
       {
-        var userEntity = await _userService.GetUserAsync(vm, cancellationToken);
+        var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
 
         if (userEntity != null)
         {
           vm.ToEntity(userEntity);
 
-          await _userService.UpdateUserAsync(userEntity, cancellationToken);
+          await _userManager.UpdateAsync(userEntity);
         }
         else
         {
-          userEntity = new UserEntity();
+          userEntity = vm.ToEntity();
 
-          vm.ToEntity(userEntity);
-
-          await _userService.AddUserAsync(userEntity, cancellationToken);
+          var result = await _userManager.CreateAsync(userEntity, "test");
         }
 
         return RedirectToAction(nameof(UserController.Get), new { userId = userEntity.Id, returnUrl = vm.ReturnUrl });

@@ -5,7 +5,7 @@
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using System.ComponentModel.DataAnnotations;
-
+  using System.Security.Claims;
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
 
@@ -38,5 +38,26 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       userEntity.Name = Name;
       userEntity.Email = Email;
     }
-  }
+
+    public UserEntity ToEntity()
+    {
+      var userEntity = new UserEntity
+      {
+        Name = Name,
+        Email = Email,
+      };
+
+      return userEntity;
+    }
+
+    public ClaimsPrincipal ToPrincipal()
+    {
+      var identityClaim = new Claim(ClaimTypes.NameIdentifier, UserId.ToString());
+      var claims = new[] { identityClaim };
+      var claimsIdentity = new ClaimsIdentity(claims);
+      var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+      return claimsPrincipal;
+    }
+}
 }
