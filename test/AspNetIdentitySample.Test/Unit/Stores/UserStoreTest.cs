@@ -188,6 +188,19 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
     }
 
     [TestMethod]
+    public async Task SetPasswordHashAsync_Should_Return_Password_Hash()
+    {
+      var userEntity = new UserEntity();
+      var passwordHash = Guid.NewGuid().ToString();
+
+      await _userStore.SetPasswordHashAsync(userEntity, passwordHash, _cancellationToken);
+
+      Assert.AreEqual(passwordHash, userEntity.PasswordHash);
+
+      _userServiceMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
     public async Task GetPasswordHashAsync_Should_Return_Password_Hash()
     {
       var controlPasswordHash = Guid.NewGuid().ToString();
