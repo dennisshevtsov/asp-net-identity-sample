@@ -23,5 +23,19 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
       return View(RegisterController.ViewName, vm);
     }
+
+    /// <summary>Handles the POST request.</summary>
+    /// <param name="vm">An object that represents data to register a new user.</param>
+    /// <returns>An object that defines a contract that represents the result of an action method.</returns>
+    [HttpPost(Routing.RegisterEndpoint)]
+    public IActionResult Post(RegisterUserViewModel vm)
+    {
+      if (ModelState.IsValid)
+      {
+        return RedirectToAction(nameof(UserListController.Get), nameof(UserListController).Replace("Controller", ""));
+      }
+
+      return View(RegisterController.ViewName, vm);
+    }
   }
 }
