@@ -6,6 +6,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using System.ComponentModel.DataAnnotations;
 
+  using AspNetIdentitySample.ApplicationCore.Entities;
+
   /// <summary>Represents data to register a new user.</summary>
   public sealed class RegisterUserViewModel : ViewModelBase
   {
@@ -25,5 +27,18 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     [Required]
     [Compare(nameof(RegisterUserViewModel.Password))]
     public string? RepeatedPassowrd { get; set; }
+
+    /// <summary>Creates an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class from the view model.</summary>
+    /// <returns>An object that represents details of a user.</returns>
+    public UserEntity ToEntity()
+    {
+      var userEntity = new UserEntity
+      {
+        Name = Name,
+        Email = Email,
+      };
+
+      return userEntity;
+    }
   }
 }
