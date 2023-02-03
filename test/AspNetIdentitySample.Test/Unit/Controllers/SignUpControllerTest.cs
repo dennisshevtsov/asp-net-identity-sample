@@ -8,7 +8,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.WebApplication.ViewModels;
-  using System.Security.Claims;
 
   [TestClass]
   public sealed class SignUpControllerTest : IdentityControllerTestBase
