@@ -32,7 +32,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents data to register a new user.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet(Routing.RegisterEndpoint)]
+    [HttpGet(Routing.SingUpEndpoint)]
     public IActionResult Get(SignUpUserViewModel vm)
     {
       ModelState.Clear();
@@ -44,7 +44,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <param name="vm">An object that represents data to register a new user.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpPost(Routing.RegisterEndpoint)]
+    [HttpPost(Routing.SingUpEndpoint)]
     public async Task<IActionResult> Post(SignUpUserViewModel vm, CancellationToken cancellationToken)
     {
       if (ModelState.IsValid)

@@ -19,14 +19,14 @@ namespace AspNetIdentitySample.WebApplication.Defaults
     /// <summary>A value that represents an endpoint for a sign out page.</summary>
     public const string SignOutEndpoint = "signout";
 
+    /// <summary>A value that represents an endpoint for a register user page.</summary>
+    public const string SingUpEndpoint = "signup";
+
     /// <summary>A value that represents an endpoint for a user page.</summary>
     public const string UserEndpoint = "{userId:guid}";
 
     /// <summary>A value that represents an endpoint for a user page.</summary>
     public const string DeleteUserEndpoint = "{userId:guid}/delete";
-
-    /// <summary>A value that represents an endpoint for a register user page.</summary>
-    public const string RegisterEndpoint = "register";
 
     /// <summary>A value that represents an endpoint for a profile page.</summary>
     public const string ProfileEndpoint = "me";
