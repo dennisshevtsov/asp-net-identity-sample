@@ -34,12 +34,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
       services.ConfigureApplicationCookie(options =>
       {
-        options.AccessDeniedPath = $"/{Routing.AccountRoute}/${Routing.AccessDeniedEndpoint}";
-        options.LoginPath = $"/{Routing.AccountRoute}/${Routing.SignInEndpoint}";
-        options.ReturnUrlParameter = "returnUrl";
+        options.AccessDeniedPath = $"/{Routing.AccountRoute}/{Routing.AccessDeniedEndpoint}";
+        options.LoginPath = $"/{Routing.AccountRoute}/{Routing.SignInEndpoint}";
+        options.ReturnUrlParameter = ToCamelCase(nameof(ViewModelBase.ReturnUrl));
       });
 
       return services;
     }
+
+    private static string ToCamelCase(string value)
+      => value.Substring(0, 1).ToLower() + value.Substring(1);
   }
 }
