@@ -11,7 +11,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
-  [Route(Routing.UserRoute)]
+  [Route(Routing.AccountRoute)]
   public sealed class UserListController : Controller
   {
     public const string ViewName = "UserListView";

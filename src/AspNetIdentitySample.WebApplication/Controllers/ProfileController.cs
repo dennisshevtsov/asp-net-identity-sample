@@ -29,7 +29,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    [HttpGet]
+    [HttpGet(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
       var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
@@ -43,7 +43,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    [HttpPost]
+    [HttpPost(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Post(ProfileViewModel vm, CancellationToken cancellationToken)
     {
       var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);

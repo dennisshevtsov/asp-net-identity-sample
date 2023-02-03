@@ -57,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
       var options =
         new RewriteOptions().AddRedirect("(.*)/$", "$1")
-                            .AddRedirect("^[/]?$", Routing.UserRoute);
+                            .AddRedirect("^[/]?$", Routing.AccountRoute);
 
       app.UseRewriter(options);
 

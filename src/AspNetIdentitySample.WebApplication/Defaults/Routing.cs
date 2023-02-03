@@ -7,9 +7,6 @@ namespace AspNetIdentitySample.WebApplication.Defaults
   /// <summary>Provides values of routes.</summary>
   public static class Routing
   {
-    /// <summary>A value that represents a base route for the user endpoints.</summary>
-    public const string UserRoute = "user";
-
     /// <summary>A value that represents a base route for the account endpoints.</summary>
     public const string AccountRoute = "account";
 
@@ -30,5 +27,11 @@ namespace AspNetIdentitySample.WebApplication.Defaults
 
     /// <summary>A value that represents an endpoint for a new user page.</summary>
     public const string NewUserEndpoint = "add";
+
+    /// <summary>A value that represents an endpoint for a register user page.</summary>
+    public const string RegisterEndpoint = "register";
+
+    /// <summary>A value that represents an endpoint for a profile page.</summary>
+    public const string ProfileEndpoint = "me";
   }
 }
