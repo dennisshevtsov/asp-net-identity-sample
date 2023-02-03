@@ -21,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
       services.AddControllersWithViews(options =>
       {
         options.Filters.Add(new AuthorizeFilter());
+        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+
         options.ModelBinderProviders.Insert(0, new ViewModelBinderProvider());
       });
       services.Configure<RazorViewEngineOptions>(options =>
