@@ -4,6 +4,11 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
+  using System;
+
+  using Microsoft.AspNetCore.Identity;
+
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
@@ -12,6 +17,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   public sealed class RegisterController : Controller
   {
     public const string ViewName = "RegisterView";
+
+    private readonly UserManager<UserEntity> _userManager;
+
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.RegisterController"/> class.</summary>
+    /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
+    public RegisterController(UserManager<UserEntity> userManager)
+    {
+      _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+    }
 
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents data to register a new user.</param>
@@ -26,12 +40,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     /// <summary>Handles the POST request.</summary>
     /// <param name="vm">An object that represents data to register a new user.</param>
+    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
     [HttpPost(Routing.RegisterEndpoint)]
-    public IActionResult Post(RegisterUserViewModel vm)
+    public async Task<IActionResult> Post(RegisterUserViewModel vm, CancellationToken cancellationToken)
     {
       if (ModelState.IsValid)
       {
+        await _userManager.CreateAsync(vm.ToEntity(), vm.Password!);
+
         return RedirectToAction(nameof(UserListController.Get), nameof(UserListController).Replace("Controller", ""));
       }
 
