@@ -7,8 +7,8 @@ namespace Microsoft.Extensions.DependencyInjection
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.WebApplication.Stores;
   using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.Stores;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to set up ASP.NET Core Identity.</summary>
