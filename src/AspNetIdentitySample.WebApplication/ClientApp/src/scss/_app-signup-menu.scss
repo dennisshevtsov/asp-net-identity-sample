@@ -1,0 +1,6 @@
+﻿.app-signup-menu {
+  &__action {
+    @extend .btn;
+    @extend .btn-outline-light;
+  }
+}
