@@ -20,7 +20,7 @@
 
         @if (Model.User.IsAuthenticated)
         {
-          <div class="app-header__profile profile-menu">
+          <div class="app-header__profile app-profile-menu">
             <a class="app-profile-menu__toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <span>@Model.User.Name</span>
             </a>
@@ -28,6 +28,12 @@
               <a class="app-profile-menu__item" asp-controller="Profile" asp-action="Get" asp-route-returnUrl="@Context.Request.Path"><span>Profile</span></a>
               <a class="app-profile-menu__item" asp-controller="SignOut" asp-action="Get" asp-route-returnUrl="@Context.Request.Path"><span>Sign out</span></a>
             </nav>
+          </div>
+        }
+        else
+        {
+          <div class="app-header__profile">
+            <a class="btn btn-outline-light" asp-controller="Register" asp-action="Get"><span>Sign-up</span></a>
           </div>
         }
       </nav>
