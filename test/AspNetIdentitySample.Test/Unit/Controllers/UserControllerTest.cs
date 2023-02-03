@@ -4,15 +4,13 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
-  using System.Threading;
   using System.Security.Claims;
+  using Microsoft.AspNetCore.Identity;
 
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.WebApplication.ViewModels;
-  using Microsoft.AspNetCore.Identity;
 
   [TestClass]
   public sealed class UserControllerTest : IdentityControllerTestBase
