@@ -6,6 +6,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
 
+  using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
@@ -13,6 +14,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
+  [AllowAnonymous]
   [Route(Routing.AccountRoute)]
   public sealed class RegisterController : Controller
   {
