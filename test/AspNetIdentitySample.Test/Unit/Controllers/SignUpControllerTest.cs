@@ -4,6 +4,11 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
+  using Microsoft.AspNetCore.Identity;
+  using Microsoft.AspNetCore.Mvc;
+
+  using AspNetIdentitySample.WebApplication.ViewModels;
+
   [TestClass]
   public sealed class SignUpControllerTest : IdentityControllerTestBase
   {
@@ -14,6 +19,28 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     protected override void InitializeInternal()
     {
       _signUpController = new SignUpController(UserManagerMock.Object);
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Create_New_User()
+    {
+      UserManagerMock.Setup(service => service.CreateAsync(It.IsAny<UserEntity>(), It.IsAny<string>()))
+                     .Returns(Task.FromResult(IdentityResult.Success))
+                     .Verifiable();
+
+      var vm = new SignUpAccountViewModel();
+
+      var actionResult = await _signUpController.Post(vm);
+
+      Assert.IsNotNull(actionResult);
+
+      var redirectResult = actionResult as RedirectToActionResult;
+
+      Assert.IsNotNull(redirectResult);
+      Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
+
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
   }
 }

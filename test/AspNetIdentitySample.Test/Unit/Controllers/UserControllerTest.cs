@@ -79,32 +79,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     }
 
     [TestMethod]
-    public async Task Post_Should_Create_New_User()
-    {
-      UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                     .ReturnsAsync(default(UserEntity))
-                     .Verifiable();
-
-      UserManagerMock.Setup(service => service.CreateAsync(It.IsAny<UserEntity>(), It.IsAny<string>()))
-                     .Returns(Task.FromResult(IdentityResult.Success))
-                     .Verifiable();
-
-      var vm = new UserViewModel();
-
-      var actionResult = await _userController.Post(vm);
-
-      Assert.IsNotNull(actionResult);
-
-      var redirectResult = actionResult as RedirectToActionResult;
-
-      Assert.IsNotNull(redirectResult);
-      Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
-
-      UserManagerMock.Verify();
-      UserManagerMock.VerifyNoOtherCalls();
-    }
-
-    [TestMethod]
     public async Task Post_Should_Update_User()
     {
       var userEntity = new UserEntity();

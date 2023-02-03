@@ -79,7 +79,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
                       .Returns(Task.CompletedTask)
                       .Verifiable();
 
-      var vm = new DeleteUserViewModel();
+      var vm = new DeleteAccountViewModel();
 
       var actionResult = await _userListController.Delete(vm, _cancellationToken);
 
