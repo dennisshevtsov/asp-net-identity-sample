@@ -35,8 +35,27 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       Assert.IsNotNull(viewResult);
       Assert.AreEqual(SignUpController.ViewName, viewResult.ViewName);
-      Assert.IsNotNull(viewResult.Model);
-      Assert.IsInstanceOfType(viewResult.Model, typeof(SignUpAccountViewModel));
+      Assert.AreEqual(vm, viewResult.Model);
+    }
+
+    [TestMethod]
+    public async Task Post_Should_Return_View_Result()
+    {
+      _signUpController.ControllerContext.ModelState.AddModelError("test", "test");
+
+      var vm = new SignUpAccountViewModel();
+
+      var actionResult = await _signUpController.Post(vm);
+
+      Assert.IsNotNull(actionResult);
+
+      var viewResult = actionResult as ViewResult;
+
+      Assert.IsNotNull(viewResult);
+      Assert.AreEqual(SignUpController.ViewName, viewResult.ViewName);
+      Assert.AreEqual(vm, viewResult.Model);
+
+      UserManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
