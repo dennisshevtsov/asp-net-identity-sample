@@ -8,6 +8,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Stores;
+  using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to set up ASP.NET Core Identity.</summary>
   public static class IdentityExtensions
@@ -32,8 +34,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
       services.ConfigureApplicationCookie(options =>
       {
-        options.AccessDeniedPath = "/account/access-denied";
-        options.LoginPath = "/account/signin";
+        options.AccessDeniedPath = $"/{Routing.AccountRoute}/${Routing.AccessDeniedEndpoint}";
+        options.LoginPath = $"/{Routing.AccountRoute}/${Routing.SignInEndpoint}";
         options.ReturnUrlParameter = "returnUrl";
       });
 
