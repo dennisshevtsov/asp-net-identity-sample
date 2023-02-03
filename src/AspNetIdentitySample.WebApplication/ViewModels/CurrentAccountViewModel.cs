@@ -8,7 +8,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents details of the authenticated user.</summary>
-  public sealed class CurrentUserViewModel : IUserIdentity
+  public sealed class CurrentAccountViewModel : IUserIdentity
   {
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }

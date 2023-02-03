@@ -11,7 +11,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
   [AllowAnonymous]
-  [Route(Routing.UserRoute)]
+  [Route(Routing.AccountRoute)]
   public sealed class AccessDeniedController : Controller
   {
     public const string ViewName = "AccessDeniedView";

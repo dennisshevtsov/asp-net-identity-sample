@@ -1,6 +1,4 @@
 ﻿.app-profile-menu {
-  @extend .dropdown;
-
   &__toggle {
     @extend .d-flex;
     @extend .align-items-center;

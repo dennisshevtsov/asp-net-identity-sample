@@ -4,15 +4,13 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
-  using System.Threading;
   using System.Security.Claims;
+  using Microsoft.AspNetCore.Identity;
 
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
-  using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.WebApplication.ViewModels;
-  using Microsoft.AspNetCore.Identity;
 
   [TestClass]
   public sealed class UserControllerTest : IdentityControllerTestBase
@@ -77,32 +75,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(UserController.ViewName, viewResult.ViewName);
       Assert.AreEqual(vm, viewResult.Model);
 
-      UserManagerMock.VerifyNoOtherCalls();
-    }
-
-    [TestMethod]
-    public async Task Post_Should_Create_New_User()
-    {
-      UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                     .ReturnsAsync(default(UserEntity))
-                     .Verifiable();
-
-      UserManagerMock.Setup(service => service.CreateAsync(It.IsAny<UserEntity>(), It.IsAny<string>()))
-                     .Returns(Task.FromResult(IdentityResult.Success))
-                     .Verifiable();
-
-      var vm = new UserViewModel();
-
-      var actionResult = await _userController.Post(vm);
-
-      Assert.IsNotNull(actionResult);
-
-      var redirectResult = actionResult as RedirectToActionResult;
-
-      Assert.IsNotNull(redirectResult);
-      Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
-
-      UserManagerMock.Verify();
       UserManagerMock.VerifyNoOtherCalls();
     }
 

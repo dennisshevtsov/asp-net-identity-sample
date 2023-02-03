@@ -139,7 +139,7 @@ namespace AspNetIdentitySample.WebApplication.Binding
 
       if (userEntity == null)
       {
-        throw new Exception($"There is no user with email ${userEmail}");
+        throw new Exception($"There is no user with email {userEmail}");
       }
 
       vm.User.FromEntity(userEntity);

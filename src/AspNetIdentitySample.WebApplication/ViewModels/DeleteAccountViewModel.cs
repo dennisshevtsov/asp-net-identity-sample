@@ -7,7 +7,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   using AspNetIdentitySample.ApplicationCore.Identities;
 
   /// <summary>Represents data to delete a user.</summary>
-  public sealed class DeleteUserViewModel : IUserIdentity
+  public sealed class DeleteAccountViewModel : IUserIdentity
   {
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }
