@@ -8,6 +8,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using System.Security.Claims;
 
   [TestClass]
   public sealed class SignUpControllerTest : IdentityControllerTestBase
@@ -19,6 +20,23 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     protected override void InitializeInternal()
     {
       _signUpController = new SignUpController(UserManagerMock.Object);
+    }
+
+    [TestMethod]
+    public void Get_Should_Return_View_Result()
+    {
+      var vm = new SignUpAccountViewModel();
+
+      var actionResult = _signUpController.Get(vm);
+
+      Assert.IsNotNull(actionResult);
+
+      var viewResult = actionResult as ViewResult;
+
+      Assert.IsNotNull(viewResult);
+      Assert.AreEqual(SignUpController.ViewName, viewResult.ViewName);
+      Assert.IsNotNull(viewResult.Model);
+      Assert.IsInstanceOfType(viewResult.Model, typeof(SignUpAccountViewModel));
     }
 
     [TestMethod]
