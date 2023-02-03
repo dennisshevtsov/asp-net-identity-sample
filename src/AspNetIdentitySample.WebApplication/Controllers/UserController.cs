@@ -30,8 +30,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>An object that defines a contract that represents the result of an action method.</returns>
-    [HttpGet(Routing.UserEndpoint, Order = 1)]
-    [HttpGet(Routing.NewUserEndpoint, Order = 2)]
+    [HttpGet(Routing.UserEndpoint)]
     public async Task<IActionResult> Get(UserViewModel vm)
     {
       ModelState.Clear();
@@ -49,8 +48,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <summary>Handles the POST request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>AAn object that represents an asynchronous operation.</returns>
-    [HttpPost(Routing.UserEndpoint, Order = 1)]
-    [HttpPost(Routing.NewUserEndpoint, Order = 2)]
+    [HttpPost(Routing.UserEndpoint)]
     public async Task<IActionResult> Post(UserViewModel vm)
     {
       if (ModelState.IsValid)
@@ -62,15 +60,9 @@ namespace AspNetIdentitySample.WebApplication.Controllers
           vm.ToEntity(userEntity);
 
           await _userManager.UpdateAsync(userEntity);
-        }
-        else
-        {
-          userEntity = vm.ToEntity();
 
-          var result = await _userManager.CreateAsync(userEntity, "test");
+          return RedirectToAction(nameof(UserController.Get), new { userId = userEntity.Id, returnUrl = vm.ReturnUrl });
         }
-
-        return RedirectToAction(nameof(UserController.Get), new { userId = userEntity.Id, returnUrl = vm.ReturnUrl });
       }
 
       return View(UserController.ViewName, vm);

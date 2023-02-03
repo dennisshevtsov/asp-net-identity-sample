@@ -40,19 +40,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       userEntity.Email = Email;
     }
 
-    /// <summary>Creates an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class from the view model.</summary>
-    /// <returns>An object that represents details of a user.</returns>
-    public UserEntity ToEntity()
-    {
-      var userEntity = new UserEntity
-      {
-        Name = Name,
-        Email = Email,
-      };
-
-      return userEntity;
-    }
-
     /// <summary>Creates an instace of the <see cref="System.Security.Claims.ClaimsPrincipal"/> class.</summary>
     /// <returns>An object that contains a user identity.</returns>
     public ClaimsPrincipal ToPrincipal()
