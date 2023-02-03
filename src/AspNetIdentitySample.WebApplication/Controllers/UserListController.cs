@@ -43,7 +43,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     /// <param name="vm">An object that represents the view model for the profile action.</param>
     /// <returns>AAn object that represents an asynchronous operation.</returns>
     [HttpPost(Routing.DeleteUserEndpoint)]
-    public async Task<IActionResult> Delete(DeleteUserViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteAccountViewModel vm, CancellationToken cancellationToken)
     {
       await _userService.DeleteUserAsync(vm, cancellationToken);
 

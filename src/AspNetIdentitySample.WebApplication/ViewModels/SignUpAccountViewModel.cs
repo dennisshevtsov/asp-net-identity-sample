@@ -9,7 +9,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   using AspNetIdentitySample.ApplicationCore.Entities;
 
   /// <summary>Represents data to register a new user.</summary>
-  public sealed class SignUpUserViewModel : ViewModelBase
+  public sealed class SignUpAccountViewModel : ViewModelBase
   {
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     [Required]
@@ -25,7 +25,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
 
     /// <summary>Gets/sets an object that represents a repeated password of a user.</summary>
     [Required]
-    [Compare(nameof(SignUpUserViewModel.Password))]
+    [Compare(nameof(SignUpAccountViewModel.Password))]
     public string? RepeatedPassowrd { get; set; }
 
     /// <summary>Creates an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class from the view model.</summary>
