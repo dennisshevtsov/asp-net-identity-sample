@@ -15,9 +15,13 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     [Required]
     public string? Email { get; set; }
 
-    /// <summary>Gets/sets an object that represents a name of a user.</summary>
+    /// <summary>Gets/sets an object that represents a fist name of a user.</summary>
     [Required]
-    public string? Name { get; set; }
+    public string? FirstName { get; set; }
+
+    /// <summary>Gets/sets an object that represents a last name of a user.</summary>
+    [Required]
+    public string? LastName { get; set; }
 
     /// <summary>Gets/sets an object that represents a password of a user.</summary>
     [Required]
@@ -34,7 +38,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     {
       var userEntity = new UserEntity
       {
-        Name = Name,
+        FirstName = FirstName,
+        LastName = LastName,
         Email = Email,
       };
 

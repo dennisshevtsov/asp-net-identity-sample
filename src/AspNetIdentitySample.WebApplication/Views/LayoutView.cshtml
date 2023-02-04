@@ -22,7 +22,7 @@
         {
           <div class="app-header__profile app-profile-menu">
             <a class="app-profile-menu__toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <span>@Model.User.Name</span>
+              <span>@Model.User.LastName, @Model.User.FirstName</span>
             </a>
             <nav class="app-profile-menu__nav dropdown-menu">
               <a class="app-profile-menu__item" asp-controller="Profile" asp-action="Get" asp-route-returnUrl="@Context.Request.Path"><span>Profile</span></a>

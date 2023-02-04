@@ -13,7 +13,7 @@
     @foreach (var user in Model.Users)
     {
       <tr>
-        <td class="app-user-list__cell app-user-list__cell_name"><span>@user.Name</span></td>
+        <td class="app-user-list__cell app-user-list__cell_name"><span>@user.LastName, @user.FirstName</span></td>
         <td class="app-user-list__cell app-user-list__cell_email"><span>@user.Email</span></td>
         <td class="app-user-list__cell app-user-list__cell_roles"><span>@user.Roles</span></td>
         <td class="app-user-list__cell app-user-list__cell_actions">
@@ -24,7 +24,7 @@
             <div class="app-modal modal-dialog">
               <div class="app-modal__content">
                 <div class="app-modal__body">
-                  <p class="app-modal__text">Are you sure you want to delete user (@user.Name, @user.Email)?</p>
+                  <p class="app-modal__text">Are you sure you want to delete user (@user.FirstName @user.LastName, @user.Email)?</p>
                 </div>
                 <div class="app-modal__footer">
                   <a class="app-modal__close" data-bs-dismiss="modal"><span>Close</span></a>
