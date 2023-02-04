@@ -34,7 +34,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     {
       var userEntity = new UserEntity
       {
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
         Email = Guid.NewGuid().ToString(),
       };
 
@@ -57,7 +58,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       var actualViewModel = viewResult.Model as ProfileViewModel;
 
       Assert.IsNotNull(actualViewModel);
-      Assert.AreEqual(userEntity.Name, actualViewModel.Name);
+      Assert.AreEqual(userEntity.FirstName, actualViewModel.FirstName);
+      Assert.AreEqual(userEntity.LastName, actualViewModel.LastName);
       Assert.AreEqual(userEntity.Email, actualViewModel.Email);
 
       _userServiceMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));
@@ -67,11 +69,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     [TestMethod]
     public async Task Post_Should_Update_Current_User()
     {
-      var userName = Guid.NewGuid().ToString();
+      var userFirstName = Guid.NewGuid().ToString();
+      var userLastName = Guid.NewGuid().ToString();
       var userEmail = Guid.NewGuid().ToString();
       var userEntity = new UserEntity
       {
-        Name = userName,
+        FirstName = userFirstName,
+        LastName = userLastName,
         Email = userEmail,
       };
 
@@ -85,7 +89,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       var viewModel = new ProfileViewModel
       {
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
         Email = Guid.NewGuid().ToString(),
       };
 
@@ -98,7 +103,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsNotNull(redirectResult);
       Assert.AreEqual(nameof(ProfileController.Get), redirectResult.ActionName);
 
-      Assert.AreEqual(viewModel.Name, userEntity.Name);
+      Assert.AreEqual(viewModel.FirstName, userEntity.FirstName);
+      Assert.AreEqual(viewModel.LastName, userEntity.LastName);
       Assert.AreEqual(userEmail, userEntity.Email);
 
       _userServiceMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));

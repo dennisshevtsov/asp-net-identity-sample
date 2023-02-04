@@ -40,7 +40,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
           Id = userId,
           UserId = userId,
           Email = Guid.NewGuid().ToString(),
-          Name = Guid.NewGuid().ToString(),
+          FirstName = Guid.NewGuid().ToString(),
+          LastName = Guid.NewGuid().ToString(),
         },
       };
 
@@ -66,7 +67,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       Assert.AreEqual(userEntityCollection[0].UserId, model.Users[0].UserId);
       Assert.AreEqual(userEntityCollection[0].Email, model.Users[0].Email);
-      Assert.AreEqual(userEntityCollection[0].Name, model.Users[0].Name);
+      Assert.AreEqual(userEntityCollection[0].FirstName, model.Users[0].FirstName);
+      Assert.AreEqual(userEntityCollection[0].LastName, model.Users[0].LastName);
 
       _userServiceMock.Verify(service => service.GetUsersAsync(_cancellationToken));
       _userServiceMock.VerifyNoOtherCalls();

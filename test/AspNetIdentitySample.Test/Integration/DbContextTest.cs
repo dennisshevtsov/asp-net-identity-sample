@@ -15,7 +15,8 @@ namespace AspNetIdentitySample.Infrastructure.Test
       var controlUserEntity = new UserEntity
       {
         Email = Guid.NewGuid().ToString(),
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
         PasswordHash = Guid.NewGuid().ToString(),
       };
 
@@ -38,7 +39,8 @@ namespace AspNetIdentitySample.Infrastructure.Test
       Assert.IsNotNull(actualUserEntity);
       Assert.AreEqual(controlUserEntity.UserId, actualUserEntity.UserId);
       Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
-      Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
+      Assert.AreEqual(controlUserEntity.FirstName, actualUserEntity.FirstName);
+      Assert.AreEqual(controlUserEntity.LastName, actualUserEntity.LastName);
       Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
     }
 
