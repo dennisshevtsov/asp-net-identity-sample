@@ -33,7 +33,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       Assert.IsNotNull(actualUserEntity);
 
       Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
-      Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
+      Assert.AreEqual(controlUserEntity.FirstName, actualUserEntity.FirstName);
+      Assert.AreEqual(controlUserEntity.LastName, actualUserEntity.LastName);
       Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
     }
 
@@ -76,7 +77,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       Assert.IsNotNull(actualUserEntity);
 
       Assert.AreEqual(controlUserEntity.Email, actualUserEntity.Email);
-      Assert.AreEqual(controlUserEntity.Name, actualUserEntity.Name);
+      Assert.AreEqual(controlUserEntity.FirstName, actualUserEntity.FirstName);
+      Assert.AreEqual(controlUserEntity.LastName, actualUserEntity.LastName);
       Assert.AreEqual(controlUserEntity.PasswordHash, actualUserEntity.PasswordHash);
     }
 
@@ -108,7 +110,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       var creatingUserEntity = new UserEntity
       {
         Email = Guid.NewGuid().ToString(),
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
       };
 
       await _userRepository.AddUserAsync(creatingUserEntity, Token);
@@ -126,7 +129,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
 
       Assert.IsNotNull(createdUserEntity);
       Assert.AreEqual(creatingUserEntity.Email, createdUserEntity.Email);
-      Assert.AreEqual(creatingUserEntity.Name, createdUserEntity.Name);
+      Assert.AreEqual(creatingUserEntity.FirstName, createdUserEntity.FirstName);
+      Assert.AreEqual(creatingUserEntity.LastName, createdUserEntity.LastName);
     }
 
     [TestMethod]
@@ -135,7 +139,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       var updatingUserEntity = await CreateTestUserAsync();
 
       updatingUserEntity.Email = Guid.NewGuid().ToString();
-      updatingUserEntity.Name = Guid.NewGuid().ToString();
+      updatingUserEntity.FirstName = Guid.NewGuid().ToString();
+      updatingUserEntity.LastName = Guid.NewGuid().ToString();
 
       await _userRepository.UpdateUserAsync(updatingUserEntity, Token);
 
@@ -150,7 +155,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
 
       Assert.IsNotNull(updatedUserEntity);
       Assert.AreEqual(updatingUserEntity.Email, updatedUserEntity.Email);
-      Assert.AreEqual(updatingUserEntity.Name, updatedUserEntity.Name);
+      Assert.AreEqual(updatingUserEntity.FirstName, updatedUserEntity.FirstName);
+      Assert.AreEqual(updatingUserEntity.LastName, updatedUserEntity.LastName);
     }
 
     [TestMethod]
@@ -177,7 +183,8 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       var controlUserEntity = new UserEntity
       {
         Email = $"test${Guid.NewGuid()}@example.com",
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
         PasswordHash = Guid.NewGuid().ToString(),
       };
 

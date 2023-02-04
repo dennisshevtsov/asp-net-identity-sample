@@ -42,7 +42,8 @@ namespace AspNetIdentitySample.Infrastructure.Configurations
       builder.Property(entity => entity.UserId).ToJsonProperty("userId").HasValueGenerator<UserPartitionKeyValueGenerator>();
 
       builder.Property(entity => entity.Email).ToJsonProperty("email");
-      builder.Property(entity => entity.Name).ToJsonProperty("name");
+      builder.Property(entity => entity.FirstName).ToJsonProperty("firstName");
+      builder.Property(entity => entity.LastName).ToJsonProperty("lastName");
       builder.Property(entity => entity.PasswordHash).ToJsonProperty("passwordHash");
 
       builder.Ignore(entity => entity.Roles);

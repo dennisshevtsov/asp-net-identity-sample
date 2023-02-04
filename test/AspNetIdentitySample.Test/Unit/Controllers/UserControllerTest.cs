@@ -30,7 +30,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       var userEntity = new UserEntity
       {
         Email = Guid.NewGuid().ToString(),
-        Name = Guid.NewGuid().ToString(),
+        FirstName = Guid.NewGuid().ToString(),
+        LastName = Guid.NewGuid().ToString(),
       };
 
       UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
@@ -52,7 +53,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       Assert.IsNotNull(model);
       Assert.AreEqual(userEntity.Email, model.Email);
-      Assert.AreEqual(userEntity.Name, model.Name);
+      Assert.AreEqual(userEntity.FirstName, model.FirstName);
+      Assert.AreEqual(userEntity.LastName, model.LastName);
 
       UserManagerMock.Verify();
       UserManagerMock.VerifyNoOtherCalls();
@@ -92,12 +94,14 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
                      .Verifiable();
 
       var email = Guid.NewGuid().ToString();
-      var name = Guid.NewGuid().ToString();
+      var firstName = Guid.NewGuid().ToString();
+      var lastName = Guid.NewGuid().ToString();
 
       var vm = new UserViewModel
       {
         Email = email,
-        Name = name,
+        FirstName = firstName,
+        LastName = lastName,
       };
 
       var actionResult = await _userController.Post(vm);
@@ -110,7 +114,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
 
       Assert.AreEqual(email, userEntity.Email);
-      Assert.AreEqual(name, userEntity.Name);
+      Assert.AreEqual(firstName, userEntity.FirstName);
+      Assert.AreEqual(lastName, userEntity.LastName);
 
       UserManagerMock.Verify();
       UserManagerMock.VerifyNoOtherCalls();

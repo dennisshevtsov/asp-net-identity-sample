@@ -13,8 +13,11 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }
 
-    /// <summary>Gets/sets an object that represents a name of a user.</summary>
-    public string? Name { get; set; }
+    /// <summary>Gets/sets an object that represents a first name of a user.</summary>
+    public string? FirstName { get; set; }
+
+    /// <summary>Gets/sets an object that represents a last name of a user.</summary>
+    public string? LastName { get; set; }
 
     /// <summary>Gets/sets an object that indicates if the user is authenticated.</summary>
     public bool IsAuthenticated { get; set; }
@@ -24,7 +27,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     public void FromEntity(UserEntity userEntity)
     {
       UserId = userEntity.Id;
-      Name = userEntity.Name;
+      FirstName = userEntity.FirstName;
+      LastName = userEntity.LastName;
       IsAuthenticated = true;
     }
   }

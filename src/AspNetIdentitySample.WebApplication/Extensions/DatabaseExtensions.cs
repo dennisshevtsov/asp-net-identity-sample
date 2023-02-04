@@ -36,7 +36,8 @@ namespace Microsoft.Extensions.DependencyInjection
       yield return new UserEntity
       {
         Email = configuration.GetValue<string>("TestUserEmail"),
-        Name = configuration.GetValue<string>("TestUserName"),
+        FirstName = configuration.GetValue<string>("TestUserFirstName"),
+        LastName = configuration.GetValue<string>("TestUserLastName"),
         PasswordHash = configuration.GetValue<string>("TestUserPasswordHash"),
       };
     }

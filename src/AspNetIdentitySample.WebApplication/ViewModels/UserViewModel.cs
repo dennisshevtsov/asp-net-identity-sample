@@ -16,9 +16,13 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that represents an ID of a user.</summary>
     public Guid UserId { get; set; }
 
-    /// <summary>Gets/sets an object that represents a name of a user.</summary>
+    /// <summary>Gets/sets an object that represents a fist name of a user.</summary>
     [Required]
-    public string? Name { get; set; }
+    public string? FirstName { get; set; }
+
+    /// <summary>Gets/sets an object that represents a last name of a user.</summary>
+    [Required]
+    public string? LastName { get; set; }
 
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
     [Required]
@@ -28,7 +32,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <param name="userEntity">An object that represents details of a user.</param>
     public void FromEntity(UserEntity userEntity)
     {
-      Name = userEntity.Name;
+      FirstName = userEntity.FirstName;
+      LastName = userEntity.LastName;
       Email = userEntity.Email;
     }
 
@@ -36,7 +41,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <param name="userEntity">An object that represents details of a user.</param>
     public void ToEntity(UserEntity userEntity)
     {
-      userEntity.Name = Name;
+      userEntity.FirstName = FirstName;
+      userEntity.LastName = LastName;
       userEntity.Email = Email;
     }
 

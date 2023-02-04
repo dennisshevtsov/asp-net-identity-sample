@@ -22,7 +22,8 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
         Users.Add(new UserViewModel
         {
           UserId = userEntity.UserId,
-          Name = userEntity.Name,
+          FirstName = userEntity.FirstName,
+          LastName = userEntity.LastName,
           Email = userEntity.Email,
         });
       }
@@ -34,8 +35,11 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       /// <summary>Gets/sets an object that represents an ID of a user.</summary>
       public Guid UserId { get; set; }
 
-      /// <summary>Gets/sets an object that represents a name of a user.</summary>
-      public string? Name { get; set; }
+      /// <summary>Gets/sets an object that represents a fist name of a user.</summary>
+      public string? FirstName { get; set; }
+
+      /// <summary>Gets/sets an object that represents a last name of a user.</summary>
+      public string? LastName { get; set; }
 
       /// <summary>Gets/sets an object that represents an email of a user.</summary>
       public string? Email { get; set; }
