@@ -32,6 +32,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
+      ModelState.Clear();
+
       var userEntity = await _userService.GetUserAsync(vm.User, cancellationToken);
 
       vm.FromEntity(userEntity!);
