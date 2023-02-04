@@ -36,16 +36,14 @@ namespace AspNetIdentitySample.ApplicationCore.Services
       var userRoleEntityCollection = await _userRoleRepository.GetRolesAsync(identities, cancellationToken);
       var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>(new UserIdentityComparer());
 
+      foreach(var identity in identities)
+      {
+        userRoleEntityDictionary.TryAdd(identity, new List<UserRoleEntity>());
+      }
+
       foreach (var userRoleEntity in userRoleEntityCollection)
       {
-        if (!userRoleEntityDictionary.TryGetValue(userRoleEntity, out var userRoleEntityCollectionForUser))
-        {
-          userRoleEntityCollectionForUser = new List<UserRoleEntity>();
-
-          userRoleEntityDictionary.Add(userRoleEntity, userRoleEntityCollectionForUser);
-        }
-
-        userRoleEntityCollectionForUser.Add(userRoleEntity);
+        userRoleEntityDictionary[userRoleEntity].Add(userRoleEntity);
       }
 
       return userRoleEntityDictionary;

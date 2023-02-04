@@ -31,6 +31,46 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
     }
 
     [TestMethod]
+    public async Task GetRolesAsync_Should_Return_Roles_Per_User_Dictionary()
+    {
+      var userId0 = Guid.NewGuid();
+      var userId1 = Guid.NewGuid();
+
+      var userRoleEntityCollection = new List<UserRoleEntity>
+      {
+        new UserRoleEntity { UserId = userId0 },
+        new UserRoleEntity { UserId = userId0 },
+        new UserRoleEntity { UserId = userId1 },
+      };
+
+      _userRoleRepositoryMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IEnumerable<IUserIdentity>>(), It.IsAny<CancellationToken>()))
+                             .ReturnsAsync(userRoleEntityCollection)
+                             .Verifiable();
+
+      var identities = new IUserIdentity[]
+      {
+        new UserEntity { UserId = userId0 },
+        new UserEntity { UserId = userId1 },
+        new UserEntity { UserId = Guid.NewGuid() },
+      };
+
+      var userRoleEntityDictionary =
+        await _userRoleService.GetRolesAsync(identities, _cancellationToken);
+
+      Assert.IsNotNull(userRoleEntityDictionary);
+      Assert.AreEqual(identities.Length, userRoleEntityDictionary.Count);
+
+      Assert.AreEqual(2, userRoleEntityDictionary[identities[0]].Count);
+      Assert.AreEqual(userRoleEntityCollection[0], userRoleEntityDictionary[identities[0]][0]);
+      Assert.AreEqual(userRoleEntityCollection[1], userRoleEntityDictionary[identities[0]][1]);
+
+      Assert.AreEqual(1, userRoleEntityDictionary[identities[1]].Count);
+      Assert.AreEqual(userRoleEntityCollection[2], userRoleEntityDictionary[identities[1]][0]);
+
+      Assert.AreEqual(0, userRoleEntityDictionary[identities[2]].Count);
+    }
+
+    [TestMethod]
     public async Task GetRoleNamesAsync_Should_Return_Role_Name_Collection_For_User()
     {
       var userRoleEntityCollection = new List<UserRoleEntity>
