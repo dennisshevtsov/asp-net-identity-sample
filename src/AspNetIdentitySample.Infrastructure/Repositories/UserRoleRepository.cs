@@ -40,7 +40,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
     /// <param name="identities">An object that represents a collection of the <see cref="AspNetIdentitySample.ApplicationCore.Identities.IUserIdentity"/>.</param>
     /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
-    public async Task<Dictionary<IUserIdentity, List<UserRoleEntity>>> GetRolesAsync(IEnumerable<IUserIdentity> identities, CancellationToken cancellationToken)
+    public async Task<List<UserRoleEntity>> GetRolesAsync(IEnumerable<IUserIdentity> identities, CancellationToken cancellationToken)
     {
       var userIdCollection = identities.Select(entity => entity.UserId)
                                        .ToArray();
@@ -52,21 +52,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
                         .OrderBy(entity => entity.RoleName)
                         .ToListAsync(cancellationToken);
 
-      var userRoleEntityDictionary = new Dictionary<IUserIdentity, List<UserRoleEntity>>(new UserIdentityComparer());
-
-      foreach (var userRoleEntity in userRoleEntityCollection)
-      {
-        if (!userRoleEntityDictionary.TryGetValue(userRoleEntity, out var userRoleEntityCollectionForUser))
-        {
-          userRoleEntityCollectionForUser = new List<UserRoleEntity>();
-
-          userRoleEntityDictionary.Add(userRoleEntity, userRoleEntityCollectionForUser);
-        }
-
-        userRoleEntityCollectionForUser.Add(userRoleEntity);
-      }
-
-      return userRoleEntityDictionary;
+      return userRoleEntityCollection;
     }
 
     /// <summary>Deletes roles for a user.</summary>
@@ -90,26 +76,6 @@ namespace AspNetIdentitySample.Infrastructure.Repositories
       {
         userRoleEntityEntry.State = EntityState.Detached;
       }
-    }
-
-    public sealed class UserIdentityComparer : IEqualityComparer<IUserIdentity>
-    {
-      public bool Equals(IUserIdentity? a, IUserIdentity? b)
-      {
-        if (a != null && b != null)
-        {
-          return a.UserId == b.UserId;
-        }
-
-        if (a == null && b == null)
-        {
-          return true;
-        }
-
-        return false;
-      }
-
-      public int GetHashCode(IUserIdentity identity) => identity.UserId.GetHashCode();
     }
   }
 }

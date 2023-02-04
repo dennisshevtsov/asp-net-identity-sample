@@ -14,15 +14,15 @@ namespace AspNetIdentitySample.ApplicationCore.Services
   public sealed class UserService : IUserService
   {
     private readonly IUserRepository _userRepository;
-    private readonly IUserRoleRepository _userRoleRepository;
+    private readonly IUserRoleService _userRoleService;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.ApplicationCore.Services.UserService"/> class.</summary>
     /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    /// <param name="userRoleRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/> in the database.</param>
-    public UserService(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
+    /// <param name="userRoleService">An object that provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserRoleEntity"/>.</param>
+    public UserService(IUserRepository userRepository, IUserRoleService userRoleService)
     {
       _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-      _userRoleRepository = userRoleRepository ?? throw new ArgumentNullException(nameof(userRoleRepository));
+      _userRoleService = userRoleService ?? throw new ArgumentNullException(nameof(userRoleService));
     }
 
     /// <summary>Gets a collection of users.</summary>
@@ -31,7 +31,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services
     public async Task<List<UserEntity>> GetUsersAsync(CancellationToken cancellationToken)
     {
       var userEntityCollection = await _userRepository.GetUsersAsync(cancellationToken);
-      var userRoleEntityDictionary = await _userRoleRepository.GetRolesAsync(userEntityCollection, cancellationToken);
+      var userRoleEntityDictionary = await _userRoleService.GetRolesAsync(userEntityCollection, cancellationToken);
 
       foreach (var userEntity in userEntityCollection)
       {
@@ -55,7 +55,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services
       if (userEntity != null)
       {
         var userRoleEntityCollection =
-          await _userRoleRepository.GetRolesAsync(userEntity, cancellationToken);
+          await _userRoleService.GetRolesAsync(userEntity, cancellationToken);
 
         userEntity.Roles = userRoleEntityCollection;
       }
@@ -94,13 +94,11 @@ namespace AspNetIdentitySample.ApplicationCore.Services
     /// <returns>An object that represents an asynchronous operation.</returns>
     public async Task DeleteUserAsync(IUserIdentity identity, CancellationToken cancellationToken)
     {
-      var userRoleEntityCollection = await _userRoleRepository.GetRolesAsync(identity, cancellationToken);
-
-      await _userRoleRepository.DeleteRolesAsync(userRoleEntityCollection, cancellationToken);
+      await _userRoleService.DeleteRolesAsync(identity, cancellationToken);
 
       var userEntity = await _userRepository.GetUserAsync(identity, cancellationToken);
 
-      if (userEntity != null )
+      if (userEntity != null)
       {
         await _userRepository.DeleteUserAsync(userEntity, cancellationToken);
       }

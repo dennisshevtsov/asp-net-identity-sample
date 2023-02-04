@@ -227,7 +227,7 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
         controlUserRole,
       };
 
-      _userRoleServiceMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+      _userRoleServiceMock.Setup(repository => repository.GetRoleNamesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
                           .ReturnsAsync(controlUserRoleEntityCollection)
                           .Verifiable();
 
@@ -238,7 +238,7 @@ namespace AspNetIdentitySample.WebApplication.Stores.Test
       Assert.AreEqual(controlUserRoleEntityCollection.Count, roleCollection.Count);
       Assert.IsTrue(controlUserRoleEntityCollection.All(role => roleCollection.Contains(role)));
 
-      _userRoleServiceMock.Verify(repository => repository.GetRolesAsync(userEntity, _cancellationToken));
+      _userRoleServiceMock.Verify(repository => repository.GetRoleNamesAsync(userEntity, _cancellationToken));
       _userRoleServiceMock.VerifyNoOtherCalls();
 
       _userServiceMock.VerifyNoOtherCalls();

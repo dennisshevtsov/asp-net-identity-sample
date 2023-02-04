@@ -49,7 +49,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
 
       var userIdentity = new UserEntity();
 
-      var userRoleCollection = await _userRoleService.GetRolesAsync(userIdentity, _cancellationToken);
+      var userRoleCollection = await _userRoleService.GetRoleNamesAsync(userIdentity, _cancellationToken);
 
       Assert.IsNotNull(userRoleCollection);
       Assert.AreEqual(userRoleEntityCollection.Count, userRoleCollection.Count);
