@@ -179,15 +179,11 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
 
       var userRoleEntityCollection = new List<UserRoleEntity>();
 
-      _userRoleServiceMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                             .ReturnsAsync(userRoleEntityCollection)
-                             .Verifiable();
-
       _userRoleServiceMock.Setup(repository => repository.DeleteRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                             .Returns(Task.CompletedTask)
-                             .Verifiable();
+                          .Returns(Task.CompletedTask)
+                          .Verifiable();
 
-      var userIdentity = controlUserEntity;
+      var userIdentity = new UserRoleEntity();
 
       await _userService.DeleteUserAsync(userIdentity, _cancellationToken);
 
@@ -195,8 +191,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
       _userRepositoryMock.Verify(repository => repository.DeleteUserAsync(controlUserEntity, _cancellationToken));
       _userRepositoryMock.VerifyNoOtherCalls();
 
-      _userRoleServiceMock.Verify(repository => repository.GetRolesAsync(userIdentity, _cancellationToken));
-      _userRoleServiceMock.Verify(repository => repository.DeleteRolesAsync(userIdentity, _cancellationToken));
+      _userRoleServiceMock.Verify(service => service.DeleteRolesAsync(userIdentity, _cancellationToken));
       _userRoleServiceMock.VerifyNoOtherCalls();
     }
   }
