@@ -4,10 +4,10 @@
 
 namespace AspNetIdentitySample.ApplicationCore.Services.Test
 {
+  using System.Threading;
+
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
-  using AspNetIdentitySample.Infrastructure.Repositories;
-  using System.Threading;
 
   [TestClass]
   public sealed class UserRoleServiceTest
@@ -28,6 +28,27 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
       _userRoleRepositoryMock = new Mock<IUserRoleRepository>();
 
       _userRoleService = new UserRoleService(_userRoleRepositoryMock.Object);
+    }
+
+    [TestMethod]
+    public async Task GetRolesAsync_Should_Return_Roles_For_User()
+    {
+      var controlUserRoleEntityCollection = new List<UserRoleEntity>();
+
+      _userRoleRepositoryMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                             .ReturnsAsync(controlUserRoleEntityCollection)
+                             .Verifiable();
+
+      var identity = new UserEntity();
+
+      var actualUserRoleEntityCollection =
+        await _userRoleService.GetRolesAsync(identity, _cancellationToken);
+
+      Assert.IsNotNull(actualUserRoleEntityCollection);
+      Assert.AreEqual(controlUserRoleEntityCollection, actualUserRoleEntityCollection);
+
+      _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identity, _cancellationToken));
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -68,6 +89,9 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
       Assert.AreEqual(userRoleEntityCollection[2], userRoleEntityDictionary[identities[1]][0]);
 
       Assert.AreEqual(0, userRoleEntityDictionary[identities[2]].Count);
+
+      _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identities, _cancellationToken));
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -126,6 +150,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
 
       _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identity, _cancellationToken));
       _userRoleRepositoryMock.Verify(repository => repository.DeleteRolesAsync(userRoleEntityCollection, _cancellationToken));
+
       _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
   }
