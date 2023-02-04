@@ -25,7 +25,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles_Collection_By_User_Id()
+    public async Task GetRolesAsync_Should_Return_Roles_Collection_For_User()
     {
       var controlUserId = Guid.NewGuid();
       var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(controlUserId);
@@ -46,7 +46,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles_Dictionary_By_User_Id()
+    public async Task GetRolesAsync_Should_Return_Roles_For_Users()
     {
       var controlUserEntityCollection = new[]
       {
@@ -55,30 +55,27 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
         new UserEntity { UserId = Guid.NewGuid(), },
       };
 
-      var controlUserRoleEntityCollection = new[]
-      {
-        await CreateTestUserRolesAsync(controlUserEntityCollection[0].UserId),
-        await CreateTestUserRolesAsync(controlUserEntityCollection[1].UserId),
-        new List<UserRoleEntity>(),
-      };
+      var controlUserRoleEntityCollection = new List<UserRoleEntity>();
+
+      controlUserRoleEntityCollection.AddRange(
+        await CreateTestUserRolesAsync(controlUserEntityCollection[0].UserId));
+      controlUserRoleEntityCollection.AddRange(
+        await CreateTestUserRolesAsync(controlUserEntityCollection[1].UserId));
+
+      controlUserRoleEntityCollection =
+        controlUserRoleEntityCollection.OrderBy(entity => entity.RoleName)
+                                       .ToList();
 
       var actualUserRoleEntityCollection =
         await _userRoleRepository.GetRolesAsync(controlUserEntityCollection, Token);
 
       Assert.IsNotNull(actualUserRoleEntityCollection);
-      Assert.AreEqual(2, actualUserRoleEntityCollection.Count);
+      Assert.AreEqual(controlUserRoleEntityCollection.Count, actualUserRoleEntityCollection.Count);
 
-      Assert.IsTrue(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[0]));
-      Assert.AreEqual(controlUserRoleEntityCollection[0].Count, actualUserRoleEntityCollection[controlUserEntityCollection[0]].Count);
-      Assert.AreEqual(controlUserRoleEntityCollection[0][0].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[0]][0].RoleName);
-      Assert.AreEqual(controlUserRoleEntityCollection[0][1].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[0]][1].RoleName);
-
-      Assert.IsTrue(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[1]));
-      Assert.AreEqual(controlUserRoleEntityCollection[1].Count, actualUserRoleEntityCollection[controlUserEntityCollection[1]].Count);
-      Assert.AreEqual(controlUserRoleEntityCollection[1][0].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[1]][0].RoleName);
-      Assert.AreEqual(controlUserRoleEntityCollection[1][1].RoleName, actualUserRoleEntityCollection[controlUserEntityCollection[1]][1].RoleName);
-
-      Assert.IsFalse(actualUserRoleEntityCollection.ContainsKey(controlUserEntityCollection[2]));
+      for (int i = 0; i < controlUserRoleEntityCollection.Count; i++)
+      {
+        Assert.AreEqual(controlUserRoleEntityCollection[0].RoleName, actualUserRoleEntityCollection[0].RoleName);
+      }
     }
 
     [TestMethod]

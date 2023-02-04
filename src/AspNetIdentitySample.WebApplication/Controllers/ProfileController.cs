@@ -6,7 +6,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
 
-  using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Defaults;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
@@ -16,13 +16,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "ProfileView";
 
-    private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.ProfileController"/> class.</summary>
     /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    public ProfileController(IUserRepository userRepository)
+    public ProfileController(IUserService userService)
     {
-      _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+      _userService = userService ?? throw new ArgumentNullException(nameof(userService));
     }
 
     /// <summary>Handles the GET request.</summary>
@@ -32,7 +32,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
     {
-      var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
+      var userEntity = await _userService.GetUserAsync(vm.User, cancellationToken);
 
       vm.FromEntity(userEntity!);
 
@@ -46,11 +46,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpPost(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Post(ProfileViewModel vm, CancellationToken cancellationToken)
     {
-      var userEntity = await _userRepository.GetUserAsync(vm.User, cancellationToken);
+      var userEntity = await _userService.GetUserAsync(vm.User, cancellationToken);
 
       vm.ToEntity(userEntity!);
 
-      await _userRepository.UpdateUserAsync(userEntity!, cancellationToken);
+      await _userService.UpdateUserAsync(userEntity!, cancellationToken);
 
       return RedirectToAction(nameof(ProfileController.Get), new { rerturnUrl = vm.ReturnUrl });
     }

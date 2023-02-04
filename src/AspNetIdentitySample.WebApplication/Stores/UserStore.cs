@@ -10,7 +10,6 @@ namespace AspNetIdentitySample.WebApplication.Stores
   using AspNetIdentitySample.ApplicationCore.Services;
 
   /// <summary>Provides an abstraction for a store which manages user accounts.</summary>
-  /// <typeparam name="TUser">The type encapsulating a user.</typeparam>
   public sealed class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserRoleStore<UserEntity>
   {
     private readonly IUserService _userService;
@@ -217,7 +216,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing a list of role names.</returns>
     public Task<IList<string>> GetRolesAsync(UserEntity user, CancellationToken cancellationToken)
-      => _userRoleService.GetRolesAsync(user, cancellationToken);
+      => _userRoleService.GetRoleNamesAsync(user, cancellationToken);
 
     /// <summary>
     /// Returns a flag indicating whether the specified <paramref name="user"/> is a member of the given named role.
