@@ -62,6 +62,10 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
       controlUserRoleEntityCollection.AddRange(
         await CreateTestUserRolesAsync(controlUserEntityCollection[1].UserId));
 
+      controlUserRoleEntityCollection =
+        controlUserRoleEntityCollection.OrderBy(entity => entity.RoleName)
+                                       .ToList();
+
       var actualUserRoleEntityCollection =
         await _userRoleRepository.GetRolesAsync(controlUserEntityCollection, Token);
 
