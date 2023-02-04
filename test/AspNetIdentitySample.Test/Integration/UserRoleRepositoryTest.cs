@@ -25,7 +25,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles_Collection_By_User_Id()
+    public async Task GetRolesAsync_Should_Return_Roles_Collection_For_User()
     {
       var controlUserId = Guid.NewGuid();
       var controlUserRoleEntityCollection = await CreateTestUserRolesAsync(controlUserId);
@@ -46,7 +46,7 @@ namespace AspNetIdentitySample.Infrastructure.Repositories.Test
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles_For_User()
+    public async Task GetRolesAsync_Should_Return_Roles_For_Users()
     {
       var controlUserEntityCollection = new[]
       {

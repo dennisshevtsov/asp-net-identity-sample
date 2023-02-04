@@ -6,6 +6,8 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
 {
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.Infrastructure.Repositories;
+  using System.Threading;
 
   [TestClass]
   public sealed class UserRoleServiceTest
@@ -29,7 +31,7 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
     }
 
     [TestMethod]
-    public async Task GetRolesAsync_Should_Return_Roles()
+    public async Task GetRoleNamesAsync_Should_Return_Role_Name_Collection_For_User()
     {
       var userRoleEntityCollection = new List<UserRoleEntity>
       {
@@ -62,6 +64,28 @@ namespace AspNetIdentitySample.ApplicationCore.Services.Test
       _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(userIdentity, _cancellationToken));
       _userRoleRepositoryMock.VerifyNoOtherCalls();
 
+      _userRoleRepositoryMock.VerifyNoOtherCalls();
+    }
+
+    [TestMethod]
+    public async Task DeleteRolesAsync_Should_Delete_Roles_For_User()
+    {
+      var userRoleEntityCollection = new List<UserRoleEntity>();
+
+      _userRoleRepositoryMock.Setup(repository => repository.GetRolesAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
+                             .ReturnsAsync(userRoleEntityCollection)
+                             .Verifiable();
+
+      _userRoleRepositoryMock.Setup(repository => repository.DeleteRolesAsync(It.IsAny<List<UserRoleEntity>>(), It.IsAny<CancellationToken>()))
+                             .Returns(Task.CompletedTask)
+                             .Verifiable();
+
+      var identity = new UserEntity();
+
+      await _userRoleService.DeleteRolesAsync(identity, _cancellationToken);
+
+      _userRoleRepositoryMock.Verify(repository => repository.GetRolesAsync(identity, _cancellationToken));
+      _userRoleRepositoryMock.Verify(repository => repository.DeleteRolesAsync(userRoleEntityCollection, _cancellationToken));
       _userRoleRepositoryMock.VerifyNoOtherCalls();
     }
   }
