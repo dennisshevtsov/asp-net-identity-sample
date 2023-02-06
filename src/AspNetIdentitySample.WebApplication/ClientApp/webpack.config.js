@@ -1,7 +1,7 @@
 ﻿const path = require('path');
 
 module.exports = {
-  entry : './src/js/index.js',
+  entry: './src/js/index.js',
   output: {
     clean: true,
     filename: 'index.js',
@@ -21,7 +21,14 @@ module.exports = {
       },
       {
         test: /\.(eot|woff(2)?|tff|otf|svg)$/i,
-        use : 'asset',
+        use: 'asset',
+      },
+      {
+        test: require.resolve("jquery"),
+        loader: "expose-loader",
+        options: {
+          exposes: ["$", "jQuery"],
+        },
       },
     ],
   },
