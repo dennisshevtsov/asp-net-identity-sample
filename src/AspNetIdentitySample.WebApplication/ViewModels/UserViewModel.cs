@@ -25,7 +25,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     public string? LastName { get; set; }
 
     /// <summary>Gets/sets an object that represents an email of a user.</summary>
-    [Required]
     public string? Email { get; set; }
 
     /// <summary>Fills out the view model with the data of the an instance of the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> class.</summary>
@@ -43,7 +42,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     {
       userEntity.FirstName = FirstName;
       userEntity.LastName = LastName;
-      userEntity.Email = Email;
     }
 
     /// <summary>Creates an instace of the <see cref="System.Security.Claims.ClaimsPrincipal"/> class.</summary>

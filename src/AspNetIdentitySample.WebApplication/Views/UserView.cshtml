@@ -3,6 +3,11 @@
 <form class="app-user app-form" method="post">
 
   <div class="app-form__group app-control">
+    <span class="app-control__field">@Model.Email</span>
+    <label class="app-control__label" asp-for="Email">Email</label>
+  </div>
+
+  <div class="app-form__group app-control">
     <input class="app-control__field" asp-for="Email" type="text" placeholder="Email" />
     <label class="app-control__label" asp-for="Email">Email</label>
     <span class="app-control__error" asp-validation-for="Email"></span>

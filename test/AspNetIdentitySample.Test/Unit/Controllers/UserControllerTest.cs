@@ -83,7 +83,11 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     [TestMethod]
     public async Task Post_Should_Update_User()
     {
-      var userEntity = new UserEntity();
+      var originalEmail = Guid.NewGuid().ToString();
+      var userEntity = new UserEntity
+      {
+        Email = originalEmail,
+      };
 
       UserManagerMock.Setup(service => service.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                      .ReturnsAsync(userEntity)
@@ -113,7 +117,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsNotNull(redirectResult);
       Assert.AreEqual(nameof(UserController.Get), redirectResult.ActionName);
 
-      Assert.AreEqual(email, userEntity.Email);
+      Assert.AreEqual(originalEmail, userEntity.Email);
       Assert.AreEqual(firstName, userEntity.FirstName);
       Assert.AreEqual(lastName, userEntity.LastName);
 
