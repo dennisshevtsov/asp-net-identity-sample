@@ -45,7 +45,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     /// <summary>Handles the POST request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
-    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     [HttpPost(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Post(ProfileViewModel vm)
