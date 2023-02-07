@@ -4,29 +4,24 @@
 
 namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
+  using System.Security.Claims;
+
+  using Microsoft.AspNetCore.Identity;
   using Microsoft.AspNetCore.Mvc;
 
-  using AspNetIdentitySample.ApplicationCore.Identities;
-  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   [TestClass]
-  public sealed class ProfileControllerTest
+  public sealed class ProfileControllerTest : IdentityControllerTestBase
   {
 #pragma warning disable CS8618
-    private Mock<IUserService> _userServiceMock;
-
     private ProfileController _profileController;
 #pragma warning restore CS8618
 
-    private CancellationToken _cancellationToken;
-
     [TestInitialize]
-    public void Initialize()
+    protected override void InitializeInternal()
     {
-      _userServiceMock = new Mock<IUserService>();
-      _profileController = new ProfileController(_userServiceMock.Object);
-      _cancellationToken = CancellationToken.None;
+      _profileController = new ProfileController(UserManagerMock.Object);
     }
 
     [TestMethod]
@@ -39,13 +34,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         Email = Guid.NewGuid().ToString(),
       };
 
-      _userServiceMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                         .ReturnsAsync(userEntity)
-                         .Verifiable();
+      UserManagerMock.Setup(repository => repository.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(userEntity)
+                     .Verifiable();
 
       var viewModel = new ProfileViewModel();
 
-      var actionResult = await _profileController.Get(viewModel, _cancellationToken);
+      var actionResult = await _profileController.Get(viewModel);
 
       Assert.IsNotNull(actionResult);
 
@@ -62,8 +57,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(userEntity.LastName, actualViewModel.LastName);
       Assert.AreEqual(userEntity.Email, actualViewModel.Email);
 
-      _userServiceMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
 
     [TestMethod]
@@ -79,13 +74,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         Email = userEmail,
       };
 
-      _userServiceMock.Setup(repository => repository.GetUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                         .ReturnsAsync(userEntity)
-                         .Verifiable();
+      UserManagerMock.Setup(repository => repository.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(userEntity)
+                     .Verifiable();
 
-      _userServiceMock.Setup(repository => repository.UpdateUserAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
-                         .Returns(Task.CompletedTask)
-                         .Verifiable();
+      UserManagerMock.Setup(repository => repository.UpdateAsync(It.IsAny<UserEntity>()))
+                     .ReturnsAsync(IdentityResult.Success)
+                     .Verifiable();
 
       var viewModel = new ProfileViewModel
       {
@@ -94,7 +89,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
         Email = Guid.NewGuid().ToString(),
       };
 
-      var actionResult = await _profileController.Post(viewModel, _cancellationToken);
+      var actionResult = await _profileController.Post(viewModel);
 
       Assert.IsNotNull(actionResult);
 
@@ -107,9 +102,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.AreEqual(viewModel.LastName, userEntity.LastName);
       Assert.AreEqual(userEmail, userEntity.Email);
 
-      _userServiceMock.Verify(repository => repository.GetUserAsync(viewModel.User, _cancellationToken));
-      _userServiceMock.Verify(repository => repository.UpdateUserAsync(userEntity, _cancellationToken));
-      _userServiceMock.VerifyNoOtherCalls();
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
     }
   }
 }
