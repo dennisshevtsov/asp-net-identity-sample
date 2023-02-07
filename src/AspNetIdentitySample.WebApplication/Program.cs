@@ -2,16 +2,14 @@
 // Licensed under the MIT License.
 // See LICENSE in the project root for license information.
 
-using AspNetIdentitySample.WebApplication.Mapping;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.SetUpApplicationCore();
 builder.Services.SetUpDatabase(builder.Configuration);
+builder.Services.SetUpMapping();
 builder.Services.SetUpPipeline();
 builder.Services.SetUpIdentity();
 builder.Services.SetUpAuthorization();
-builder.Services.AddAutoMapper(configuration => configuration.AddProfile<ProfileViewModelProfile>());
 
 var app = builder.Build();
 
