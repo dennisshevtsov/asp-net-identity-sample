@@ -5,9 +5,12 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
+  
+  using Microsoft.AspNetCore.Identity;
 
-  using AspNetIdentitySample.ApplicationCore.Services;
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
@@ -16,25 +19,24 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "ProfileView";
 
-    private readonly IUserService _userService;
+    private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.ProfileController"/> class.</summary>
-    /// <param name="userRepository">An object that provides a simple API to a collection of <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/> in the database.</param>
-    public ProfileController(IUserService userService)
+    /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
+    public ProfileController(UserManager<UserEntity> userManager)
     {
-      _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+      _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
     /// <summary>Handles the GET request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
-    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     [HttpGet(Routing.ProfileEndpoint)]
-    public async Task<IActionResult> Get(ProfileViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(ProfileViewModel vm)
     {
       ModelState.Clear();
 
-      var userEntity = await _userService.GetUserAsync(vm.User, cancellationToken);
+      var userEntity = await _userManager.GetUserAsync(vm.User.ToPrincipal());
 
       vm.FromEntity(userEntity!);
 
@@ -43,16 +45,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     /// <summary>Handles the POST request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
-    /// <param name="cancellationToken">An object that propagates notification that operations should be canceled.</param>
     /// <returns>An object that represents an asynchronous operation that can return a value.</returns>
     [HttpPost(Routing.ProfileEndpoint)]
-    public async Task<IActionResult> Post(ProfileViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(ProfileViewModel vm)
     {
-      var userEntity = await _userService.GetUserAsync(vm.User, cancellationToken);
+      var userEntity = await _userManager.GetUserAsync(vm.User.ToPrincipal());
 
       vm.ToEntity(userEntity!);
 
-      await _userService.UpdateUserAsync(userEntity!, cancellationToken);
+      await _userManager.UpdateAsync(userEntity!);
 
       return RedirectToAction(nameof(ProfileController.Get), new { rerturnUrl = vm.ReturnUrl });
     }
