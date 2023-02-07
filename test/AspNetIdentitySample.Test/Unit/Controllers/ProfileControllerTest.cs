@@ -6,13 +6,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 {
   using System.Security.Claims;
 
+  using AutoMapper;
   using Microsoft.AspNetCore.Identity;
   using Microsoft.AspNetCore.Mvc;
 
-  using AspNetIdentitySample.WebApplication.ViewModels;
-  using AutoMapper;
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.WebApplication.Mapping;
+  using AspNetIdentitySample.WebApplication.ViewModels;
 
   [TestClass]
   public sealed class ProfileControllerTest : IdentityControllerTestBase
