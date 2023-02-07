@@ -17,10 +17,10 @@ namespace AspNetIdentitySample.WebApplication.Mapping
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Mapping.UserIdentityProfile"/> class.</summary>
     public UserIdentityProfile()
     {
-      UserIdentityProfile.Configure(this);
+      UserIdentityProfile.ConfigureMapping(this);
     }
 
-    private static void Configure(IProfileExpression expression)
+    private static void ConfigureMapping(IProfileExpression expression)
     {
       expression.CreateMap<IUserIdentity, ClaimsPrincipal>()
                 .ConstructUsing(identity => identity.ToPrincipal());

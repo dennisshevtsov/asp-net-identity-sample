@@ -23,7 +23,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     private ProfileController _profileController;
 #pragma warning restore CS8618
 
-    [TestInitialize]
     protected override void InitializeInternal()
     {
       _mapperMock = new Mock<IMapper>();
