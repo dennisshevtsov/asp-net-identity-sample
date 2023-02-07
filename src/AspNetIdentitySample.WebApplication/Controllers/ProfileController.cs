@@ -5,12 +5,13 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
-  
+  using System.Security.Claims;
+
+  using AutoMapper;
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Defaults;
-  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
@@ -19,12 +20,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "ProfileView";
 
+    private readonly IMapper _mapper;
     private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.ProfileController"/> class.</summary>
+    /// <param name="mapper">An object that provides a simple API to convert objects.</param>
     /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
-    public ProfileController(UserManager<UserEntity> userManager)
+    public ProfileController(IMapper mapper, UserManager<UserEntity> userManager)
     {
+      _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
@@ -36,9 +40,10 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       ModelState.Clear();
 
-      var userEntity = await _userManager.GetUserAsync(vm.User.ToPrincipal());
+      var claimsPrincipal = _mapper.Map<ClaimsPrincipal>(vm.User);
+      var userEntity = await _userManager.GetUserAsync(claimsPrincipal);
 
-      vm.FromEntity(userEntity!);
+      _mapper.Map(userEntity, vm);
 
       return View(ProfileController.ViewName, vm);
     }
@@ -49,9 +54,10 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpPost(Routing.ProfileEndpoint)]
     public async Task<IActionResult> Post(ProfileViewModel vm)
     {
-      var userEntity = await _userManager.GetUserAsync(vm.User.ToPrincipal());
+      var claimsPrincipal = _mapper.Map<ClaimsPrincipal>(vm.User);
+      var userEntity = await _userManager.GetUserAsync(claimsPrincipal);
 
-      vm.ToEntity(userEntity!);
+      _mapper.Map(vm, userEntity);
 
       await _userManager.UpdateAsync(userEntity!);
 
