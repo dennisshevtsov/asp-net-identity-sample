@@ -9,24 +9,30 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
   using AspNetIdentitySample.ApplicationCore.Identities;
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using Microsoft.AspNetCore.Identity;
+  using AspNetIdentitySample.ApplicationCore.Entities;
+  using System.Security.Claims;
 
   [TestClass]
-  public sealed class UserListControllerTest
+  public sealed class UserListControllerTest : IdentityControllerTestBase
   {
+    private CancellationToken _cancellationToken;
+
 #pragma warning disable CS8618
     private Mock<IUserService> _userServiceMock;
 
     private UserListController _userListController;
 #pragma warning restore CS8618
 
-    private CancellationToken _cancellationToken;
-
     [TestInitialize]
-    public void Initialize()
+    protected override void InitializeInternal()
     {
-      _userServiceMock = new Mock<IUserService>();
-      _userListController = new UserListController(_userServiceMock.Object);
       _cancellationToken = CancellationToken.None;
+
+      _userServiceMock = new Mock<IUserService>();
+
+      _userListController = new UserListController(
+        _userServiceMock.Object, UserManagerMock.Object);
     }
 
     [TestMethod]
@@ -77,13 +83,17 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     [TestMethod]
     public async Task Delete_Should_Delete_User()
     {
-      _userServiceMock.Setup(service => service.DeleteUserAsync(It.IsAny<IUserIdentity>(), It.IsAny<CancellationToken>()))
-                      .Returns(Task.CompletedTask)
-                      .Verifiable();
+      UserManagerMock.Setup(repository => repository.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                     .ReturnsAsync(new UserEntity())
+                     .Verifiable();
+
+      UserManagerMock.Setup(service => service.DeleteAsync(It.IsAny<UserEntity>()))
+                     .ReturnsAsync(IdentityResult.Success)
+                     .Verifiable();
 
       var vm = new DeleteAccountViewModel();
 
-      var actionResult = await _userListController.Delete(vm, _cancellationToken);
+      var actionResult = await _userListController.Delete(vm);
 
       Assert.IsNotNull(actionResult);
 
@@ -92,7 +102,9 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       Assert.IsNotNull(redirectResult);
       Assert.AreEqual(nameof(UserListController.Get), redirectResult.ActionName);
 
-      _userServiceMock.Verify(service => service.DeleteUserAsync(vm, _cancellationToken));
+      UserManagerMock.Verify();
+      UserManagerMock.VerifyNoOtherCalls();
+
       _userServiceMock.VerifyNoOtherCalls();
     }
   }

@@ -6,8 +6,12 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
 
+  using Microsoft.AspNetCore.Identity;
+
+  using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
@@ -17,12 +21,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     public const string ViewName = "UserListView";
 
     private readonly IUserService _userService;
+    private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.UserListController"/> class.</summary>
     /// <param name="userService">An object that provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</param>
-    public UserListController(IUserService userService)
+    /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
+    public UserListController(IUserService userService, UserManager<UserEntity> userManager)
     {
       _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+      _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
     /// <summary>Handles the GET request.</summary>
@@ -41,11 +48,16 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
     /// <summary>Handles the DELETE request.</summary>
     /// <param name="vm">An object that represents the view model for the profile action.</param>
-    /// <returns>AAn object that represents an asynchronous operation.</returns>
+    /// <returns>An object that represents an asynchronous operation.</returns>
     [HttpPost(Routing.DeleteUserEndpoint)]
-    public async Task<IActionResult> Delete(DeleteAccountViewModel vm, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(DeleteAccountViewModel vm)
     {
-      await _userService.DeleteUserAsync(vm, cancellationToken);
+      var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
+
+      if (userEntity != null)
+      {
+        await _userManager.DeleteAsync(userEntity);
+      }
 
       return RedirectToAction(nameof(UserListController.Get));
     }
