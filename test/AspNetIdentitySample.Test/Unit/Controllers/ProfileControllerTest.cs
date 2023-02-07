@@ -10,35 +10,51 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
   using Microsoft.AspNetCore.Mvc;
 
   using AspNetIdentitySample.WebApplication.ViewModels;
+  using AutoMapper;
+  using AspNetIdentitySample.ApplicationCore.Identities;
+  using AspNetIdentitySample.WebApplication.Mapping;
 
   [TestClass]
   public sealed class ProfileControllerTest : IdentityControllerTestBase
   {
 #pragma warning disable CS8618
+    private Mock<IMapper> _mapperMock;
+
     private ProfileController _profileController;
 #pragma warning restore CS8618
 
     [TestInitialize]
     protected override void InitializeInternal()
     {
-      _profileController = new ProfileController(UserManagerMock.Object);
+      _mapperMock = new Mock<IMapper>();
+
+      _profileController = new ProfileController(
+        _mapperMock.Object, UserManagerMock.Object);
     }
 
     [TestMethod]
     public async Task Get_Should_Get_Current_User()
     {
-      var userEntity = new UserEntity
-      {
-        FirstName = Guid.NewGuid().ToString(),
-        LastName = Guid.NewGuid().ToString(),
-        Email = Guid.NewGuid().ToString(),
-      };
+      var principal = new ClaimsPrincipal();
+
+      _mapperMock.Setup(mapper => mapper.Map<ClaimsPrincipal>(It.IsAny<IUserIdentity>()))
+                 .Returns(principal)
+                 .Verifiable();
+
+      _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UserEntity>(), It.IsAny<ProfileViewModelProfile>()))
+                 .Returns(new ProfileViewModelProfile())
+                 .Verifiable();
+
+      var userEntity = new UserEntity();
 
       UserManagerMock.Setup(repository => repository.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                      .ReturnsAsync(userEntity)
                      .Verifiable();
 
-      var viewModel = new ProfileViewModel();
+      var viewModel = new ProfileViewModel
+      {
+        User = new CurrentAccountViewModel(),
+      };
 
       var actionResult = await _profileController.Get(viewModel);
 
@@ -48,16 +64,13 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
 
       Assert.IsNotNull(viewResult);
       Assert.IsNotNull(viewResult.Model);
+      Assert.AreEqual(viewModel, viewResult.Model);
       Assert.AreEqual(ProfileController.ViewName, viewResult.ViewName);
 
-      var actualViewModel = viewResult.Model as ProfileViewModel;
+      _mapperMock.Verify(mapper => mapper.Map<ClaimsPrincipal>(viewModel.User));
+      _mapperMock.Verify(mapper => mapper.Map(userEntity, viewModel));
 
-      Assert.IsNotNull(actualViewModel);
-      Assert.AreEqual(userEntity.FirstName, actualViewModel.FirstName);
-      Assert.AreEqual(userEntity.LastName, actualViewModel.LastName);
-      Assert.AreEqual(userEntity.Email, actualViewModel.Email);
-
-      UserManagerMock.Verify();
+      UserManagerMock.Verify(manager => manager.GetUserAsync(It.IsAny<ClaimsPrincipal>()));
       UserManagerMock.VerifyNoOtherCalls();
     }
 
