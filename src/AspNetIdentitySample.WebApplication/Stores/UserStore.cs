@@ -109,8 +109,12 @@ namespace AspNetIdentitySample.WebApplication.Stores
     /// <param name="user">The user to delete.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
     /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the delete operation.</returns>
-    public Task<IdentityResult> DeleteAsync(UserEntity user, CancellationToken cancellationToken)
-      => throw new NotImplementedException();
+    public async Task<IdentityResult> DeleteAsync(UserEntity user, CancellationToken cancellationToken)
+    {
+      await _userService.DeleteUserAsync(user, cancellationToken);
+
+      return IdentityResult.Success;
+    }
 
     /// <summary>
     /// Finds and returns a user, if any, who has the specified <paramref name="userId"/>.
