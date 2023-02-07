@@ -10,6 +10,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>

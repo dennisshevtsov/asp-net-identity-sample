@@ -5,7 +5,6 @@
 namespace AspNetIdentitySample.WebApplication.ViewModels
 {
   using System.ComponentModel.DataAnnotations;
-  using System.Security.Claims;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Identities;
@@ -42,18 +41,6 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     {
       userEntity.FirstName = FirstName;
       userEntity.LastName = LastName;
-    }
-
-    /// <summary>Creates an instace of the <see cref="System.Security.Claims.ClaimsPrincipal"/> class.</summary>
-    /// <returns>An object that contains a user identity.</returns>
-    public ClaimsPrincipal ToPrincipal()
-    {
-      var identityClaim = new Claim(ClaimTypes.NameIdentifier, UserId.ToString());
-      var claims = new[] { identityClaim };
-      var claimsIdentity = new ClaimsIdentity(claims);
-      var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-      return claimsPrincipal;
     }
   }
 }
