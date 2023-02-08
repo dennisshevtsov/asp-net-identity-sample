@@ -5,7 +5,9 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
+  using System.Security.Claims;
 
+  using AutoMapper;
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
@@ -19,12 +21,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "UserView";
 
-    private UserManager<UserEntity> _userManager;
+    private readonly IMapper _mapper;
+
+    private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.UserController"/> class.</summary>
     /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
-    public UserController(UserManager<UserEntity> userManager)
+    public UserController(IMapper mapper, UserManager<UserEntity> userManager)
     {
+      _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
@@ -36,11 +41,12 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       ModelState.Clear();
 
-      var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
+      var principal = _mapper.Map<ClaimsPrincipal>(vm);
+      var userEntity = await _userManager.GetUserAsync(principal);
 
       if (userEntity != null)
       {
-        vm.FromEntity(userEntity);
+        _mapper.Map(userEntity, vm);
       }
 
       return View(UserController.ViewName, vm);
@@ -54,11 +60,12 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       if (ModelState.IsValid)
       {
-        var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
+        var principal = _mapper.Map<ClaimsPrincipal>(vm);
+        var userEntity = await _userManager.GetUserAsync(principal);
 
         if (userEntity != null)
         {
-          vm.ToEntity(userEntity);
+          _mapper.Map(vm, userEntity);
 
           await _userManager.UpdateAsync(userEntity);
 
