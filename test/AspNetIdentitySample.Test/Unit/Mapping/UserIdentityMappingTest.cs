@@ -39,7 +39,7 @@ namespace AspNetIdentitySample.WebApplication.Mapping.Test
     }
 
     [TestMethod]
-    public void Map_Should_Map_View_Model_To_Principal()
+    public void Map_Should_Map_User_Identity_To_Principal()
     {
       var userId = Guid.NewGuid();
       var viewModel = new CurrentAccountViewModel
