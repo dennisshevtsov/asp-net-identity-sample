@@ -17,6 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
       services.AddAutoMapper(configuration =>
       {
         configuration.AddProfile<ProfileViewModelProfile>();
+        configuration.AddProfile<SignUpAccountViewModelMappingProfile>();
         configuration.AddProfile<UserIdentityProfile>();
       });
 

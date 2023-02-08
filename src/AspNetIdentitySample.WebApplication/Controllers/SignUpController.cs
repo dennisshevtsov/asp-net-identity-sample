@@ -6,6 +6,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
 
+  using AutoMapper;
   using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Identity;
 
@@ -20,12 +21,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "SignUpView";
 
+    private readonly IMapper _mapper;
     private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.SignUpController"/> class.</summary>
+    /// <param name="mapper">An object that provides a simple API to convert objects.</param>
     /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
-    public SignUpController(UserManager<UserEntity> userManager)
+    public SignUpController(IMapper mapper, UserManager<UserEntity> userManager)
     {
+      _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
@@ -48,7 +52,9 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       if (ModelState.IsValid)
       {
-        await _userManager.CreateAsync(vm.ToEntity(), vm.Password!);
+        var userEntity = _mapper.Map<UserEntity>(vm);
+
+        await _userManager.CreateAsync(userEntity, vm.Password!);
 
         return RedirectToAction(nameof(UserListController.Get), nameof(UserListController).Replace("Controller", ""));
       }
