@@ -40,8 +40,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
                  .Returns(principal)
                  .Verifiable();
 
-      _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UserEntity>(), It.IsAny<ProfileViewModelProfile>()))
-                 .Returns(new ProfileViewModelProfile())
+      _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UserEntity>(), It.IsAny<ProfileViewModelMapping>()))
+                 .Returns(new ProfileViewModelMapping())
                  .Verifiable();
 
       var userEntity = new UserEntity();
@@ -84,7 +84,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
                  .Returns(principal)
                  .Verifiable();
 
-      _mapperMock.Setup(mapper => mapper.Map(It.IsAny<ProfileViewModelProfile>(), It.IsAny<UserEntity>()))
+      _mapperMock.Setup(mapper => mapper.Map(It.IsAny<ProfileViewModelMapping>(), It.IsAny<UserEntity>()))
                  .Returns(userEntity)
                  .Verifiable();
 

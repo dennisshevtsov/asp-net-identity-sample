@@ -10,12 +10,12 @@ namespace AspNetIdentitySample.WebApplication.Mapping
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a named configuration for maps.</summary>
-  public sealed class ProfileViewModelProfile : Profile
+  public sealed class ProfileViewModelMapping : Profile
   {
-    public ProfileViewModelProfile()
+    public ProfileViewModelMapping()
     {
-      ProfileViewModelProfile.ConfigureGetMapping(this);
-      ProfileViewModelProfile.ConfigureUpdateMapping(this);
+      ProfileViewModelMapping.ConfigureGetMapping(this);
+      ProfileViewModelMapping.ConfigureUpdateMapping(this);
     }
 
     private static void ConfigureGetMapping(IProfileExpression expression)
@@ -24,7 +24,7 @@ namespace AspNetIdentitySample.WebApplication.Mapping
                 .ForMember(entity => entity.PageTitle, options => options.Ignore())
                 .ForMember(entity => entity.User, options => options.Ignore())
                 .ForMember(entity => entity.ReturnUrl, options => options.Ignore())
-                .ForMember(entity => entity.FirstName, options => options.MapFrom(vm => vm.Email))
+                .ForMember(entity => entity.Email, options => options.MapFrom(vm => vm.Email))
                 .ForMember(entity => entity.FirstName, options => options.MapFrom(vm => vm.FirstName))
                 .ForMember(entity => entity.LastName, options => options.MapFrom(vm => vm.LastName));
     }

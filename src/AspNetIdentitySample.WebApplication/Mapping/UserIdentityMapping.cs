@@ -12,12 +12,12 @@ namespace AspNetIdentitySample.WebApplication.Mapping
   using AspNetIdentitySample.WebApplication.Extensions;
 
   /// <summary>Provides a named configuration for maps.</summary>
-  public sealed class UserIdentityProfile : Profile
+  public sealed class UserIdentityMapping : Profile
   {
-    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Mapping.UserIdentityProfile"/> class.</summary>
-    public UserIdentityProfile()
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Mapping.UserIdentityMapping"/> class.</summary>
+    public UserIdentityMapping()
     {
-      UserIdentityProfile.ConfigureMapping(this);
+      UserIdentityMapping.ConfigureMapping(this);
     }
 
     private static void ConfigureMapping(IProfileExpression expression)

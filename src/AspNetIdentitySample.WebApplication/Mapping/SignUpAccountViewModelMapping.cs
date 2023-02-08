@@ -10,12 +10,12 @@ namespace AspNetIdentitySample.WebApplication.Mapping
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a named configuration for maps.</summary>
-  public sealed class SignUpAccountViewModelMappingProfile : Profile
+  public sealed class SignUpAccountViewModelMapping : Profile
   {
-    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Mapping.SignUpAccountViewModelMappingProfile"/> class.</summary>
-    public SignUpAccountViewModelMappingProfile()
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Mapping.SignUpAccountViewModelMapping"/> class.</summary>
+    public SignUpAccountViewModelMapping()
     {
-      SignUpAccountViewModelMappingProfile.ConfigureMapping(this);
+      SignUpAccountViewModelMapping.ConfigureMapping(this);
     }
 
     private static void ConfigureMapping(IProfileExpression expression)
