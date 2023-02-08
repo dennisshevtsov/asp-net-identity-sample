@@ -20,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
         configuration.AddProfile<SignUpAccountViewModelMapping>();
         configuration.AddProfile<UserIdentityMapping>();
         configuration.AddProfile<UserListViewModelMapping>();
+        configuration.AddProfile<UserViewModelMapping>();
       });
 
       return services;
