@@ -5,13 +5,14 @@
 namespace AspNetIdentitySample.WebApplication.Controllers
 {
   using System;
+  using System.Security.Claims;
 
+  using AutoMapper;
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.Defaults;
-  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
@@ -20,14 +21,17 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   {
     public const string ViewName = "UserListView";
 
+    private readonly IMapper _mapper;
     private readonly IUserService _userService;
     private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.UserListController"/> class.</summary>
+    /// <param name="mapper">An object that provides a simple API to convert objects.</param>
     /// <param name="userService">An object that provides a simple API to execute queries and commands with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</param>
     /// <param name="userManager">An object that provides the APIs for managing user in a persistence store.</param>
-    public UserListController(IUserService userService, UserManager<UserEntity> userManager)
+    public UserListController(IMapper mapper, IUserService userService, UserManager<UserEntity> userManager)
     {
+      _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
       _userService = userService ?? throw new ArgumentNullException(nameof(userService));
       _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
@@ -41,7 +45,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       var userEntityCollection = await _userService.GetUsersAsync(cancellationToken);
 
-      vm.WithUsers(userEntityCollection);
+      vm.Users = _mapper.Map<List<UserListViewModel.UserViewModel>>(userEntityCollection);
 
       return View(UserListController.ViewName, vm);
     }
@@ -52,7 +56,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpPost(Routing.DeleteUserEndpoint)]
     public async Task<IActionResult> Delete(DeleteAccountViewModel vm)
     {
-      var userEntity = await _userManager.GetUserAsync(vm.ToPrincipal());
+      var principal = _mapper.Map<ClaimsPrincipal>(vm.UserId);
+      var userEntity = await _userManager.GetUserAsync(principal);
 
       if (userEntity != null)
       {

@@ -21,12 +21,12 @@ namespace AspNetIdentitySample.WebApplication.Mapping
     private static void ConfigureGetMapping(IProfileExpression expression)
     {
       expression.CreateMap<UserEntity, ProfileViewModel>()
-                .ForMember(entity => entity.PageTitle, options => options.Ignore())
-                .ForMember(entity => entity.User, options => options.Ignore())
-                .ForMember(entity => entity.ReturnUrl, options => options.Ignore())
-                .ForMember(entity => entity.Email, options => options.MapFrom(vm => vm.Email))
-                .ForMember(entity => entity.FirstName, options => options.MapFrom(vm => vm.FirstName))
-                .ForMember(entity => entity.LastName, options => options.MapFrom(vm => vm.LastName));
+                .ForMember(vm => vm.PageTitle, options => options.Ignore())
+                .ForMember(vm => vm.User, options => options.Ignore())
+                .ForMember(vm => vm.ReturnUrl, options => options.Ignore())
+                .ForMember(vm => vm.Email, options => options.MapFrom(entity => entity.Email))
+                .ForMember(vm => vm.FirstName, options => options.MapFrom(entity => entity.FirstName))
+                .ForMember(vm => vm.LastName, options => options.MapFrom(entity => entity.LastName));
     }
 
     private static void ConfigureUpdateMapping(IProfileExpression expression)
