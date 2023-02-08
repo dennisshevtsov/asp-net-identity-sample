@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
   public sealed class UserListViewModel : ViewModelBase
   {
     /// <summary>Gets/sets an object that represents a collection of user records.</summary>
-    public List<UserViewModel>? Users { get; set; }
+    public List<UserViewModel> Users { get; set; } = new List<UserViewModel>();
 
     /// <summary>Represents the view model for the user record.</summary>
     public sealed class UserViewModel : IUserIdentity
