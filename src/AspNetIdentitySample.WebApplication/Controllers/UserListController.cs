@@ -22,7 +22,9 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     public const string ViewName = "UserListView";
 
     private readonly IMapper _mapper;
+
     private readonly IUserService _userService;
+
     private readonly UserManager<UserEntity> _userManager;
 
     /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Controllers.UserListController"/> class.</summary>
@@ -56,7 +58,7 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpPost(Routing.DeleteUserEndpoint)]
     public async Task<IActionResult> Delete(DeleteAccountViewModel vm)
     {
-      var principal = _mapper.Map<ClaimsPrincipal>(vm.UserId);
+      var principal = _mapper.Map<ClaimsPrincipal>(vm);
       var userEntity = await _userManager.GetUserAsync(principal);
 
       if (userEntity != null)
