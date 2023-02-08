@@ -4,9 +4,10 @@
 
 namespace AspNetIdentitySample.WebApplication.Mapping.Test
 {
-  using AspNetIdentitySample.WebApplication.ViewModels;
   using AutoMapper;
   using Microsoft.Extensions.DependencyInjection;
+
+  using AspNetIdentitySample.WebApplication.ViewModels;
 
   [TestClass]
   public sealed class ProfileViewModelMappingTest
@@ -36,7 +37,7 @@ namespace AspNetIdentitySample.WebApplication.Mapping.Test
     }
 
     [TestMethod]
-    public void Map_Should_Map_User_To_Profile()
+    public void Map_Should_Map_Entity_View_Model()
     {
       var pageTitle = Guid.NewGuid().ToString();
       var returnUrl = Guid.NewGuid().ToString();
@@ -72,7 +73,7 @@ namespace AspNetIdentitySample.WebApplication.Mapping.Test
     }
 
     [TestMethod]
-    public void Map_Should_Map_Profile_To_User()
+    public void Map_Should_Map_View_Model_To_Entity()
     {
       var firstName = Guid.NewGuid().ToString();
       var lastName = Guid.NewGuid().ToString();
