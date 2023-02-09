@@ -21,18 +21,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
     }
 
     [TestMethod]
-    public void Get_Should_Clear_Model_Sate()
-    {
-      _signInController.ControllerContext.ModelState.AddModelError("test", "test");
-
-      _signInController.Get(new SignInAccountViewModel());
-
-      Assert.IsTrue(_signInController.ControllerContext.ModelState.IsValid);
-
-      SignInManagerMock.VerifyNoOtherCalls();
-    }
-
-    [TestMethod]
     public void Get_Should_Return_Action_Result_With_View_Name()
     {
       var actionResult = _signInController.Get(new SignInAccountViewModel());

@@ -10,6 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
   using AspNetIdentitySample.WebApplication.Binding;
   using AspNetIdentitySample.WebApplication.Defaults;
+  using AspNetIdentitySample.WebApplication.Filters;
 
   /// <summary>Provides a simple API to set up the MVC pipeline.</summary>
   public static class MvcExtensions
@@ -23,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
       {
         options.Filters.Add(new AuthorizeFilter());
         options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+        options.Filters.Add(new SuppressValidationFilter());
 
         options.ModelBinderProviders.Insert(0, new ViewModelBinderProvider());
       });
