@@ -39,8 +39,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet(Routing.SingUpEndpoint)]
     public IActionResult Get(SignUpAccountViewModel vm)
     {
-      ModelState.Clear();
-
       return View(SignUpController.ViewName, vm);
     }
 

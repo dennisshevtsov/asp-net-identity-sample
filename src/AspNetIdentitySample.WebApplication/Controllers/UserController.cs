@@ -39,8 +39,6 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     [HttpGet(Routing.UserEndpoint)]
     public async Task<IActionResult> Get(UserViewModel vm)
     {
-      ModelState.Clear();
-
       var principal = _mapper.Map<ClaimsPrincipal>(vm);
       var userEntity = await _userManager.GetUserAsync(principal);
 
