@@ -16,6 +16,14 @@ namespace AspNetIdentitySample.WebApplication.Binding
   /// <summary>Provides a simple API to create an instance of a model for an HTTP request.</summary>
   public sealed class ViewModelBinder : IModelBinder
   {
+    /// <summary>Initializes a new instance of the <see cref="AspNetIdentitySample.WebApplication.Binding.ViewModelBinder"/> class.</summary>
+    public ViewModelBinder()
+    {
+      TypeDescriptor.AddAttributes(
+        typeof(bool),
+        new TypeConverterAttribute(typeof(CheckboxValueConverter)));
+    }
+
     /// <summary>Attempts to bind a model.</summary>
     /// <param name="bindingContext">An object that represents a context that contains operating information for model binding and validation.</param>
     /// <returns>An object that represents an asynchronous operation.</returns>
@@ -105,8 +113,7 @@ namespace AspNetIdentitySample.WebApplication.Binding
         {
           properties.Add(
             property.PropertyName,
-            (vm, value) => property.PropertySetter(
-              vm, typeConverter.ConvertFrom(value)));
+            (vm, value) => property.PropertySetter(vm, typeConverter.ConvertFrom(value)));
         }
       }
 
