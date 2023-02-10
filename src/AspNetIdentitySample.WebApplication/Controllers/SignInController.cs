@@ -47,7 +47,8 @@ namespace AspNetIdentitySample.WebApplication.Controllers
     {
       if (ModelState.IsValid)
       {
-        var signInResult = await _signInManager.PasswordSignInAsync(vm.Email!, vm.Password!, false, false);
+        var signInResult = await _signInManager.PasswordSignInAsync(
+          vm.Email!, vm.Password!, vm.RememberMe, false);
 
         if (signInResult != null && signInResult.Succeeded)
         {
