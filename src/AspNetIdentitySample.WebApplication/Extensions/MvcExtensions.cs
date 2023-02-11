@@ -45,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
       services.AddAuthorization(options =>
       {
         options.AddPolicy(
-          "AdminOnlyPolicy",
+          Policies.AdminOnlyPolicy,
           builder => builder.RequireRole("admin").Build());
       });
 

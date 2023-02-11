@@ -25,7 +25,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     /// <summary>Gets/sets an object that indicates if the user is admin.</summary>
     public bool IsAdmin { get; private set; }
 
-    /// <summary>Populates the view model with the <see cref="UserEntity"/>.</summary>
+    /// <summary>Populates the view model with the <see cref="AspNetIdentitySample.ApplicationCore.Entities.UserEntity"/>.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
     public void FromEntity(UserEntity userEntity)
     {
