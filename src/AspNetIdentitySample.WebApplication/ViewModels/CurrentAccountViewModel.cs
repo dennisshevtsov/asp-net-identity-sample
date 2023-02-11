@@ -14,13 +14,16 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
     public Guid UserId { get; set; }
 
     /// <summary>Gets/sets an object that represents a first name of a user.</summary>
-    public string? FirstName { get; set; }
+    public string? FirstName { get; private set; }
 
     /// <summary>Gets/sets an object that represents a last name of a user.</summary>
-    public string? LastName { get; set; }
+    public string? LastName { get; private set; }
 
     /// <summary>Gets/sets an object that indicates if the user is authenticated.</summary>
-    public bool IsAuthenticated { get; set; }
+    public bool IsAuthenticated { get; private set; }
+
+    /// <summary>Gets/sets an object that indicates if the user is admin.</summary>
+    public bool IsAdmin { get; private set; }
 
     /// <summary>Populates the view model with the <see cref="UserEntity"/>.</summary>
     /// <param name="userEntity">An object that represents details of a user.</param>
@@ -30,6 +33,7 @@ namespace AspNetIdentitySample.WebApplication.ViewModels
       FirstName = userEntity.FirstName;
       LastName = userEntity.LastName;
       IsAuthenticated = true;
+      IsAdmin = userEntity.Roles != null && userEntity.Roles.Any(entity => entity.RoleName == "admin");
     }
   }
 }
