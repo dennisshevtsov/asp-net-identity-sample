@@ -38,7 +38,7 @@
                   </div>
                   <div class="app-modal__footer">
                     <a class="app-modal__close" data-bs-dismiss="modal"><span>Close</span></a>
-                    <form method="post" asp-controller="UserList" asp-action="Delete" asp-route-userId="@user.UserId">
+                    <form method="post" asp-controller="User" asp-action="Delete" asp-route-userId="@user.UserId">
                       <button class="app-modal__ok" type="submit"><span>Ok</span></button>
                     </form>
                   </div>
