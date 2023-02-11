@@ -14,7 +14,7 @@ namespace AspNetIdentitySample.WebApplication.Binding.Test
   using Microsoft.AspNetCore.Routing;
   using Microsoft.Extensions.Primitives;
 
-  using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels.Test;
 
   [TestClass]
@@ -276,16 +276,16 @@ namespace AspNetIdentitySample.WebApplication.Binding.Test
                               .Verifiable();
 #pragma warning restore CS0618
 
-      var userRepositoryMock = new Mock<IUserRepository>();
+      var userServiceMock = new Mock<IUserService>();
 
-      userRepositoryMock.Setup(repository => repository.GetUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+      userServiceMock.Setup(repository => repository.GetUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                         .ReturnsAsync(new UserEntity())
                         .Verifiable();
 
       var serviceProviderMock = new Mock<IServiceProvider>();
 
       serviceProviderMock.Setup(provider => provider.GetService(It.IsAny<Type>()))
-                         .Returns(userRepositoryMock.Object)
+                         .Returns(userServiceMock.Object)
                          .Verifiable();
 
       _httpContextMock.SetupGet(context => context.RequestServices)
@@ -301,10 +301,10 @@ namespace AspNetIdentitySample.WebApplication.Binding.Test
       Assert.IsNotNull(vm);
       Assert.IsTrue(vm.User.IsAuthenticated);
 
-      userRepositoryMock.Verify(repository => repository.GetUserAsync(userEmail, CancellationToken.None));
-      userRepositoryMock.VerifyNoOtherCalls();
+      userServiceMock.Verify(repository => repository.GetUserAsync(userEmail, CancellationToken.None));
+      userServiceMock.VerifyNoOtherCalls();
 
-      serviceProviderMock.Verify(provider => provider.GetService(typeof(IUserRepository)));
+      serviceProviderMock.Verify(provider => provider.GetService(typeof(IUserService)));
       serviceProviderMock.VerifyNoOtherCalls();
 
       _modelMetadataMock.Verify(metadata => metadata.Properties);
