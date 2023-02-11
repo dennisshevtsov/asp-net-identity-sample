@@ -74,45 +74,5 @@ namespace AspNetIdentitySample.WebApplication.Controllers.Test
       _userServiceMock.Verify(service => service.GetUsersAsync(_cancellationToken));
       _userServiceMock.VerifyNoOtherCalls();
     }
-
-    [TestMethod]
-    public async Task Delete_Should_Delete_User()
-    {
-      var principal = new ClaimsPrincipal();
-
-      _mapperMock.Setup(mapper => mapper.Map<ClaimsPrincipal>(It.IsAny<IUserIdentity>()))
-                 .Returns(principal)
-                 .Verifiable();
-
-      var userEntity = new UserEntity();
-
-      UserManagerMock.Setup(repository => repository.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                     .ReturnsAsync(userEntity)
-                     .Verifiable();
-
-      UserManagerMock.Setup(service => service.DeleteAsync(It.IsAny<UserEntity>()))
-                     .ReturnsAsync(IdentityResult.Success)
-                     .Verifiable();
-
-      var viewModel = new DeleteAccountViewModel();
-
-      var actionResult = await _userListController.Delete(viewModel);
-
-      Assert.IsNotNull(actionResult);
-
-      var redirectResult = actionResult as RedirectToActionResult;
-
-      Assert.IsNotNull(redirectResult);
-      Assert.AreEqual(nameof(UserListController.Get), redirectResult.ActionName);
-
-      _mapperMock.Verify(mapper => mapper.Map<ClaimsPrincipal>(viewModel));
-      _mapperMock.VerifyNoOtherCalls();
-
-      UserManagerMock.Verify(manager => manager.GetUserAsync(principal));
-      UserManagerMock.Verify(manager => manager.DeleteAsync(userEntity));
-      UserManagerMock.VerifyNoOtherCalls();
-
-      _userServiceMock.VerifyNoOtherCalls();
-    }
   }
 }

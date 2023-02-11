@@ -8,14 +8,15 @@ namespace AspNetIdentitySample.WebApplication.Controllers
   using System.Security.Claims;
 
   using AutoMapper;
+  using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Identity;
 
   using AspNetIdentitySample.ApplicationCore.Entities;
   using AspNetIdentitySample.WebApplication.Defaults;
-  using AspNetIdentitySample.WebApplication.Extensions;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to handle HTTP requests.</summary>
+  [Authorize(Policies.AdminOnlyPolicy)]
   [Route(Routing.AccountRoute)]
   public sealed class UserController : Controller
   {
@@ -72,6 +73,23 @@ namespace AspNetIdentitySample.WebApplication.Controllers
       }
 
       return View(UserController.ViewName, vm);
+    }
+
+    /// <summary>Handles the DELETE request.</summary>
+    /// <param name="vm">An object that represents the view model for the profile action.</param>
+    /// <returns>An object that represents an asynchronous operation.</returns>
+    [HttpPost(Routing.DeleteUserEndpoint)]
+    public async Task<IActionResult> Delete(DeleteAccountViewModel vm)
+    {
+      var principal = _mapper.Map<ClaimsPrincipal>(vm);
+      var userEntity = await _userManager.GetUserAsync(principal);
+
+      if (userEntity != null)
+      {
+        await _userManager.DeleteAsync(userEntity);
+      }
+
+      return RedirectToAction(nameof(UserListController.Get));
     }
   }
 }

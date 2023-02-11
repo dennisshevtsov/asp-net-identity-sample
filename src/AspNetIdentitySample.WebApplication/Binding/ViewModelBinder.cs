@@ -10,7 +10,7 @@ namespace AspNetIdentitySample.WebApplication.Binding
   using Microsoft.AspNetCore.Mvc.ModelBinding;
   using Microsoft.Extensions.Primitives;
 
-  using AspNetIdentitySample.ApplicationCore.Repositories;
+  using AspNetIdentitySample.ApplicationCore.Services;
   using AspNetIdentitySample.WebApplication.ViewModels;
 
   /// <summary>Provides a simple API to create an instance of a model for an HTTP request.</summary>
@@ -131,18 +131,18 @@ namespace AspNetIdentitySample.WebApplication.Binding
         return Task.CompletedTask;
       }
 
-      var userRepository =
-        bindingContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+      var userService =
+        bindingContext.HttpContext.RequestServices.GetRequiredService<IUserService>();
 
       var userEmail = bindingContext.HttpContext.User.Identity!.Name!;
 
-      return ViewModelBinder.FillOutUserAsync(vm, userEmail, userRepository, cancellationToken);
+      return ViewModelBinder.FillOutUserAsync(vm, userEmail, userService, cancellationToken);
     }
 
     private static async Task FillOutUserAsync(
-      ViewModelBase vm, string userEmail, IUserRepository userRepository, CancellationToken cancellationToken)
+      ViewModelBase vm, string userEmail, IUserService userService, CancellationToken cancellationToken)
     {
-      var userEntity = await userRepository.GetUserAsync(userEmail, cancellationToken);
+      var userEntity = await userService.GetUserAsync(userEmail, cancellationToken);
 
       if (userEntity == null)
       {
