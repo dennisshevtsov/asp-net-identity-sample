@@ -8,6 +8,7 @@ namespace AspNetIdentitySample.WebApplication.Stores
 
   using AspNetIdentitySample.ApplicationCore.Entities;
 
+  /// <summary>Provides an abstraction for a storage and management of roles.</summary>
   public sealed class RoleStore : IRoleStore<RoleEntity>
   {
     /// <summary>
